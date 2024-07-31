@@ -5,7 +5,7 @@ const resendOtp = require("../controllers/userAuth/resendPhoneOTP");
 const router = express.Router();
 
 router.route('/login').post(userLogin)
-router.route('/verify/phon/otp').post(verifyOtp)
+router.route('/verify/phone/otp').post(verifyOtp)
 router.route('/resend/phone/otp').post(resendOtp)
 
 module.exports = router;

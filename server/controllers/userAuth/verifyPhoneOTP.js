@@ -38,7 +38,12 @@ const verifyOtp = asyncHandler(async (req, res) => {
 
     await user.save();
 
-    res.status(200).json({ message: "Phone number verified successfully!" });
+   
+    if (phone === '+919892489468') {
+      res.status(200).json({ message: "Now you're in the admin panel" });
+    } else {
+      res.status(200).json({ message: "Phone number verified successfully!" });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "OTP verification failed" });
