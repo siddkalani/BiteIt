@@ -7,9 +7,9 @@ const twilioPhone = process.env.TWILIO_PHONE_NO;
 
 const twilioClient = new twilio(accountSid, authToekn);
 
-const sendPhoneOTP = asyncHandler(async (name, phoneNo, otp) => {
+const sendPhoneOTP = asyncHandler(async (phoneNo, otp) => {
   const sendOtp = await twilioClient.messages.create({
-    body: `Hi ${name}! Your otp is: ${otp}`,
+    body: `Hi! Your otp is: ${otp}`,
     to: phoneNo,
     from: twilioPhone,
   });

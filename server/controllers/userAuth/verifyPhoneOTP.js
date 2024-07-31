@@ -1,48 +1,48 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../../models/userModel");
-const { sendPhoneOTP } = require("../../services/authService");
 const bcrypt = require("bcrypt");
 
-const sendOtp_phone = asyncHandler(async (name, phoneNo, otp, hashedOTP) => {
-  const otpExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour from now
+//POST -> /user/verify-otp
+const verifyOtp = asyncHandler(async (req, res) => {
+  const { phone, otp, name } = req.body;
 
-  const user = await User.findOneAndUpdate(
-    { phoneNo },
-    { otp: hashedOTP, otpExpires: otpExpires },
-    { upsert: true, new: true }
-  );
+  try {
+    const user = await User.findOne({ phone });
 
-  if (!user) {
-    throw new Error("User not found or failed to update");
+    if (!user) {
+      return res.status(400).json({ error: "Invalid phone number" });
+    }
+
+    if (user.otpExpires < Date.now()) {
+      return res.status(400).json({ error: "OTP expired" });
+    }
+
+    const isOtpValid = await bcrypt.compare(otp, user.otp);
+
+    if (!isOtpValid) {
+      return res.status(400).json({ error: "Invalid OTP" });
+    }
+
+    // Clear the OTP fields
+    user.otp = undefined;
+    user.otpExpires = undefined;
+    user.isVerified = true;
+
+    if (!user.name) {
+      if (!name) {
+        return res.status(400).json({ error: "Name is required for new users" });
+      }
+      // First-time registration, update user with name
+      user.name = name;
+    }
+
+    await user.save();
+
+    res.status(200).json({ message: "Phone number verified successfully!" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "OTP verification failed" });
   }
-
-  sendPhoneOTP(name, phoneNo, otp);
 });
 
-const verifyPhoneOTP = asyncHandler(async (req, res) => {
-  const { phoneNo, otp } = req.body;
-
-  const user = await User.findOne({ phoneNo });
-
-  if (!user) {
-    return res.status(400).json({ error: "Invalid phone" });
-  }
-
-  if (user.isVerified) {
-    return res.status(400).json({ error: "User already verified" });
-  }
-
-  const matchOTP = await bcrypt.compare(otp, user.otp);
-
-  if (!matchOTP || user.otpExpires < Date.now()) {
-    return res.status(400).json({ error: "Invalid or expired OTP" });
-  }
-  user.isVerified = true;
-  user.otp = undefined;
-  user.otpExpires = undefined;
-  await user.save();
-
-  res.status(200).json({ success: "Phone Number verified successfully" });
-});
-
-module.exports = { verifyPhoneOTP, sendOtp_phone };
+module.exports = verifyOtp;
