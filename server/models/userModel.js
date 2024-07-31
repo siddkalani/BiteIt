@@ -20,7 +20,10 @@ const userSchema = mongoose.Schema(
     otpExpires: {
       type: Date,
     },
-    createdAt: { type: Date, default: Date.now },
+    status: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,
