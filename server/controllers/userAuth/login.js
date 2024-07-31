@@ -1,10 +1,8 @@
-
 const asyncHandler = require("express-async-handler");
 const User = require("../../models/userModel");
 const bcrypt = require("bcrypt");
 const otpGenerator = require("otp-generator");
-const { sendOtp_phone } = require('../userAuth/verifyPhoneOTP')
-const {sendPhoneOTP} = require('../../services/authService')
+const { sendPhoneOTP } = require("../../services/authService");
 
 //POST -> /user/send-otp
 const userLogin = asyncHandler(async (req, res) => {
@@ -44,4 +42,3 @@ const userLogin = asyncHandler(async (req, res) => {
 });
 
 module.exports = userLogin;
-
