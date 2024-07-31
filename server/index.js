@@ -14,6 +14,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/user", require("./routes/userRoutes"));
+app.use("/category", require("./routes/categoryRoutes"));
 app.use(errorHandler);
 
 const port = process.env.PORT;
