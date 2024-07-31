@@ -13,6 +13,10 @@ const verifyOtp = asyncHandler(async (req, res) => {
       return res.status(400).json({ error: "Invalid phone number" });
     }
 
+    if (!user.otp || !otp) {
+      return res.status(400).json({ error: "OTP is required" });
+    }
+
     if (user.otpExpires < Date.now()) {
       return res.status(400).json({ error: "OTP expired" });
     }
@@ -30,7 +34,9 @@ const verifyOtp = asyncHandler(async (req, res) => {
 
     if (!user.name) {
       if (!name) {
-        return res.status(400).json({ error: "Name is required for new users" });
+        return res
+          .status(400)
+          .json({ error: "Name is required for new users" });
       }
       // First-time registration, update user with name
       user.name = name;
@@ -38,8 +44,10 @@ const verifyOtp = asyncHandler(async (req, res) => {
 
     await user.save();
 
-   
-    if (phone === '+919892489468') {
+    if (
+      phone === process.env.ADMIN_PHONE_1 ||
+      phone === process.env.ADMIN_PHONE_2
+    ) {
       res.status(200).json({ message: "Now you're in the admin panel" });
     } else {
       res.status(200).json({ message: "Phone number verified successfully!" });
