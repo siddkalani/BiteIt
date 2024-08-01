@@ -9,6 +9,16 @@ const createItem = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "All fields are required" });
   }
 
+  // Check if an item with the same name already exists in the same category
+  const existingItem = await Item.findOne({ itemName, categoryId });
+  if (existingItem) {
+    return res
+      .status(400)
+      .json({
+        message: "Item with this name already exists in the selected category",
+      });
+  }
+
   const newItem = new Item({
     categoryId,
     itemName,
@@ -23,7 +33,9 @@ const createItem = asyncHandler(async (req, res) => {
       Item: savedItem,
     });
   } catch (error) {
-    res.status(500).json({ message: "Error saving item", error });
+    res
+      .status(500)
+      .json({ message: "Error saving item", error: error.message });
   }
 });
 

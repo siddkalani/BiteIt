@@ -14,8 +14,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/user", require("./routes/userRoutes"));
+app.use("/canteen", require("./routes/canteenRoutes"));
 app.use("/category", require("./routes/categoryRoutes"));
 app.use("/food-item", require("./routes/foodItemRoutes"));
+app.use("/user/order", require("./routes/userOrderRoutes"));
 app.use(errorHandler);
 
 const port = process.env.PORT;
