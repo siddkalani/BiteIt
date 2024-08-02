@@ -45,7 +45,7 @@ const verifyOtp = asyncHandler(async (req, res) => {
     await user.save();
 
     if (
-      phone === process.env.ADMIN_PHONE_1 ||
+      // phone === process.env.ADMIN_PHONE_1 ||
       phone === process.env.ADMIN_PHONE_2
     ) {
       res.status(200).json({ message: "Now you're in the admin panel" });

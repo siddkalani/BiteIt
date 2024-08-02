@@ -1,6 +1,4 @@
 const mongoose = require("mongoose");
-const UserOrderHistory = require("./userOrderHistoryModel");
-const Item = require("./foodItemModel");
 
 const orderSchema = mongoose.Schema(
   {
@@ -25,6 +23,11 @@ const orderSchema = mongoose.Schema(
     },
     totalAmount: {
       type: Number,
+      required: true,
+    },
+    payment: {
+      type: Number,
+      default: 0,  // 0 -> not done , 1 -> payment done
       required: true,
     },
     status: {

@@ -5,15 +5,17 @@ const userOrderHistorySchema = mongoose.Schema(
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      // required: true,
     },
-    canteenName: {
-      type: String,
-      required: true,
+    canteenId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Canteen",
+      // required: true,
     },
-    itemName: {
-      type: String,
-      required: true,
+    itemId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Item",
+      // required: true,
     },
     itemQuantity: {
       type: Number,
@@ -21,11 +23,11 @@ const userOrderHistorySchema = mongoose.Schema(
     },
     itemImage: {
       type: String,
-    //   required: true,
+      //   required: true,
     },
     totalAmount: {
       type: Number,
-      required: true,
+      // required: true,
     },
     status: {
       type: Number,

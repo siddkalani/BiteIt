@@ -3,11 +3,15 @@ const Order = require("../../models/orderModel");
 
 //POST -> /user/order/add
 const createOrder = asyncHandler(async (req, res) => {
-  const { userId, canteenId, itemId, itemQuantity, totalAmount, status } =
+  const { userId, canteenId, itemId, itemQuantity, totalAmount,payment, status } =
     req.body;
 
   if (!userId || !canteenId || !itemId || !itemQuantity || !totalAmount) {
     return res.status(400).json({ message: "All fields are required" });
+  }
+
+  if (payment !== 1) {
+    return res.status(400).json({ message: "Payment not done!" });
   }
 
   const newOrder = new Order({
