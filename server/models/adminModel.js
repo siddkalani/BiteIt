@@ -16,8 +16,8 @@ const adminSchema = mongoose.Schema(
       required: true,
     },
     otp: {
-      type: Number,
-      required: true,
+      type: String,
+      // required: true, // eng - 1234, manag - 5678,
     },
   },
   {
