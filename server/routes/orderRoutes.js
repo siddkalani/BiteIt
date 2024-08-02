@@ -3,7 +3,7 @@ const express = require("express");
 const { createOrder } = require("../controllers/userOrder/postOrder");
 const {
   getUserOrders,
-  getUserOrderHistory,
+  getOrderHistory,
 } = require("../controllers/userOrder/getOrder");
 const {
   updateOrderStatus,
@@ -11,7 +11,7 @@ const {
 const router = express.Router();
 
 router.route("/:userId").get(getUserOrders);
-router.route("/history/:userId").get(getUserOrderHistory);
+router.route("/history/:userId").get(getOrderHistory);
 router.route("/add").post(createOrder);
 router.route("/update-status/:id").post(updateOrderStatus);
 

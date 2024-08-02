@@ -18,7 +18,7 @@ app.use("/admin", require("./routes/adminRoutes"));
 app.use("/canteen", require("./routes/canteenRoutes"));
 app.use("/category", require("./routes/categoryRoutes"));
 app.use("/food-item", require("./routes/foodItemRoutes"));
-app.use("/user/order", require("./routes/userOrderRoutes"));
+app.use("/user/order", require("./routes/orderRoutes"));
 app.use(errorHandler);
 
 const port = process.env.PORT;

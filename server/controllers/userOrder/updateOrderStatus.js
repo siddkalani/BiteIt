@@ -1,6 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Order = require("../../models/orderModel");
-const UserOrderHistory = require("../../models/userOrderHistoryModel"); // Import UserOrderHistory model
+const OrderHistory = require("../../models/orderModel"); // Import OrderHistory model
 
 // PUT -> /user/order/update-status/:id
 const updateOrderStatus = asyncHandler(async (req, res) => {
@@ -25,7 +25,7 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
     if (status === 1) {
       console.log("Order delivered. Creating order history..."); 
 
-      const newOrderHistory = new UserOrderHistory({
+      const newOrderHistory = new OrderHistory({
         userId: updatedOrder.userId, 
         canteenId: updatedOrder.canteenId, 
         itemId: updatedOrder.itemId, 

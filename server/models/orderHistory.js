@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const userOrderHistorySchema = mongoose.Schema(
+const orderHistorySchema = mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -44,4 +44,4 @@ const userOrderHistorySchema = mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("UserOrderHistory", userOrderHistorySchema);
+module.exports = mongoose.model("orderHistory", orderHistorySchema);
