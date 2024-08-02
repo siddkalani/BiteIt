@@ -14,6 +14,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/user", require("./routes/userRoutes"));
+app.use("/admin", require("./routes/adminRoutes"));
 app.use("/canteen", require("./routes/canteenRoutes"));
 app.use("/category", require("./routes/categoryRoutes"));
 app.use("/food-item", require("./routes/foodItemRoutes"));
