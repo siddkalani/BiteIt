@@ -35,7 +35,6 @@
 //   updateOrderStatus,
 // };
 
-
 const asyncHandler = require("express-async-handler");
 const Order = require("../../models/orderModel");
 const UserOrderHistory = require("../../models/userOrderHistoryModel"); // Import UserOrderHistory model
@@ -63,6 +62,8 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
 
     // Add to UserOrderHistory if status is delivered (1)
     if (status === 1) {
+      console.log("Order delivered. Creating order history..."); // Debugging log
+
       const newOrderHistory = new UserOrderHistory({
         userId: updatedOrder.userId, // Extract user ID from updated order
         canteenName: updatedOrder.canteenName, // Extract canteen name
@@ -73,7 +74,13 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
         status: 1, // Set status to delivered (1)
       });
 
-      await newOrderHistory.save(); // Save new order history document
+      try {
+        await newOrderHistory.save(); // Save new order history document
+        console.log("Order history saved successfully."); // Debugging log
+      } catch (saveError) {
+        console.error("Error saving order history:", saveError); // Error logging
+        return res.status(500).json({ message: "Error saving order history", error: saveError });
+      }
     }
 
     res.status(200).json({
@@ -88,4 +95,3 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
 module.exports = {
   updateOrderStatus,
 };
-
