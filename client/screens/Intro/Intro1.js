@@ -2,8 +2,8 @@ import * as React from "react";
 import { SafeAreaView, StatusBar, Pressable, Text, View, Image, Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
-import { FontFamily, FontSize } from "../GlobalStyles";
-import SafeAreaAndroid from "../components/SafeAreaAndroid";
+import { FontFamily, FontSize } from "../../GlobalStyles";
+import SafeAreaAndroid from "../../components/SafeAreaAndroid";
 
 const { width, height } = Dimensions.get('window');
 
@@ -19,12 +19,12 @@ const Intro1 = () => {
             <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
             <View className="flex-1 items-center justify-between">
                 <Image
-                    source={require("../assets/images/intro/ellipse-main.png")}
+                    source={require("../../assets/images/intro/ellipse-main.png")}
                     style={{ resizeMode: 'cover', height: height * 0.6, width: width * 1.2, top: -height * 0.1 }}
                     className='absolute h-full w-full'
                 />
                 <Image
-                    source={require("../assets/images/intro/introFood.png")}
+                    source={require("../../assets/images/intro/introFood.png")}
                     style={{ resizeMode: 'cover', height: '100%', width: '100%' }}
                     className='absolute bottom-[-10] w-full h-full -z-10'
                 />

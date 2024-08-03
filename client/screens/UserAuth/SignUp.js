@@ -2,14 +2,14 @@ import * as React from "react";
 import { SafeAreaView, StatusBar, Pressable, Text, View, Image, TextInput } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
-import { FontFamily, FontSize } from "../GlobalStyles";
+import { FontFamily, FontSize } from "../../GlobalStyles";
 import * as Icon from 'react-native-feather';
 
-const SignIn = () => {
+const SignUp = () => {
     const navigation = useNavigation();
 
     const handleEvent = () => {
-        navigation.navigate('SignUp'); 
+        navigation.navigate('Home');
     };
 
     const handleForgotPasswordPress = () => {
@@ -22,16 +22,27 @@ const SignIn = () => {
             <StatusBar translucent backgroundColor="transparent" />
             <View className='absolute top-0 left-0 right-0 bottom-0'>
                 <Image
-                    source={require("../assets/images/signIn/signIn.png")}
+                    source={require("../../assets/images/signIn/signIn.png")}
                     style={{ resizeMode: 'cover', height: '100%', width: '100%' }}
                 />
             </View>
             <View className='absolute bottom-0 w-full flex-1 bg-[#F4F5F9] rounded-t-2xl px-4 py-6 space-y-5'>
                 <View>
-                    <Text style={{ fontFamily: FontFamily.poppinsBold, fontSize: FontSize.textRegularLowercase_size }}>Welcome back!</Text>
-                    <Text style={{ fontFamily: FontFamily.poppinsMedium, fontSize: FontSize.size_mini }} className='text-[#868889] mt-[-4]'>Sign in to your account</Text>
+                    <Text style={{ fontFamily: FontFamily.poppinsBold, fontSize: FontSize.textRegularLowercase_size }}>Create account</Text>
+                    <Text style={{ fontFamily: FontFamily.poppinsMedium, fontSize: FontSize.size_mini }} className='text-[#868889] mt-[-4]'>Quickly create account</Text>
                 </View>
                 <View className='space-y-2'>
+                    <View className='flex-row items-center bg-[#FFFFFF] p-3 rounded-md'>
+                        <Icon.User
+                            height={20}
+                            width={20}
+                            stroke='gray'
+                        />
+                        <TextInput
+                            placeholder='Name'
+                            className='flex-1 ml-3'
+                        />
+                    </View>
                     <View className='flex-row items-center bg-[#FFFFFF] p-3 rounded-md'>
                         <Icon.Mail
                             height={20}
@@ -40,6 +51,17 @@ const SignIn = () => {
                         />
                         <TextInput
                             placeholder='Student ID number'
+                            className='flex-1 ml-3'
+                        />
+                    </View>
+                    <View className='flex-row items-center bg-[#FFFFFF] p-3 rounded-md'>
+                        <Icon.PhoneCall
+                            height={20}
+                            width={20}
+                            stroke='gray'
+                        />
+                        <TextInput
+                            placeholder='Phone number'
                             className='flex-1 ml-3'
                         />
                     </View>
@@ -83,4 +105,4 @@ const SignIn = () => {
     );
 };
 
-export default SignIn;
+export default SignUp;
