@@ -1,5 +1,5 @@
 import * as React from "react";
-import { SafeAreaView, StatusBar, Pressable, Text, View, Image, Dimensions } from "react-native";
+import { SafeAreaView, StatusBar, Pressable, Text, View, Image, Dimensions, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontFamily, FontSize } from "../../GlobalStyles";
@@ -18,17 +18,18 @@ const Intro1 = () => {
         <SafeAreaView style={SafeAreaAndroid.AndroidSafeArea} className='flex-1 bg-white'>
             <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
             <View className="flex-1 items-center justify-between">
-                <Image
+                {/* <Image
                     source={require("../../assets/images/intro/ellipse-main.png")}
-                    style={{ resizeMode: 'cover', height: height * 0.6, width: width * 1.2, top: -height * 0.1 }}
+                    style={{ resizeMode: 'cover', height: height * 0.5, width: width * 1.2, top: -height * 0.1 }}
                     className='absolute h-full w-full'
-                />
+                /> */}
                 <Image
                     source={require("../../assets/images/intro/introFood.png")}
                     style={{ resizeMode: 'cover', height: '100%', width: '100%' }}
                     className='absolute bottom-[-10] w-full h-full -z-10'
                 />
-                <View className='w-full items-center justify-center' style={{ height: height * 0.5 }}>
+                <View className='bg-white rounded-b-full' style={{height: height * 0.5, width: width * 1.2}}>
+                <View className='w-full items-center justify-center rounded-b-lg' style={{ height: height * 0.5 }}>
                     <Text style={{ fontFamily: FontFamily.poppinsSemiBold, fontSize: FontSize.size_11xl }} className='text-center'>
                         Order Food{'\n'}
                         <Text style={{ fontFamily: FontFamily.poppinsSemiBold, fontSize: FontSize.size_11xl }} className='text-green-700'>Without cash</Text>
@@ -40,6 +41,7 @@ const Intro1 = () => {
                             when ordering food.
                         </Text>
                     </View>
+                </View>
                 </View>
                 <View className='w-full px-4 py-6'>
                     <LinearGradient
@@ -57,5 +59,11 @@ const Intro1 = () => {
         </SafeAreaView>
     );
 };
+
+const styles = StyleSheet.create({
+    roundedBorder: {
+        borderBottomEndRadius: 999, // Change this to your preferred border radius
+    }
+});
 
 export default Intro1;
