@@ -12,10 +12,10 @@ const Home = () => {
 
   return (
     <SafeAreaView style={{ flex: 1, paddingTop: Platform.OS === 'android' ? RNStatusBar.currentHeight : 0 }} className='bg-[#ffffff]'>
-      <StatusBar barStyle="dark-content" />
-      <View className='px-4 py-4 bg-slate-600 space-y-4'>
+      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
+      <View className='px-4 py-4 space-y-2'>
         {/* search bar */}
-        <View className="flex-row items-center space-x-2 bg-slate-300">
+        <View className="flex-row items-center space-x-2">
           <View className="flex-row flex-1 bg-[#F4F5F9] items-center p-2 rounded-lg">
             <Icon.Search
               height='20'
@@ -41,22 +41,55 @@ const Home = () => {
           />
         </View>
         {/* categories */}
-        <View>
+        <View className='space-y-2'>
           <Text style={{ fontFamily: FontFamily.poppinsSemiBold, fontSize: FontSize.size_xl }}>
-          Categories
+            Categories
           </Text>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-
-          </ScrollView>
+          <FlatList
+            horizontal
+            data={foodCategories}
+            renderItem={({ item }) => (
+              <View className='mr-4 items-center'>
+                <Image
+                  source={item.image}
+                  className='h-[62] w-[61] rounded-full'
+                  resizeMode='contain'
+                />
+                <Text style={{ fontFamily: FontFamily.poppinsMedium, fontSize: FontSize.size_xs }}>{item.name}</Text>
+              </View>
+            )}
+            keyExtractor={(item) => item.id}
+            showsHorizontalScrollIndicator={false}
+          />
         </View>
       </View>
-
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 20 }}>
-        <FlatList
-        
-        />
-      </ScrollView>
-    </SafeAreaView>
+      {/* menu bar */}
+      <View className='px-4 py-4 space-y-2 flex-1 bg-[#F4F5F9]'>
+        <Text style={{ fontFamily: FontFamily.poppinsSemiBold, fontSize: FontSize.size_xl }}>
+          Menu
+        </Text>
+          <FlatList
+            data={foodCategories}
+            renderItem={({ item }) => (
+              <View className='p-1 bg-white w-1/2'>
+                <View className=''>
+                  <Image
+                    source={item.image}
+                    className='h-[62] w-[61] rounded-full'
+                    resizeMode='contain'
+                  />
+                  <Text style={{ fontFamily: FontFamily.poppinsMedium, fontSize: FontSize.size_xs }}>
+                    {item.name}
+                  </Text>
+                </View>
+              </View>
+            )}
+            keyExtractor={(item) => item.id}
+            showsVerticalScrollIndicator={false}
+          />
+      </View>
+      {/* footer */}
+    </SafeAreaView >
   );
 };
 
