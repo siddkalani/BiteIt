@@ -1,4 +1,4 @@
-import { Image, View, Text, SafeAreaView, StatusBar, TextInput, FlatList, TouchableOpacity, Dimensions, Platform, StatusBar as RNStatusBar, Animated } from 'react-native';
+import { Image, View, Text, SafeAreaView, StatusBar, TextInput, TouchableOpacity, Dimensions, Platform, StatusBar as RNStatusBar, Animated, ScrollView } from 'react-native';
 import React, { useRef, useState } from 'react';
 import * as Icon from 'react-native-feather';
 import SafeAreaAndroid from '../../components/SafeAreaAndroid';
@@ -30,6 +30,7 @@ const Home = () => {
         onScroll={handleScroll}
         onMomentumScrollEnd={handleScrollEnd}
         scrollEventThrottle={16}
+
       >
         <View className='px-4 py-4 space-y-2'>
           {/* search bar */}
@@ -56,11 +57,9 @@ const Home = () => {
             <Text style={{ fontFamily: FontFamily.poppinsSemiBold, fontSize: FontSize.size_xl }}>
               Categories
             </Text>
-            <FlatList
-              horizontal
-              data={foodCategories}
-              renderItem={({ item }) => (
-                <View className='mr-4 items-center'>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} className="space-x-4">
+              {foodCategories.map((item) => (
+                <View key={item.id} className='items-center'>
                   <Image
                     source={item.image}
                     className='h-[62] w-[61] rounded-full'
@@ -68,18 +67,15 @@ const Home = () => {
                   />
                   <Text style={{ fontFamily: FontFamily.poppinsMedium, fontSize: FontSize.size_xs }}>{item.name}</Text>
                 </View>
-              )}
-              keyExtractor={(item) => item.id}
-              showsHorizontalScrollIndicator={false}
-            />
+              ))}
+            </ScrollView>
           </View>
         </View>
         {/* Shadow separator */}
         {isScrolled && (
           <View
+            className="h-[1px] bg-transparent shadow-lg"
             style={{
-              height: 1,
-              backgroundColor: 'transparent',
               shadowColor: "#000",
               shadowOffset: { width: 0, height: 2 },
               shadowOpacity: 0.25,
@@ -89,19 +85,17 @@ const Home = () => {
           />
         )}
         {/* menu bar */}
-        <View className='px-4 py-4 space-y-2 flex-1 bg-[#F4F5F9]'>
+        <View className='px-4 py-2 space-y-2 flex-1 bg-[#F4F5F9]'>
           <Text style={{ fontFamily: FontFamily.poppinsSemiBold, fontSize: FontSize.size_xl }}>
             Menu
           </Text>
-          <FlatList
-            data={foodCategories}
-            renderItem={({ item }) => (
-              <FoodCard item={item} />
-            )}
-            numColumns={2}
-            keyExtractor={(item) => item.id}
-            showsVerticalScrollIndicator={false}
-          />
+          <View className="flex-row flex-wrap justify-between">
+            {foodCategories.map((item) => (
+              <View key={item.id} className="w-[48%] mb-4">
+                <FoodCard item={item} />
+              </View>
+            ))}
+          </View>
         </View>
       </Animated.ScrollView>
       {/* footer */}
