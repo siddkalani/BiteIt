@@ -135,7 +135,7 @@ const SignIn = () => {
 
   const handleLogin = async () => {
     try {
-      await dispatch(loginUser({ phone: `+91${phone}` })).unwrap();
+      // await dispatch(loginUser({ phone: `+91${phone}` })).unwrap();
       Alert.alert("Success", "Logged in successfully");
       navigation.navigate("SignUp"); // Navigate to SignUp on successful login
     } catch (error) {
