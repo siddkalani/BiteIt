@@ -6,6 +6,7 @@ import Intro1 from './screens/Intro/Intro1';
 import SignIn from './screens/UserAuth/SignIn';
 import SignUp from './screens/UserAuth/SignUp';
 import Home from './screens/Main/Home';
+import OTP from './screens/UserAuth/Otp';
 
 const Stack = createNativeStackNavigator();
 
@@ -22,8 +23,8 @@ function AppNavigator() {
           component={SignIn}
         />
         <Stack.Screen
-          name="SignUp"
-          component={SignUp}
+          name="Otp"
+          component={OTP}
         />
         <Stack.Screen
           name="Home"
