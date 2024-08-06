@@ -381,7 +381,7 @@ const Home = () => {
       </Animated.ScrollView>
       {/* footer */}
       <View className="flex-row justify-around rounded-t-2xl items-center bg-slate-400">
-        <TouchableOpacity className="items-center py-2" onPress={handleLogout}>
+        <TouchableOpacity className="items-center py-2">
           <Icon.Home width={24} height={24} stroke="gray" />
         </TouchableOpacity>
         <TouchableOpacity className="items-center py-2">
