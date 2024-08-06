@@ -55,7 +55,7 @@ const OTP = () => {
                         </Text>
                     </View>
 
-                    <View className="flex-row">
+                    <View className="flex-row justify-center">
                         {otp.map((digit, index) => (
                             <TextInput
                                 key={index}
@@ -65,7 +65,7 @@ const OTP = () => {
                                 onKeyPress={(e) => handleKeyPress(e, index)}
                                 onFocus={() => setFocusedIndex(index)}
                                 onBlur={() => setFocusedIndex(null)}
-                                className={`caret-transparent w-12 h-12 border rounded-md text-3xl font-bold text-gray-800 items-center text-center ${focusedIndex === index || digit ? 'border-orange-500' : 'border-chocolate-100'}`}
+                                className={`caret-transparent w-12 h-12 border rounded-md text-3xl font-bold text-gray-800 items-center text-center mx-2 ${focusedIndex === index || digit ? 'border-orange-500' : 'border-chocolate-100'}`}
                                 maxLength={1}
                                 keyboardType="numeric"
                                 returnKeyType="next"
