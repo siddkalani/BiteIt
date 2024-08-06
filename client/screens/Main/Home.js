@@ -24,25 +24,28 @@ const Home = () => {
   };
 
   return (
+    // add shadow to search bar
+    // add style to card
+    // enhance footer with border top and shadow
     <SafeAreaView style={{ flex: 1, paddingTop: Platform.OS === 'android' ? RNStatusBar.currentHeight : 0 }} className='bg-[#ffffff]'>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
+      {/* search bar */}
+      <View style={{}} className="flex-row items-center space-x-2 px-4 py-4">
+        <View className="flex-row flex-1 bg-[#F4F5F9] items-center p-2 rounded-lg">
+          <Icon.Search height='20' width='20' stroke='gray' />
+          <TextInput placeholder='What are you craving?' className="flex-1 ml-2" />
+        </View>
+        <View className="">
+          <Icon.ShoppingCart width='20' height='20' strokeWidth={2} stroke='gray' />
+        </View>
+      </View>
       <Animated.ScrollView
         onScroll={handleScroll}
         onMomentumScrollEnd={handleScrollEnd}
         scrollEventThrottle={16}
-
+        showsVerticalScrollIndicator={false}
       >
-        <View className='px-4 py-4 space-y-2'>
-          {/* search bar */}
-          <View className="flex-row items-center space-x-2">
-            <View className="flex-row flex-1 bg-[#F4F5F9] items-center p-2 rounded-lg">
-              <Icon.Search height='20' width='20' stroke='gray' />
-              <TextInput placeholder='What are you craving?' className="flex-1 ml-2" />
-            </View>
-            <View className="">
-              <Icon.ShoppingCart width='20' height='20' strokeWidth={2} stroke='gray' />
-            </View>
-          </View>
+        <View className='px-4 pb-4 space-y-2'>
           {/* pagination window */}
           <View>
             <Image
