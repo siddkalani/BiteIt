@@ -7,7 +7,11 @@ const Admin = require("../../models/adminModel");
 
 // POST -> /user/login
 const userLogin = asyncHandler(async (req, res) => {
-  const { phone } = req.body;
+  let { phone } = req.body;
+
+  if (!phone.startsWith("+91")) {
+    phone = `+91${phone}`;
+  }
 
   try {
     const admin = await Admin.findOne({ phone });
@@ -18,7 +22,7 @@ const userLogin = asyncHandler(async (req, res) => {
         .json({ message: "Admin found. Proceed to OTP verification." });
     } else {
       const user = await User.findOne({ phone });
-      const otp = otpGenerator.generate(4, {
+      const otp = otpGenerator.generate(5, {
         upperCaseAlphabets: false,
         specialChars: false,
         lowerCaseAlphabets: false,

@@ -5,11 +5,14 @@ const bcrypt = require("bcrypt");
 
 // POST -> /user/verify-otp
 const verifyOtp = asyncHandler(async (req, res) => {
-  const { phone, otp, name } = req.body;
+  let { phone, otp, name } = req.body;
 
   // Validate request data
   if (!phone || !otp) {
     return res.status(400).json({ error: "Phone number and OTP are required" });
+  }
+  if (!phone.startsWith("+91")) {
+    phone = `+91${phone}`;
   }
 
   try {
@@ -28,13 +31,16 @@ const verifyOtp = asyncHandler(async (req, res) => {
         return res.status(400).json({ error: "Invalid OTP" });
       }
 
-
       admin.otp = undefined;
       await admin.save();
 
-      return res.status(200).json({ message: "Admin verified successfully! Now you're in the admin panel." });
+      return res
+        .status(200)
+        .json({
+          message:
+            "Admin verified successfully! Now you're in the admin panel.",
+        });
     } else {
-
       const user = await User.findOne({ phone });
 
       if (!user) {
@@ -62,14 +68,18 @@ const verifyOtp = asyncHandler(async (req, res) => {
 
       if (!user.name) {
         if (!name) {
-          return res.status(400).json({ error: "Name is required for new users" });
+          return res
+            .status(400)
+            .json({ error: "Name is required for new users" });
         }
         user.name = name;
       }
 
       await user.save();
 
-      return res.status(200).json({ message: "Phone number verified successfully!" });
+      return res
+        .status(200)
+        .json({ message: "Phone number verified successfully!" });
     }
   } catch (error) {
     console.error("OTP verification failed:", error);
