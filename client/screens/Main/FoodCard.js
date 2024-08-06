@@ -17,8 +17,8 @@ const FoodCard = ({ item }) => {
                     end={{ x: 1.9, y: 0 }}
                     className='rounded-md w-full'
                 >
-                    <Pressable className='py-1 justify-center items-center'>
-                    <Icon.ShoppingBag width={22} height={22} stroke="gray" />
+                    <Pressable className='py-1 justify-center items-center flex-row space-x-1'>
+                    <Icon.ShoppingBag width={15} height={15} stroke="white" />
                         <Text className='text-white' style={{ fontFamily: FontFamily.poppinsMedium , fontSize:FontSize.size_mini}}>Add to cart</Text>
                     </Pressable>
                 </LinearGradient>

@@ -187,6 +187,7 @@ import {
   TouchableOpacity,
   Dimensions,
   Platform,
+  StatusBar as RNStatusBar,
   Animated,
   ScrollView,
   ActivityIndicator,
@@ -227,20 +228,6 @@ const Home = () => {
   };
 
   return (
-<<<<<<< HEAD
-    <SafeAreaView
-      style={{
-        flex: 1,
-        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-      }}
-      className="bg-[#ffffff]"
-    >
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor="transparent"
-        translucent
-      />
-=======
     // add shadow to search bar
     // add style to card
     // enhance footer with border top and shadow
@@ -256,7 +243,6 @@ const Home = () => {
           <Icon.ShoppingCart width='20' height='20' strokeWidth={2} stroke='gray' />
         </View>
       </View>
->>>>>>> refs/remotes/origin/main
       <Animated.ScrollView
         onScroll={handleScroll}
         onMomentumScrollEnd={handleScrollEnd}
