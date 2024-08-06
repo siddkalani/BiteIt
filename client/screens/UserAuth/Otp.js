@@ -36,7 +36,7 @@ const OTP = () => {
         navigation.navigate("SignIn")
     };
     const handleVerify = () => {
-        navigation.navigate("Home")
+        navigation.navigate("NewUser")
     }
 
     return (
