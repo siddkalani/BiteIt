@@ -106,7 +106,6 @@
 
 // export default SignIn;
 
-
 import React, { useState } from "react";
 import {
   StatusBar,
@@ -134,10 +133,11 @@ const SignIn = () => {
   const error = useSelector((state) => state.users.error);
 
   const handleLogin = async () => {
+    // const formattedPhone = phone.startsWith("+91") ? phone : `+91${phone}`;
     try {
-      // await dispatch(loginUser({ phone: `+91${phone}` })).unwrap();
-      Alert.alert("Success", "Logged in successfully");
-      navigation.navigate("Otp"); // Navigate to SignUp on successful login
+      await dispatch(loginUser({ phone: phone })).unwrap();
+      // Alert.alert("Success", "Logged in successfully");
+      navigation.navigate("Otp", { phone: phone });
     } catch (error) {
       console.error("Login Error:", error);
       Alert.alert("Error", `Failed to log in: ${error.message}`);
@@ -180,7 +180,7 @@ const SignIn = () => {
               placeholder="Enter phone number"
               value={phone}
               onChangeText={setPhone}
-            //   keyboardType="phone-pad"
+              //   keyboardType="phone-pad"
               style={styles.textInput}
             />
           </View>
@@ -202,8 +202,8 @@ const SignIn = () => {
                 fontSize: FontSize.size_lg,
               }}
             >
-            {/* {loading ? "Loading..." : "Continue"} */}
-            Continue
+              {/* {loading ? "Loading..." : "Continue"} */}
+              Continue
             </Text>
           </Pressable>
         </LinearGradient>

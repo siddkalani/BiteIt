@@ -189,7 +189,7 @@ import {
   Platform,
   Animated,
   ScrollView,
-  ActivityIndicator,
+  ActivityIndicator, Alert
 } from "react-native";
 import * as Icon from "react-native-feather";
 import { useDispatch, useSelector } from "react-redux";
@@ -197,8 +197,10 @@ import { fetchcategory } from "../../store/Slices/categorySlice";
 import { FontFamily, FontSize } from "../../GlobalStyles";
 import FoodCard from "./FoodCard";
 import foodcategory from "./HomeData";
+import { useNavigation } from '@react-navigation/native';
 
 const Home = () => {
+  const navigation = useNavigation();
   const dispatch = useDispatch();
   const { width: screenWidth } = Dimensions.get("window");
   const aspectRatio = 183 / 402;
@@ -225,13 +227,43 @@ const Home = () => {
     const offsetY = nativeEvent.contentOffset.y;
     setIsScrolled(offsetY > 0);
   };
-
+ 
+  const handleLogout = () => {
+    // Clear any user authentication data here
+    // Example: Clear token from async storage or state management
+    // await AsyncStorage.removeItem('userToken');
+    
+    // Show confirmation or directly navigate based on your requirements
+    Alert.alert(
+      'Logout',
+      'Are you sure you want to logout?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel'
+        },
+        {
+          text: 'Logout',
+          onPress: () => {
+            // Navigate to SignIn page and clear the navigation stack
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'SignIn' }],
+            });
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
   return (
-<<<<<<< HEAD
+    // add shadow to search bar
+    // add style to card
+    // enhance footer with border top and shadow
     <SafeAreaView
       style={{
         flex: 1,
-        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+        paddingTop: Platform.OS === "android" ? RNStatusBar.currentHeight : 0,
       }}
       className="bg-[#ffffff]"
     >
@@ -240,30 +272,31 @@ const Home = () => {
         backgroundColor="transparent"
         translucent
       />
-=======
-    // add shadow to search bar
-    // add style to card
-    // enhance footer with border top and shadow
-    <SafeAreaView style={{ flex: 1, paddingTop: Platform.OS === 'android' ? RNStatusBar.currentHeight : 0 }} className='bg-[#ffffff]'>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
       {/* search bar */}
       <View style={{}} className="flex-row items-center space-x-2 px-4 py-4">
         <View className="flex-row flex-1 bg-[#F4F5F9] items-center p-2 rounded-lg">
-          <Icon.Search height='20' width='20' stroke='gray' />
-          <TextInput placeholder='What are you craving?' className="flex-1 ml-2" />
+          <Icon.Search height="20" width="20" stroke="gray" />
+          <TextInput
+            placeholder="What are you craving?"
+            className="flex-1 ml-2"
+          />
         </View>
         <View className="">
-          <Icon.ShoppingCart width='20' height='20' strokeWidth={2} stroke='gray' />
+          <Icon.ShoppingCart
+            width="20"
+            height="20"
+            strokeWidth={2}
+            stroke="gray"
+          />
         </View>
       </View>
->>>>>>> refs/remotes/origin/main
       <Animated.ScrollView
         onScroll={handleScroll}
         onMomentumScrollEnd={handleScrollEnd}
         scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
       >
-        <View className='px-4 pb-4 space-y-2'>
+        <View className="px-4 pb-4 space-y-2">
           {/* pagination window */}
           <View>
             <Image
@@ -348,7 +381,7 @@ const Home = () => {
       </Animated.ScrollView>
       {/* footer */}
       <View className="flex-row justify-around rounded-t-2xl items-center bg-slate-400">
-        <TouchableOpacity className="items-center py-2">
+        <TouchableOpacity className="items-center py-2" onPress={handleLogout}>
           <Icon.Home width={24} height={24} stroke="gray" />
         </TouchableOpacity>
         <TouchableOpacity className="items-center py-2">
