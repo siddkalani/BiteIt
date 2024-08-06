@@ -3,11 +3,11 @@ import axios from "axios";
 
 export const loginUser = createAsyncThunk(
   "users/loginUser",
-  async (user, { rejectWithValue }) => {
+  async (phone, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        "http://10.0.112.129:3000/user/login",
-        user
+        "http://10.0.5.94:3000/user/login",
+        phone
       );
       return response.data;
     } catch (error) {
