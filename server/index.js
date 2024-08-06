@@ -8,8 +8,8 @@ const errorHandler = require("./middleware/errorHandler");
 dbConnection();
 
 const app = express();
-app.use(logger("dev"));
 app.use(cors());
+app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -19,6 +19,7 @@ app.use("/canteen", require("./routes/canteenRoutes"));
 app.use("/category", require("./routes/categoryRoutes"));
 app.use("/food-item", require("./routes/foodItemRoutes"));
 app.use("/user/order", require("./routes/orderRoutes"));
+
 app.use(errorHandler);
 
 const port = process.env.PORT;

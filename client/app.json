@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "practice-food",
-    "slug": "practice-food",
+    "name": "canteenApp",
+    "slug": "canteenApp",
+    "displayName": "canteenApp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -23,8 +24,6 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      "expo-font"
-    ]
+    "plugins": ["expo-font"]
   }
 }
