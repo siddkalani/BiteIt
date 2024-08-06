@@ -52,22 +52,49 @@ const OTP = () => {
   const handleVerify = async () => {
     try {
       const response = await axios.post(
-        "http://10.0.5.94:3000/user/verify/phone/otp",
+        "http://192.168.0.101:3000/user/verify/phone/otp",
         {
           phone: phone,
           otp: otp.join(""),
         }
       );
+      const data = response.data;
+      console.log("Response Data:", data); // Debugging line
+      console.log("Response Status:", response.status); // Debugging line
 
       if (response.status === 200) {
-        // Alert.alert("Success", "OTP Verified Successfully");
         navigation.replace("Home");
+      } else if (
+        response.status === 400 &&
+        data.error === "Name is required for new users"
+      ) {
+        navigation.replace("NewUser", { phone: phone, otp: otp.join("") });
       } else {
         Alert.alert("Error", "Invalid OTP");
       }
     } catch (error) {
-      Alert.alert("Error", "Failed to verify OTP");
       console.error("Verification Error:", error);
+
+      // Handling specific error case here
+      if (error.response) {
+        const errorData = error.response.data;
+        const errorStatus = error.response.status;
+
+        console.error("Error Response Data:", errorData);
+        console.error("Error Response Status:", errorStatus);
+
+        // Check for the specific error message and navigate
+        if (
+          errorStatus === 400 &&
+          errorData.error === "Name is required for new users"
+        ) {
+          navigation.replace("NewUser", { phone: phone, otp: otp.join("") });
+        } else {
+          Alert.alert("Error", "Failed to verify OTP");
+        }
+      } else {
+        Alert.alert("Error", "Network Error. Please try again.");
+      }
     }
   };
 
@@ -165,5 +192,3 @@ const OTP = () => {
 };
 
 export default OTP;
-
-
