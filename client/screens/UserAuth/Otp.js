@@ -50,6 +50,28 @@ const OTP = () => {
   };
 
   const handleVerify = async () => {
+<<<<<<< HEAD
+    // try {
+    //   const response = await axios.post(
+    //     "http://10.0.5.94:3000/user/verify/phone/otp",
+    //     {
+    //       phone: phone,
+    //       otp: otp.join(""),
+    //     }
+    //   );
+
+    //   if (response.status === 200) {
+    //     // Alert.alert("Success", "OTP Verified Successfully");
+    //     navigation.replace("Home");
+    //   } else {
+    //     Alert.alert("Error", "Invalid OTP");
+    //   }
+    // } catch (error) {
+    //   Alert.alert("Error", "Failed to verify OTP");
+    //   console.error("Verification Error:", error);
+    // }
+    navigation.navigate("Home");
+=======
     try {
       const response = await axios.post(
         "http://192.168.0.101:3000/user/verify/phone/otp",
@@ -96,6 +118,7 @@ const OTP = () => {
         Alert.alert("Error", "Network Error. Please try again.");
       }
     }
+>>>>>>> refs/remotes/origin/main
   };
 
   return (
