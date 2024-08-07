@@ -15,6 +15,9 @@ import {
   ActivityIndicator,
   Alert,
   Modal,
+  KeyboardAvoidingView,
+  Keyboard,
+  TouchableWithoutFeedback
 } from "react-native";
 import * as Icon from "react-native-feather";
 import { useDispatch, useSelector } from "react-redux";
@@ -55,29 +58,17 @@ const Home = () => {
   };
 
   const handleLogout = () => {
-    // Clear any user authentication data here
-    // Example: Clear token from async storage or state management
-    // await AsyncStorage.removeItem('userToken');
-    
-    // Show confirmation or directly navigate based on your requirements
     Alert.alert(
       'Logout',
       'Are you sure you want to logout?',
       [
-        {
-          text: 'Cancel',
-          style: 'cancel'
-        },
-        {
-          text: 'Logout',
-          onPress: () => {
-            // Navigate to SignIn page and clear the navigation stack
-            navigation.reset({
-              index: 0,
-              routes: [{ name: 'SignIn' }],
-            });
-          },
-        },
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Logout', onPress: () => {
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'SignIn' }],
+          });
+        }},
       ],
       { cancelable: false }
     );
@@ -104,7 +95,6 @@ const Home = () => {
         backgroundColor="transparent"
         translucent
       />
-      {/* search bar */}
       <View className="flex-row items-center space-x-2 px-4 py-4">
         <View className="flex-row flex-1 bg-[#F4F5F9] items-center p-2 rounded-lg shadow">
           <Icon.Search height="20" width="20" stroke="gray" />
@@ -131,7 +121,6 @@ const Home = () => {
         showsVerticalScrollIndicator={false}
       >
         <View className="px-4 pb-4 space-y-2">
-          {/* pagination window */}
           <View>
             <Image
               source={require("../../assets/images/home/home-slider.png")}
@@ -140,7 +129,6 @@ const Home = () => {
               className="rounded-lg w-full"
             />
           </View>
-          {/* category */}
           <View className="space-y-2">
             <Text
               style={{
@@ -163,7 +151,7 @@ const Home = () => {
                 {category.map((item) => (
                   <View key={item.id} className="items-center">
                     <Image
-                      source={{ uri: item.image }} // Assuming image URLs are provided
+                      source={{ uri: item.image }} 
                       className="h-[62] w-[61] rounded-full"
                       resizeMode="contain"
                     />
@@ -181,7 +169,6 @@ const Home = () => {
             )}
           </View>
         </View>
-        {/* Shadow separator */}
         {isScrolled && (
           <View
             className="h-[1px] bg-transparent shadow-lg"
@@ -194,7 +181,6 @@ const Home = () => {
             }}
           />
         )}
-        {/* menu bar */}
         <View className="px-4 py-2 space-y-2 flex-1 bg-[#F4F5F9]">
           <Text
             style={{
@@ -213,7 +199,6 @@ const Home = () => {
           </View>
         </View>
       </Animated.ScrollView>
-      {/* footer */}
       <View className="flex-row justify-around rounded-t-2xl items-center shadow-md bg-white border-t border-gray-200 py-2">
         <TouchableOpacity className="items-center">
           <Icon.Home width={24} height={24} stroke="gray" />
@@ -223,50 +208,54 @@ const Home = () => {
         </TouchableOpacity>
       </View>
 
-      {/* Search Modal */}
       <Modal
         visible={isModalVisible}
         animationType="slide"
         transparent={true}
         onRequestClose={closeSearchModal}
       >
-        <View className="flex-1 justify-end bg-black bg-opacity-50">
-          <View className="bg-white p-4 rounded-t-lg">
-            <View className="flex-row justify-between items-center">
-              <Text
-                style={{
-                  fontFamily: FontFamily.poppinsMedium,
-                  fontSize: FontSize.size_lg,
-                }}
-              >
-                Search
-              </Text>
-              <TouchableOpacity onPress={closeSearchModal}>
-                <Icon.X width={24} height={24} stroke="black" />
-              </TouchableOpacity>
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View className="flex-1 justify-end bg-black bg-opacity-50">
+              <View className="bg-white p-4 rounded-t-lg">
+                <View className="flex-row justify-between items-center">
+                  <Text
+                    style={{
+                      fontFamily: FontFamily.poppinsMedium,
+                      fontSize: FontSize.size_lg,
+                    }}
+                  >
+                    Search
+                  </Text>
+                  <TouchableOpacity onPress={closeSearchModal}>
+                    <Icon.X width={24} height={24} stroke="black" />
+                  </TouchableOpacity>
+                </View>
+                <View className="flex-row bg-[#F4F5F9] items-center p-2 rounded-lg mt-4">
+                  <Icon.Search height="20" width="20" stroke="gray" />
+                  <TextInput
+                    placeholder="What are you craving?"
+                    className="flex-1 ml-2"
+                    autoFocus
+                  />
+                </View>
+                <View className="mt-4">
+                  <Text
+                    style={{
+                      fontFamily: FontFamily.poppinsSemiBold,
+                      fontSize: FontSize.size_md,
+                    }}
+                  >
+                    Recent Searches
+                  </Text>
+                </View>
+              </View>
             </View>
-            <View className="flex-row bg-[#F4F5F9] items-center p-2 rounded-lg mt-4">
-              <Icon.Search height="20" width="20" stroke="gray" />
-              <TextInput
-                placeholder="What are you craving?"
-                className="flex-1 ml-2"
-                autoFocus
-              />
-            </View>
-            {/* Recent Searches */}
-            <View className="mt-4">
-              <Text
-                style={{
-                  fontFamily: FontFamily.poppinsSemiBold,
-                  fontSize: FontSize.size_md,
-                }}
-              >
-                Recent Searches
-              </Text>
-              {/* Add your recent search items here */}
-            </View>
-          </View>
-        </View>
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
       </Modal>
     </SafeAreaView>
   );
