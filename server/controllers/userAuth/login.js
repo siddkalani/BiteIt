@@ -32,7 +32,8 @@ const userLogin = asyncHandler(async (req, res) => {
 
       if (user) {
         user.otp = hashedOTP;
-        user.otpExpires = Date.now() + 120000; // OTP expires in 2 minutes
+        user.otpExpires = Date.now() + 600000; // OTP expires in 10 minutes
+        // user.otpExpires = Date.now() + 120000; // OTP expires in 2 minutes
         await user.save();
       } else {
         await User.create({
