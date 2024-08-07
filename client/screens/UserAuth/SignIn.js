@@ -135,7 +135,7 @@ const SignIn = () => {
   const handleLogin = async () => {
     // const formattedPhone = phone.startsWith("+91") ? phone : `+91${phone}`;
     try {
-      await dispatch(loginUser({ phone: phone })).unwrap();
+      // await dispatch(loginUser({ phone: phone })).unwrap();
       // Alert.alert("Success", "Logged in successfully");
       navigation.navigate("Otp", { phone: phone });
     } catch (error) {

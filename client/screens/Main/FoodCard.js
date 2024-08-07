@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, Text, Image, Pressable } from 'react-native';
+import { View, Text, Image, Pressable , TouchableOpacity} from 'react-native';
 import { FontFamily, FontSize } from '../../GlobalStyles';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Icon from "react-native-feather";
+import { Platform } from 'react-native';
 
 const FoodCard = ({ item }) => {
     return (
@@ -17,10 +18,18 @@ const FoodCard = ({ item }) => {
                     end={{ x: 1.9, y: 0 }}
                     className='rounded-md w-full'
                 >
-                    <Pressable className='py-1 justify-center items-center flex-row space-x-1'>
-                    <Icon.ShoppingBag width={15} height={15} stroke="white" />
-                        <Text className='text-white' style={{ fontFamily: FontFamily.poppinsMedium , fontSize:FontSize.size_mini}}>Add to cart</Text>
-                    </Pressable>
+                    <TouchableOpacity className='py-1 justify-center items-center flex-row space-x-1'>
+                        <View
+                            className='justify-center items-center'
+                            style={{ height: FontSize.size_mini * 1.3, marginBottom: Platform.OS === 'android' ? 2 : 0 }}
+                        >
+                            <Icon.ShoppingBag width={15} height={15} stroke="white" />
+                        </View>
+                        <Text className='text-white' style={{ fontFamily: FontFamily.poppinsMedium, fontSize: FontSize.size_mini }}>
+                            Add to cart
+                        </Text>
+                    </TouchableOpacity>
+
                 </LinearGradient>
             </View>
         </View>

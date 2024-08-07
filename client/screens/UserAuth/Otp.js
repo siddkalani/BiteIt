@@ -50,25 +50,26 @@ const OTP = () => {
   };
 
   const handleVerify = async () => {
-    try {
-      const response = await axios.post(
-        "http://10.0.5.94:3000/user/verify/phone/otp",
-        {
-          phone: phone,
-          otp: otp.join(""),
-        }
-      );
+    // try {
+    //   const response = await axios.post(
+    //     "http://10.0.5.94:3000/user/verify/phone/otp",
+    //     {
+    //       phone: phone,
+    //       otp: otp.join(""),
+    //     }
+    //   );
 
-      if (response.status === 200) {
-        // Alert.alert("Success", "OTP Verified Successfully");
-        navigation.replace("Home");
-      } else {
-        Alert.alert("Error", "Invalid OTP");
-      }
-    } catch (error) {
-      Alert.alert("Error", "Failed to verify OTP");
-      console.error("Verification Error:", error);
-    }
+    //   if (response.status === 200) {
+    //     // Alert.alert("Success", "OTP Verified Successfully");
+    //     navigation.replace("Home");
+    //   } else {
+    //     Alert.alert("Error", "Invalid OTP");
+    //   }
+    // } catch (error) {
+    //   Alert.alert("Error", "Failed to verify OTP");
+    //   console.error("Verification Error:", error);
+    // }
+    navigation.navigate("Home");
   };
 
   return (
