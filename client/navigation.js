@@ -8,6 +8,7 @@ import SignUp from './screens/UserAuth/SignUp';
 import Home from './screens/Main/Home';
 import OTP from './screens/UserAuth/Otp';
 import NewUser from './screens/UserAuth/NewUser';
+import FoodItem from './screens/FoodItem/FoodItem';
 
 const Stack = createNativeStackNavigator();
 
@@ -34,6 +35,10 @@ function AppNavigator() {
         <Stack.Screen
           name="Home"
           component={Home}
+        />
+        <Stack.Screen
+          name="FoodItem"
+          component={FoodItem}
         />
       </Stack.Navigator>
     </NavigationContainer>

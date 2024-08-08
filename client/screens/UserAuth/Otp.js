@@ -86,11 +86,11 @@ const OTP = () => {
         backgroundColor="transparent"
         translucent
       />
-      <View className="flex-1 items-center">
-        <View className="w-[90%] space-y-10 mt-4">
+      <View className="flex-1 py-2 items-center">
+        <View className="w-[90%] space-y-10">
           <TouchableOpacity
             onPress={handleBackPress}
-            className="p-2 rounded-full"
+            className="p-2"
           >
             <Ionicons name="arrow-back" size={24} color="black" />
           </TouchableOpacity>
@@ -114,11 +114,10 @@ const OTP = () => {
                 onKeyPress={(e) => handleKeyPress(e, index)}
                 onFocus={() => setFocusedIndex(index)}
                 onBlur={() => setFocusedIndex(null)}
-                className={`caret-transparent w-12 h-12 border rounded-md text-3xl font-bold text-gray-800 items-center text-center mx-2 ${
-                  focusedIndex === index || digit
+                className={`caret-transparent w-12 h-12 border rounded-md text-3xl font-bold text-gray-800 items-center text-center mx-2 ${focusedIndex === index || digit
                     ? "border-orange-500"
                     : "border-chocolate-100"
-                }`}
+                  }`}
                 maxLength={1}
                 keyboardType="numeric"
                 returnKeyType="next"
