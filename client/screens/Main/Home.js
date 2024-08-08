@@ -60,17 +60,18 @@ const Home = () => {
 
   const handleLogout = () => {
     Alert.alert(
-      'Logout',
-      'Are you sure you want to logout?',
+      "Logout",
+      "Are you sure you want to logout?",
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: "Cancel", style: "cancel" },
         {
-          text: 'Logout', onPress: () => {
+          text: "Logout",
+          onPress: () => {
             navigation.reset({
               index: 0,
-              routes: [{ name: 'SignIn' }],
+              routes: [{ name: "SignIn" }],
             });
-          }
+          },
         },
       ],
       { cancelable: false }
@@ -144,7 +145,7 @@ const Home = () => {
                 className="space-x-4"
               >
                 {category.map((item) => (
-                  <View key={item.id} className="items-center">
+                  <View key={item._id} className="items-center">
                     <Image
                       source={{ uri: item.image }}
                       className="h-[62] w-[61] rounded-full"
@@ -156,7 +157,7 @@ const Home = () => {
                         fontSize: FontSize.size_xs,
                       }}
                     >
-                      {item.name}
+                      {item.categoryName}
                     </Text>
                   </View>
                 ))}
@@ -188,7 +189,10 @@ const Home = () => {
           </Text>
           <View className="flex-row flex-wrap justify-between">
             {foodcategory.map((item) => (
-              <View key={item.id} className="w-[48%] mb-4 rounded-lg shadow bg-white p-2">
+              <View
+                key={item.id}
+                className="w-[48%] mb-4 rounded-lg shadow bg-white p-2"
+              >
                 <FoodCard item={item} />
               </View>
             ))}

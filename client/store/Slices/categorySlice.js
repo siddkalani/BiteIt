@@ -1,10 +1,11 @@
 // store/Slices/categorySlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { BASE_URL } from "@env";
 
 export const fetchcategory = createAsyncThunk(
   "category/fetchcategory",
   async () => {
-    const response = await fetch("http://10.0.5.94:3000/category/get");
+    const response = await fetch(`${BASE_URL}/category/get`);
     const data = await response.json();
     // return data;
     return data.categories;
@@ -33,6 +34,5 @@ const categorySlice = createSlice({
       });
   },
 });
-
 
 export default categorySlice;
