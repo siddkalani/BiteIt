@@ -12,7 +12,7 @@ const getItem = asyncHandler(async (req, res) => {
     throw new Error("Item not found");
   }
 
-  res.status(200).json({ message: "Item Found", item:item });
+  res.status(200).json({ message: "Item Found", item: item });
 });
 
 // GET - /food-item/get
@@ -21,4 +21,4 @@ const getAllItems = asyncHandler(async (req, res) => {
   res.status(200).json({ items: items });
 });
 
-module.exports = { getItem , getAllItems };
+module.exports = { getItem, getAllItems };
