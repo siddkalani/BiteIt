@@ -26,8 +26,8 @@ const NewUser = () => {
   const phone = route.params?.phone;
   const otp = route.params?.otp;
 
-  console.log("Received phone:", phone);
-  console.log("Received otp:", otp);
+  // console.log("Received phone:", phone);
+  // console.log("Received otp:", otp);
 
   const handleVerify = async () => {
     try {
