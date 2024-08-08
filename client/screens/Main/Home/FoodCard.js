@@ -5,9 +5,14 @@ import { LinearGradient } from "expo-linear-gradient";
 import * as Icon from "react-native-feather";
 import { Platform } from "react-native";
 import { BASE_URL } from "@env";
+import { useNavigation } from "@react-navigation/native";
 
 const FoodCard = ({ foodItem }) => {
-    console.log(foodItem);
+    // console.log(foodItem);
+    const navigation = useNavigation();
+    const handleAdd = () => {
+        navigation.navigate('FoodItem');
+    };
     return (
         <View className="flex-1 ">
             <View className="bg-white rounded-lg p-2 w-full items-center space-y-1">
@@ -42,7 +47,7 @@ const FoodCard = ({ foodItem }) => {
                     end={{ x: 1.9, y: 0 }}
                     className="rounded-md w-full"
                 >
-                    <TouchableOpacity className="py-1 justify-center items-center flex-row space-x-1">
+                    <TouchableOpacity onPress={handleAdd} className="py-1 justify-center items-center flex-row space-x-1">
                         <View
                             className="justify-center items-center"
                             style={{
