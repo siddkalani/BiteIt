@@ -3,22 +3,29 @@ const Category = require("../../models/categoryModel");
 
 // Create a new category
 const createCategory = asyncHandler(async (req, res) => {
-  const { category_name } = req.body; 
+  console.log("Request body:", req.body);
+  console.log("Request file:", req.file);
 
-  if (!category_name) {
-    return res.status(400).json({ message: "Category name is required" }); 
+  const { categoryName } = req.body;
+  const image = req.file ? req.file.filename : null;
+
+  if (!categoryName && !image) {
+    return res
+      .status(400)
+      .json({ message: "Category name and image are required" });
   }
 
   const newCategory = new Category({
-    category_name
+    categoryName,
+    image,
   });
 
   const savedCategory = await newCategory.save(); // Save to the database
 
   res.status(201).json({
     message: "Category created successfully",
-    category: savedCategory
-  }); 
+    category: savedCategory,
+  });
 });
 
 module.exports = {

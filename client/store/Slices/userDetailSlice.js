@@ -1,14 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { BASE_URL } from "@env";
 
 export const loginUser = createAsyncThunk(
   "users/loginUser",
   async (phone, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        "http://192.168.0.101:3000/user/login",
-        phone
-      );
+      const response = await axios.post(`${BASE_URL}/user/login`, phone);
       return response.data;
     } catch (error) {
       if (error.response) {

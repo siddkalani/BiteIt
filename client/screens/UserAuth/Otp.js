@@ -15,6 +15,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { FontFamily, FontSize } from "../../GlobalStyles";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
+import { BASE_URL } from "@env";
 
 const OTP = () => {
   const [otp, setOtp] = useState(["", "", "", "", ""]);
@@ -52,7 +53,7 @@ const OTP = () => {
   const handleVerify = async () => {
     // try {
     //   const response = await axios.post(
-    //     "http://10.0.5.94:3000/user/verify/phone/otp",
+    //     `${BASE_URL}/user/verify/phone/otp`,
     //     {
     //       phone: phone,
     //       otp: otp.join(""),

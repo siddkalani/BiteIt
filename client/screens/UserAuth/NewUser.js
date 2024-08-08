@@ -15,6 +15,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { FontFamily, FontSize } from "../../GlobalStyles";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
+import { BASE_URL } from "@env";
 
 const NewUser = () => {
   const [name, setName] = useState("");
@@ -31,14 +32,11 @@ const NewUser = () => {
   const handleVerify = async () => {
     try {
       console.log("Sending request with data:", { phone, otp, name });
-      const response = await axios.post(
-        "http://192.168.0.101:3000/user/verify/phone/otp",
-        {
-          phone: phone,
-          otp: otp,
-          name: name,
-        }
-      );
+      const response = await axios.post(`${BASE_URL}/user/verify/phone/otp`, {
+        phone: phone,
+        otp: otp,
+        name: name,
+      });
 
       if (response.status === 200) {
         // Navigate to Home after successful registration
