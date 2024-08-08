@@ -167,7 +167,7 @@ const Home = () => {
                     <Image
                       source={{ uri: `${BASE_URL}/uploads/${item.image}` }}
                       className="h-[62] w-[61] rounded-full"
-                      resizeMode="contain"
+                      resizeMode="cover"
                     />
                     <Text
                       style={{
