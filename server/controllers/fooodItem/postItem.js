@@ -4,19 +4,18 @@ const Item = require("../../models/foodItemModel");
 // Create a new Item
 const createItem = asyncHandler(async (req, res) => {
   const { categoryId, itemName, itemPrice, itemIncredients } = req.body;
+  const image = req.file ? req.file.filename : null;
 
-  if (!categoryId || !itemName || !itemPrice || !itemIncredients) {
+  if (!categoryId || !itemName || !itemPrice || !itemIncredients || !image) {
     return res.status(400).json({ message: "All fields are required" });
   }
 
   // Check if an item with the same name already exists in the same category
   const existingItem = await Item.findOne({ itemName, categoryId });
   if (existingItem) {
-    return res
-      .status(400)
-      .json({
-        message: "Item with this name already exists in the selected category",
-      });
+    return res.status(400).json({
+      message: "Item with this name already exists in the selected category",
+    });
   }
 
   const newItem = new Item({
@@ -24,6 +23,7 @@ const createItem = asyncHandler(async (req, res) => {
     itemName,
     itemPrice,
     itemIncredients,
+    image,
   });
 
   try {

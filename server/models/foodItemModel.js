@@ -19,12 +19,12 @@ const foodItemSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    itemImage: {
+    image: {
       type: String,
     },
     itemQuantity: {
-      type: Number
-    }
+      type: Number,
+    },
   },
   {
     timestamps: true,
