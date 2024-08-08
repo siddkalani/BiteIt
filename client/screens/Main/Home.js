@@ -15,17 +15,18 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   TouchableWithoutFeedback,
-  Platform
+  Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native";
 import * as Icon from "react-native-feather";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchcategory } from "../../store/Slices/categorySlice";
+import { fetchFoodItems } from "../../store/Slices/foodItemSlice";
 import { FontFamily, FontSize } from "../../GlobalStyles";
 import FoodCard from "./FoodCard";
-import foodcategory from "./HomeData";
-import { useNavigation } from '@react-navigation/native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+// import foodcategory from "./HomeData";
+import { useNavigation } from "@react-navigation/native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BASE_URL } from "@env";
 
 const Home = () => {
@@ -43,11 +44,18 @@ const Home = () => {
   const categoryStatus = useSelector((state) => state.category.status);
   const categoryError = useSelector((state) => state.category.error);
 
+  const foodItems = useSelector((state) => state.foodItem.items);
+  const foodItemsStatus = useSelector((state) => state.foodItem.status);
+  const foodItemsError = useSelector((state) => state.foodItem.error);
+
   useEffect(() => {
     if (categoryStatus === "idle") {
       dispatch(fetchcategory());
     }
-  }, [categoryStatus, dispatch]);
+    if (foodItemsStatus === "idle") {
+      dispatch(fetchFoodItems());
+    }
+  }, [categoryStatus, foodItemsStatus, dispatch]);
 
   const handleScroll = Animated.event(
     [{ nativeEvent: { contentOffset: { y: scrollY } } }],
@@ -96,7 +104,11 @@ const Home = () => {
       }}
       className="bg-white"
     >
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="transparent"
+        translucent
+      />
       {/* SearchBar */}
       <View className="flex-row items-center space-x-2 px-4 py-2">
         <TouchableOpacity
@@ -107,7 +119,12 @@ const Home = () => {
           <Text className="flex-1 ml-2">What are you craving?</Text>
         </TouchableOpacity>
         <View>
-          <Icon.ShoppingCart width="20" height="20" strokeWidth={2} stroke="gray" />
+          <Icon.ShoppingCart
+            width="20"
+            height="20"
+            strokeWidth={2}
+            stroke="gray"
+          />
         </View>
       </View>
       {/* Categories */}
@@ -189,14 +206,20 @@ const Home = () => {
             Menu
           </Text>
           <View className="flex-row flex-wrap justify-between">
-            {foodcategory.map((item) => (
-              <View
-                key={item.id}
-                className="w-[48%] mb-4 rounded-lg shadow bg-white p-2"
-              >
-                <FoodCard item={item} />
-              </View>
-            ))}
+            {foodItemsStatus === "loading" ? (
+              <ActivityIndicator size="large" color="#007022" />
+            ) : foodItemsStatus === "failed" ? (
+              <Text>Error: {foodItemsError}</Text>
+            ) : (
+              foodItems.map((foodItem) => (
+                <View
+                  key={foodItem._id}
+                  className="w-[48%] mb-4 rounded-lg shadow bg-white p-2"
+                >
+                  <FoodCard foodItem={foodItem} />
+                </View>
+              ))
+            )}
           </View>
         </View>
       </Animated.ScrollView>
@@ -225,8 +248,8 @@ const Home = () => {
               <SafeAreaView
                 style={{
                   flex: 1,
-                  backgroundColor: 'white',
-                  overflow: 'hidden',
+                  backgroundColor: "white",
+                  overflow: "hidden",
                 }}
               >
                 <View className="bg-white px-4 py-2 flex-1 rounded-none">

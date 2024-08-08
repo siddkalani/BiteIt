@@ -1,22 +1,3 @@
-// import { configureStore } from "@reduxjs/toolkit";
-// import userDetailSlice from "./Slices/userDetailSlice";
-// import createSagaMiddleware from 'redux-saga'
-// import resendVerificationSlice from "./Slices/resendVerificationSlice";
-// import SagaData from './saga'
-
-// const sagaMiddleware = createSagaMiddleware()
-
-// const store = configureStore({
-//   reducer: {
-//     users: userDetailSlice.reducer,
-//     // resendVerification: resendVerificationSlice.reducer,
-//     middleware: ()=>[sagaMiddleware]
-//   },
-// });
-
-// sagaMiddleware.run(SagaData)
-// export default store;
-
 // store.js
 import { configureStore } from '@reduxjs/toolkit';
 import createSagaMiddleware from 'redux-saga';
@@ -29,7 +10,8 @@ const sagaMiddleware = createSagaMiddleware();
 const store = configureStore({
   reducer: {
     users: userDetailSlice.reducer,
-    category: categorySlice.reducer
+    category: categorySlice.reducer,
+    foodItem: categorySlice.reducer
   },
   // middleware: (getDefaultMiddleware) =>
   //   getDefaultMiddleware().concat(sagaMiddleware),
