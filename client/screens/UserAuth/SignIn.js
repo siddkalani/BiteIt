@@ -65,14 +65,22 @@ const SignIn = () => {
           </Text>
         </View>
         <View className="space-y-2">
-          <View style={styles.inputContainer}>
-            <Text style={styles.prefix}>+91</Text>
+          <View style={styles.inputContainer} className='space-x-2'>
+            <Text className='text-green-700' style={{
+                fontFamily: FontFamily.poppinsRegular,
+                fontSize: FontSize.size_mini,
+                fontWeight:600,
+              }}>+91</Text>
             <TextInput
               placeholder="Enter phone number"
               value={phone}
               onChangeText={setPhone}
               //   keyboardType="phone-pad"
-              style={styles.textInput}
+              style={{
+                fontFamily: FontFamily.poppinsRegular,
+                fontSize: FontSize.size_mini,
+              }}
+              className='flex-1'
             />
           </View>
         </View>
@@ -110,7 +118,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     padding: 10,
     borderRadius: 8,
-    position: "relative",
   },
   prefix: {
     color: "#007022",
