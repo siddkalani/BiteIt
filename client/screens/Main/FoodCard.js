@@ -6,16 +6,15 @@ import * as Icon from "react-native-feather";
 import { Platform } from "react-native";
 import { BASE_URL } from "@env";
 
-
 const FoodCard = ({ foodItem }) => {
   console.log(foodItem);
   return (
     <View className="flex-1 ">
       <View className="bg-white rounded-lg p-2 w-full items-center space-y-1">
-              {/* <View className="w-full h-20 rounded-lg bg-green-400" ></View> */}
-              <Image
-          source={{ uri: `${BASE_URL}/uploads/${foodItem.image}` }}  // Use the image URL from foodItem
-          style={{ width: '100%', height: 100, borderRadius: 8 }} // Adjust style as needed
+        {/* <View className="w-full h-20 rounded-lg bg-green-400" ></View> */}
+        <Image
+          source={{ uri: `${BASE_URL}/uploads/${foodItem.image}` }} // Use the image URL from foodItem
+          style={{ width: "100%", height: 100, borderRadius: 8 }} // Adjust style as needed
         />
         <Text
           style={{
