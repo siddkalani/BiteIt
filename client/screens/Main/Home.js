@@ -26,6 +26,7 @@ import FoodCard from "./FoodCard";
 import foodcategory from "./HomeData";
 import { useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { BASE_URL } from "@env";
 
 const Home = () => {
   const navigation = useNavigation();
@@ -147,7 +148,7 @@ const Home = () => {
                 {category.map((item) => (
                   <View key={item._id} className="items-center">
                     <Image
-                      source={{ uri: item.image }}
+                      source={{ uri: `${BASE_URL}/uploads/${item.image}` }}
                       className="h-[62] w-[61] rounded-full"
                       resizeMode="contain"
                     />
