@@ -8,8 +8,6 @@ import {
   TouchableOpacity,
   Dimensions,
   Animated,
-  ScrollView,
-  ActivityIndicator,
   Alert,
   Modal,
   KeyboardAvoidingView,
@@ -23,11 +21,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchcategory } from "../../store/Slices/categorySlice";
 import { fetchFoodItems } from "../../store/Slices/foodItemSlice";
 import { FontFamily, FontSize } from "../../GlobalStyles";
-import FoodCard from "./FoodCard";
 // import foodcategory from "./HomeData";
 import { useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BASE_URL } from "@env";
+import Categories from "./Home/Categories";
+import Featured from "./Home/Featured";
+import Footer from "./Home/Footer";
 
 const Home = () => {
   const navigation = useNavigation();
@@ -40,9 +40,9 @@ const Home = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const { top, bottom } = useSafeAreaInsets();
 
-  const category = useSelector((state) => state.category.items);
+  // const category = useSelector((state) => state.category.items);
   const categoryStatus = useSelector((state) => state.category.status);
-  const categoryError = useSelector((state) => state.category.error);
+  // const categoryError = useSelector((state) => state.category.error);
 
   const foodItems = useSelector((state) => state.foodItem.items);
   const foodItemsStatus = useSelector((state) => state.foodItem.status);
@@ -127,7 +127,7 @@ const Home = () => {
           />
         </View>
       </View>
-      {/* Categories */}
+      {/* scroll start */}
       <Animated.ScrollView
         onScroll={handleScroll}
         onMomentumScrollEnd={handleScrollEnd}
@@ -143,95 +143,13 @@ const Home = () => {
               className="rounded-lg w-full"
             />
           </View>
-          <View className="space-y-2">
-            <Text
-              style={{
-                fontFamily: FontFamily.poppinsSemiBold,
-                fontSize: FontSize.size_xl,
-              }}
-            >
-              Categories
-            </Text>
-            {categoryStatus === "loading" ? (
-              <ActivityIndicator size="large" color="#007022" />
-            ) : categoryStatus === "failed" ? (
-              <Text>Error: {categoryError}</Text>
-            ) : (
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                className="space-x-4"
-              >
-                {category.map((item) => (
-                  <View key={item._id} className="items-center">
-                    <Image
-                      source={{ uri: `${BASE_URL}/uploads/${item.image}` }}
-                      className="h-[62] w-[61] rounded-full"
-                      resizeMode="cover"
-                    />
-                    <Text
-                      style={{
-                        fontFamily: FontFamily.poppinsMedium,
-                        fontSize: FontSize.size_xs,
-                      }}
-                    >
-                      {item.categoryName}
-                    </Text>
-                  </View>
-                ))}
-              </ScrollView>
-            )}
-          </View>
+          <Categories />
         </View>
-        {isScrolled && (
-          <View
-            className="h-[1px] bg-transparent shadow-lg"
-            style={{
-              shadowColor: "#000",
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.25,
-              shadowRadius: 3.84,
-              elevation: 5,
-            }}
-          />
-        )}
         {/* Featured */}
-        <View className="px-4 py-2 space-y-2 flex-1 bg-[#F4F5F9]">
-          <Text
-            style={{
-              fontFamily: FontFamily.poppinsSemiBold,
-              fontSize: FontSize.size_xl,
-            }}
-          >
-            Menu
-          </Text>
-          <View className="flex-row flex-wrap justify-between">
-            {foodItemsStatus === "loading" ? (
-              <ActivityIndicator size="large" color="#007022" />
-            ) : foodItemsStatus === "failed" ? (
-              <Text>Error: {foodItemsError}</Text>
-            ) : (
-              foodItems.map((foodItem) => (
-                <View
-                  key={foodItem._id}
-                  className="w-[48%] mb-4 rounded-lg shadow bg-white p-2"
-                >
-                  <FoodCard foodItem={foodItem} />
-                </View>
-              ))
-            )}
-          </View>
-        </View>
+        <Featured/>
       </Animated.ScrollView>
       {/* Footer */}
-      <View className="flex-row justify-around items-center shadow-md bg-white border-t border-gray-200 py-2">
-        <TouchableOpacity className="items-center">
-          <Icon.Home width={24} height={24} stroke="gray" />
-        </TouchableOpacity>
-        <TouchableOpacity className="items-center">
-          <Icon.User width={22} height={22} stroke="gray" />
-        </TouchableOpacity>
-      </View>
+      <Footer/>
       {/* Modal */}
       <Modal
         visible={isModalVisible}
