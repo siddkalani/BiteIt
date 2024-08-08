@@ -6,7 +6,7 @@ import * as Icon from "react-native-feather";
 import { Platform } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-const FoodCard = ({ item }) => {
+const FoodCard = ({ foodItem }) => {
   const navigation = useNavigation();
   const handleAdd = () => {
     navigation.navigate("FoodItem");
@@ -22,7 +22,7 @@ const FoodCard = ({ item }) => {
           }}
           className="text-green-600"
         >
-          ${item.itemPrice}
+          ${foodItem.itemPrice}
         </Text>
         <Text
           style={{
@@ -31,7 +31,7 @@ const FoodCard = ({ item }) => {
           }}
           className=""
         >
-          {item.itemName}
+          {foodItem.itemName}
         </Text>
         <LinearGradient
           colors={["#007022", "#54d17a", "#bcffd0"]}
