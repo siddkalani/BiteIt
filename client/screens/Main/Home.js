@@ -211,12 +211,12 @@ const Home = () => {
             ) : foodItemsStatus === "failed" ? (
               <Text>Error: {foodItemsError}</Text>
             ) : (
-              foodItems.map((foodItem) => (
+              foodItems.map((item) => (
                 <View
-                  key={foodItem._id}
+                  key={item._id}
                   className="w-[48%] mb-4 rounded-lg shadow bg-white p-2"
                 >
-                  <FoodCard foodItem={foodItem} />
+                  <FoodCard item={item} />
                 </View>
               ))
             )}
