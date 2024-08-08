@@ -1,17 +1,22 @@
 import React from "react";
-import { View, Text, Image, Pressable, TouchableOpacity } from "react-native";
+import { View, Text, Image, TouchableOpacity, Platform } from "react-native";
 import { FontFamily, FontSize } from "../../../GlobalStyles";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Icon from "react-native-feather";
-import { Platform } from "react-native";
-import { BASE_URL } from "@env";
 import { useNavigation } from "@react-navigation/native";
+import { BASE_URL } from "@env";
 
 const FoodCard = ({ foodItem }) => {
+  const navigation = useNavigation();
+
+  const handlePress = () => {
+    // Navigate to the FoodItem page, passing the foodItem as a parameter
+    navigation.navigate("FoodItem", { foodItem });
+  };
+
   return (
-    <View className="flex-1 ">
+    <TouchableOpacity onPress={handlePress} style={{ flex: 1 }}>
       <View className="bg-white rounded-lg p-2 w-full items-center space-y-1">
-        {/* <View className="w-full h-20 rounded-lg bg-green-400" ></View> */}
         <Image
           source={{ uri: `${BASE_URL}/items_uploads/${foodItem.image}` }}
           style={{ width: "100%", height: 100, borderRadius: 8 }} // Adjust style as needed
@@ -30,9 +35,7 @@ const FoodCard = ({ foodItem }) => {
             fontFamily: FontFamily.poppinsMedium,
             fontSize: FontSize.size_mini,
           }}
-          className=""
         >
-          {/* {foodItem.categoryName} */}
           {foodItem.itemName}
         </Text>
         <LinearGradient
@@ -63,7 +66,7 @@ const FoodCard = ({ foodItem }) => {
           </TouchableOpacity>
         </LinearGradient>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
