@@ -5,6 +5,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import * as Icon from "react-native-feather";
 import { Platform } from "react-native";
 import { BASE_URL } from "@env";
+import { useNavigation } from "@react-navigation/native";
 
 const FoodCard = ({ foodItem }) => {
   return (
