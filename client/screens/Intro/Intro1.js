@@ -14,7 +14,7 @@ const Intro1 = () => {
     };
 
     return (
-        <SafeAreaView style={SafeAreaAndroid.AndroidSafeArea} className='flex-1 bg-white'>
+        <View style={SafeAreaAndroid.AndroidSafeArea} className='flex-1 bg-white'>
             <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
             <View className="flex-1 items-center justify-between">
                 {/* <Image
@@ -55,7 +55,7 @@ const Intro1 = () => {
                     </LinearGradient>
                 </View>
             </View>
-        </SafeAreaView>
+        </View>
     );
 };
 
