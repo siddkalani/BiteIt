@@ -146,7 +146,7 @@ const Home = () => {
           <Categories />
         </View>
         {/* Featured */}
-        <Featured />
+        <Featured/>
       </Animated.ScrollView>
       {/* Footer */}
       <Footer />
