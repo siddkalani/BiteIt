@@ -17,7 +17,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Categories from "./Categories";
 import Featured from "./Featured";
 import Footer from "./Footer";
-import SearchModal from "../SearchBar/SearchModal"; // Import the SearchModal component
+import SearchModal from "./SearchModal"; 
 
 const Home = () => {
   const navigation = useNavigation();

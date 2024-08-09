@@ -19,8 +19,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { BASE_URL } from "@env";
 import axios from "axios";
 import { fetchcategory } from "../../../store/Slices/categorySlice";
-import SearchResults from "./SearchResults";
-import SearchCategories from "./SearchCategories"; // Import the SearchCategories component
+import SearchResults from './../SearchBar/SearchResults'
+import SearchCategories from "./../SearchBar/SearchCategories"; 
 
 const SearchModal = ({ isModalVisible, closeSearchModal }) => {
   const dispatch = useDispatch();
