@@ -18,10 +18,7 @@ import {
 import { SafeAreaView } from "react-native";
 import * as Icon from "react-native-feather";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchcategory } from "../../store/Slices/categorySlice";
-import { fetchFoodItems } from "../../store/Slices/foodItemSlice";
 import { FontFamily, FontSize } from "../../GlobalStyles";
-// import foodcategory from "./HomeData";
 import { useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BASE_URL } from "@env";
@@ -39,23 +36,6 @@ const Home = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const { top, bottom } = useSafeAreaInsets();
-
-  // const category = useSelector((state) => state.category.items);
-  const categoryStatus = useSelector((state) => state.category.status);
-  // const categoryError = useSelector((state) => state.category.error);
-
-  const foodItems = useSelector((state) => state.foodItem.items);
-  const foodItemsStatus = useSelector((state) => state.foodItem.status);
-  const foodItemsError = useSelector((state) => state.foodItem.error);
-
-  useEffect(() => {
-    if (categoryStatus === "idle") {
-      dispatch(fetchcategory());
-    }
-    if (foodItemsStatus === "idle") {
-      dispatch(fetchFoodItems());
-    }
-  }, [categoryStatus, foodItemsStatus, dispatch]);
 
   const handleScroll = Animated.event(
     [{ nativeEvent: { contentOffset: { y: scrollY } } }],
@@ -146,7 +126,7 @@ const Home = () => {
           <Categories />
         </View>
         {/* Featured */}
-        <Featured/>
+        <Featured />
       </Animated.ScrollView>
       {/* Footer */}
       <Footer />

@@ -17,8 +17,13 @@ const getItem = asyncHandler(async (req, res) => {
 
 // GET - /food-item/get
 const getAllItems = asyncHandler(async (req, res) => {
-  const items = await Item.find();
-  res.status(200).json({ items: items });
+  try {
+    const items = await Item.find(); // Ensure Item is your food item model
+    res.status(200).json({ items });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch items", error: error.message });
+  }
 });
+
 
 module.exports = { getItem, getAllItems };

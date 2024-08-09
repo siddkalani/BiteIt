@@ -4,6 +4,7 @@ import createSagaMiddleware from 'redux-saga';
 import userDetailSlice from './Slices/userDetailSlice';
 import SagaData from './saga';
 import categorySlice from './Slices/categorySlice';
+import foodItemSlice from './Slices/foodItemSlice';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -11,7 +12,7 @@ const store = configureStore({
   reducer: {
     users: userDetailSlice.reducer,
     category: categorySlice.reducer,
-    foodItem: categorySlice.reducer
+    foodItem: foodItemSlice.reducer
   },
   // middleware: (getDefaultMiddleware) =>
   //   getDefaultMiddleware().concat(sagaMiddleware),

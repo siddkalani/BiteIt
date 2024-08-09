@@ -65,12 +65,17 @@ const SignIn = () => {
           </Text>
         </View>
         <View className="space-y-2">
-          <View style={styles.inputContainer} className='space-x-2'>
-            <Text className='text-green-700' style={{
+          <View style={styles.inputContainer} className="space-x-2">
+            <Text
+              className="text-green-700"
+              style={{
                 fontFamily: FontFamily.poppinsRegular,
                 fontSize: FontSize.size_mini,
-                fontWeight:600,
-              }}>+91</Text>
+                fontWeight: 600,
+              }}
+            >
+              +91
+            </Text>
             <TextInput
               placeholder="Enter phone number"
               value={phone}
@@ -80,7 +85,7 @@ const SignIn = () => {
                 fontFamily: FontFamily.poppinsRegular,
                 fontSize: FontSize.size_mini,
               }}
-              className='flex-1'
+              className="flex-1"
             />
           </View>
         </View>
