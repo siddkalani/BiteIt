@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { View, Text, ActivityIndicator } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import FoodCard from "./FoodCard";
+import FoodCard from "../FoodItem/FoodCard";
 import { FontFamily, FontSize } from "../../../GlobalStyles";
 import { fetchFoodItems } from "../../../store/Slices/foodItemSlice";
 

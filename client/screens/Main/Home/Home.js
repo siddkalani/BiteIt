@@ -15,7 +15,7 @@ import { useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Categories from "./Categories";
-import Featured from "./../FoodItem/Featured";
+import Featured from "./Featured";
 import Footer from "./Footer";
 import SearchModal from "../SearchBar/SearchModal"; // Import the SearchModal component
 
