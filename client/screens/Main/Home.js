@@ -83,22 +83,22 @@ const Home = () => {
         translucent
       />
       {/* SearchBar */}
-      <View className="flex-row items-center space-x-2 px-4 py-2">
+      <View className="flex-row items-center space-x-2 px-4 py-2 bg-none">
         <TouchableOpacity
-          className="flex-row flex-1 bg-[#F4F5F9] items-center p-2 rounded-lg shadow"
+          className="flex-row flex-1 bg-[#F4F5F9] items-center p-3 rounded-lg shadow"
           onPress={openSearchModal}
         >
           <Icon.Search height="20" width="20" stroke="gray" />
           <Text className="flex-1 ml-2">What are you craving?</Text>
         </TouchableOpacity>
-        <View>
+        <TouchableOpacity>
           <Icon.ShoppingCart
             width="20"
             height="20"
             strokeWidth={2}
             stroke="gray"
           />
-        </View>
+        </TouchableOpacity>
       </View>
       {/* scroll start */}
       <Animated.ScrollView

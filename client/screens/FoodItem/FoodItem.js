@@ -1,5 +1,5 @@
-import React from "react";
-import { View, Text, Image,Pressable, TouchableOpacity, Platform, StatusBar, TextInput, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import { View, Text, Image, Pressable, TouchableOpacity, Platform, StatusBar } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -12,11 +12,12 @@ const FoodItem = () => {
     const { top, bottom } = useSafeAreaInsets();
     const navigation = useNavigation();
     const route = useRoute();
-    const { foodItem } = route.params || {}; // Use default empty object if route.params is undefined
+    const { foodItem } = route.params || {};
+    const [quantity, setQuantity] = useState(1);
 
     if (!foodItem) {
         return (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <View className="flex-1 justify-center items-center">
                 <Text>No food item data available</Text>
             </View>
         );
@@ -26,18 +27,25 @@ const FoodItem = () => {
         navigation.navigate('Home');
     };
 
+    const increaseQuantity = () => {
+        setQuantity(prevQuantity => prevQuantity + 1);
+    };
+
+    const decreaseQuantity = () => {
+        setQuantity(prevQuantity => Math.max(1, prevQuantity - 1));
+    };
+
     return (
         <LinearGradient
-            colors={['#d4f4d1', '#ffffff']} // Light green to white gradient
-            style={{ flex: 1 }} // Ensures the gradient takes up the entire container
+            colors={['#d4f4d1', '#ffffff']}
+            className="flex-1"
         >
             <View
+                className="flex-1"
                 style={{
-                    flex: 1,
                     paddingTop: Platform.OS === "ios" ? top : StatusBar.currentHeight,
                     paddingBottom: Platform.OS === "ios" ? 0 : bottom,
                 }}
-                className=""
             >
                 <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
 
@@ -47,16 +55,15 @@ const FoodItem = () => {
                             <Ionicons name="arrow-back" size={24} color="black" />
                         </TouchableOpacity>
                     </View>
-                    {/* food image */}
                     <View className='w-full h-full'>
                         <Image
-                            source={{ uri: `${BASE_URL}/items_uploads/${foodItem.image}` }} // Use the correct image source
-                            style={{ width: '100%', height: '100%' }} // Adjust height as needed
+                            source={{ uri: `${BASE_URL}/items_uploads/${foodItem.image}` }}
+                            className="w-full h-full"
                             resizeMode="cover"
                         />
                     </View>
                 </View>
-                <View className='flex-1 '>
+                <View className='flex-1'>
                     <View className="space-y-3 px-4 py-2 flex-1 bg-[#F4F5F9]">
                         <View>
                             <View className='flex-row items-center justify-between'>
@@ -80,7 +87,7 @@ const FoodItem = () => {
                             >
                                 {foodItem.itemName}
                             </Text>
-                            <View className=''>
+                            <View>
                                 <Text style={{
                                     fontFamily: FontFamily.poppinsRegular,
                                     fontSize: FontSize.size_mini,
@@ -89,23 +96,27 @@ const FoodItem = () => {
                                 </Text>
                             </View>
                         </View>
-                        <View style={styles.inputContainer} className='space-x-2'>
-                            {/* <Text className='text-green-700' style={{
-                                fontFamily: FontFamily.poppinsRegular,
-                                fontSize: FontSize.size_mini,
-                                fontWeight: 600,
-                            }}>+91</Text> */}
-                            <TextInput
-                                placeholder="Enter quantity"
-                                // value={phone}
-                                // onChangeText={setPhone}
-                                //   keyboardType="phone-pad"
-                                style={{
-                                    fontFamily: FontFamily.poppinsRegular,
-                                    fontSize: FontSize.size_mini,
-                                }}
-                                className='flex-1'
-                            />
+                        <View className="flex-row items-center justify-between bg-white rounded-lg py-2 px-3">
+                            <Text className="text-gray-500 text-lg font-semibold">Quantity</Text>
+                            <View className="flex-row items-center">
+                                <TouchableOpacity
+                                    onPress={decreaseQuantity}
+                                    className="w-8 h-8 justify-center items-center"
+                                >
+                                    <Icon.Minus stroke='green' />
+                                </TouchableOpacity>
+                                <View className="w-12 items-center justify-center">
+                                    <Text className="text-xl font-semibold" numberOfLines={1} adjustsFontSizeToFit>
+                                        {quantity}
+                                    </Text>
+                                </View>
+                                <TouchableOpacity
+                                    onPress={increaseQuantity}
+                                    className="w-8 h-8 justify-center items-center"
+                                >
+                                    <Icon.Plus stroke='green' />
+                                </TouchableOpacity>
+                            </View>
                         </View>
                         <LinearGradient
                             colors={["#007022", "#54d17a", "#bcffd0"]}
@@ -125,17 +136,4 @@ const FoodItem = () => {
     );
 }
 
-const styles = StyleSheet.create({
-    inputContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        backgroundColor: "#FFFFFF",
-        padding: 10,
-        borderRadius: 8,
-    },
-});
-
 export default FoodItem;
-
-// home pe onclick to cart pe change hoke + - dikhayge
-// FoodItem me quantity or add to cart dono

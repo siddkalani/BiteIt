@@ -15,6 +15,8 @@ import {
 import { SafeAreaView } from "react-native";
 import * as Icon from "react-native-feather";
 import { FontFamily, FontSize } from "../../../GlobalStyles";
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useNavigation } from "@react-navigation/native";
 
 const initialSearchHistory = [
     { name: "Pizza", image: require("../../../assets/images/categories/icecream.png") },
@@ -59,20 +61,26 @@ const SearchModal = ({ isModalVisible, closeSearchModal }) => {
                             }}
                         >
                             <View className="bg-white px-4 py-2 flex-1 rounded-none">
-                                <View className="flex-row justify-between items-center">
-                                    <Text
-                                        style={{
-                                            fontFamily: FontFamily.poppinsMedium,
-                                            fontSize: FontSize.size_lg,
-                                        }}
-                                    >
-                                        Search
-                                    </Text>
-                                    <TouchableOpacity onPress={closeSearchModal}>
-                                        <Icon.X width={24} height={24} stroke="black" />
+                                <View className="flex-row items-center space-x-4">
+                                    <TouchableOpacity onPress={closeSearchModal} className="w-10 h-10  justify-center absolute">
+                                        <Ionicons name="arrow-back" size={24} color="black" />
                                     </TouchableOpacity>
+                                    <View className='flex-1 items-center'>
+                                        <Text
+                                            style={{
+                                                fontFamily: FontFamily.poppinsMedium,
+                                                fontSize: FontSize.size_lg, // Adjust font size as needed
+                                                lineHeight: 28, // Match this to the icon size
+                                                // textAlign: 'center' // Center text within the view
+                                            }}
+                                            className="text-black"
+                                        >
+                                            Search for dishes
+                                        </Text>
+                                    </View>
                                 </View>
-                                <View className="flex-row bg-[#F4F5F9] items-center p-2 rounded-lg mt-4">
+
+                                <View className="flex-row bg-[#F4F5F9] items-center p-3 rounded-lg mt-4">
                                     <Icon.Search height="20" width="20" stroke="gray" />
                                     <TextInput
                                         placeholder="What are you craving?"
