@@ -56,7 +56,7 @@ const FoodItem = () => {
                         />
                     </View>
                 </View>
-                <View className='flex-1'>
+                <View className='flex-1 '>
                     <View className="space-y-3 px-4 py-2 flex-1 bg-[#F4F5F9]">
                         <View>
                             <View className='flex-row items-center justify-between'>
@@ -90,8 +90,16 @@ const FoodItem = () => {
                             </View>
                         </View>
                         <View style={styles.inputContainer} className='space-x-2'>
+                            {/* <Text className='text-green-700' style={{
+                                fontFamily: FontFamily.poppinsRegular,
+                                fontSize: FontSize.size_mini,
+                                fontWeight: 600,
+                            }}>+91</Text> */}
                             <TextInput
                                 placeholder="Enter quantity"
+                                // value={phone}
+                                // onChangeText={setPhone}
+                                //   keyboardType="phone-pad"
                                 style={{
                                     fontFamily: FontFamily.poppinsRegular,
                                     fontSize: FontSize.size_mini,
@@ -128,3 +136,6 @@ const styles = StyleSheet.create({
 });
 
 export default FoodItem;
+
+// home pe onclick to cart pe change hoke + - dikhayge
+// FoodItem me quantity or add to cart dono
