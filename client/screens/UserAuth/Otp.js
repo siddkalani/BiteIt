@@ -51,53 +51,54 @@ const OTP = () => {
   };
 
   const handleVerify = async () => {
-    // try {
-    //   const response = await axios.post(
-    //    `${BASE_URL}/user/verify/phone/otp`,
-    //     {
-    //       phone: phone,
-    //       otp: otp.join(""),
-    //     }
-    //   );
-    //   const data = response.data;
-    //   console.log("Response Data:", data); // Debugging line
-    //   console.log("Response Status:", response.status); // Debugging line
+    try {
+      const response = await axios.post(`${BASE_URL}/user/verify/phone/otp`, {
+        phone: phone,
+        otp: otp.join(""),
+      });
+      const data = response.data;
+      console.log("Response Data:", data); // Debugging line
 
-    //   if (response.status === 200) {
-    //     navigation.replace("Home");
-    //   } else if (
-    //     response.status === 400 &&
-    //     data.error === "Name is required for new users"
-    //   ) {
-    //     navigation.replace("NewUser", { phone: phone, otp: otp.join("") });
-    //   } else {
-    //     Alert.alert("Error", "Invalid OTP");
-    //   }
-    // } catch (error) {
-    //   console.error("Verification Error:", error);
+      if (
+        response.status === 200 &&
+        data.message === "Phone number verified successfully!"
+      ) {
+        navigation.replace("Home");
+      } else if (response.status === 200 && data.message === "Admin found") {
+        navigation.replace("AdminHome");
+      } else if (
+        response.status === 400 &&
+        data.error === "Name is required for new users"
+      ) {
+        navigation.replace("NewUser", { phone: phone, otp: otp.join("") });
+      } else {
+        Alert.alert("Error", "Invalid OTP");
+      }
+    } catch (error) {
+      console.error("Verification Error:", error);
 
-    //   // Handling specific error case here
-    //   if (error.response) {
-    //     const errorData = error.response.data;
-    //     const errorStatus = error.response.status;
+      // Handling specific error case here
+      if (error.response) {
+        const errorData = error.response.data;
+        const errorStatus = error.response.status;
 
-    //     console.error("Error Response Data:", errorData);
-    //     console.error("Error Response Status:", errorStatus);
+        console.error("Error Response Data:", errorData);
+        console.error("Error Response Status:", errorStatus);
 
-    //     // Check for the specific error message and navigate
-    //     if (
-    //       errorStatus === 400 &&
-    //       errorData.error === "Name is required for new users"
-    //     ) {
-    //       navigation.replace("NewUser", { phone: phone, otp: otp.join("") });
-    //     } else {
-    //       Alert.alert("Error", "Failed to verify OTP");
-    //     }
-    //   } else {
-    //     Alert.alert("Error", "Network Error. Please try again.");
-    //   }
-    // }
-    navigation.navigate("Home");
+        // Check for the specific error message and navigate
+        if (
+          errorStatus === 400 &&
+          errorData.error === "Name is required for new users"
+        ) {
+          navigation.replace("NewUser", { phone: phone, otp: otp.join("") });
+        } else {
+          Alert.alert("Error", "Failed to verify OTP");
+        }
+      } else {
+        Alert.alert("Error", "Network Error. Please try again.");
+      }
+    }
+    // navigation.navigate("Home");
   };
 
   return (

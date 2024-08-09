@@ -8,6 +8,7 @@ import Home from "./screens/Main/Home/Home";
 import OTP from "./screens/UserAuth/Otp";
 import NewUser from "./screens/UserAuth/NewUser";
 import FoodItem from "./screens/Main/FoodItem/FoodItem";
+import AdminHome from "./screens/Admin/AdminHome";
 
 const Stack = createNativeStackNavigator();
 
@@ -18,6 +19,7 @@ function AppNavigator() {
         <Stack.Screen name="intro" component={Intro1} />
         <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="Otp" component={OTP} />
+        <Stack.Screen name="AdminHome" component={AdminHome} />
         <Stack.Screen name="NewUser" component={NewUser} />
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="FoodItem" component={FoodItem} />
