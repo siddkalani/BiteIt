@@ -14,10 +14,10 @@ import * as Icon from "react-native-feather";
 import { useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import Categories from "./Home/Categories";
-import Featured from "./Home/Featured";
-import Footer from "./Home/Footer";
-import SearchModal from "./Home/SearchModal"; // Import the SearchModal component
+import Categories from "./Categories";
+import Featured from "./../FoodItem/Featured";
+import Footer from "./Footer";
+import SearchModal from "../SearchBar/SearchModal"; // Import the SearchModal component
 
 const Home = () => {
   const navigation = useNavigation();
@@ -110,7 +110,7 @@ const Home = () => {
         <View className="px-4 pb-4 space-y-2">
           <View>
             <Image
-              source={require("../../assets/images/home/home-slider.png")}
+              source={require("../../../assets/images/home/home-slider.png")}
               resizeMode="contain"
               style={{ width: "100%", height: imageHeight }}
               className="rounded-lg w-full"
