@@ -15,11 +15,13 @@ const CategoryCard = ({ foodItem }) => {
   };
 
   return (
-    <TouchableOpacity style={{ flex: 1 }}>
+    <TouchableOpacity style={{ flex: 1 }} className=''>
       <View className="bg-white rounded-lg p-2 w-full items-center space-y-1">
         <Image
           source={{ uri: `${BASE_URL}/items_uploads/${foodItem.image}` }}
           style={{ width: "100%", height: 100, borderRadius: 8 }}
+          resizeMode="cover"
+          className='rounded-full'
         />
         <View className="w-full items-center">
           <View>
@@ -39,6 +41,7 @@ const CategoryCard = ({ foodItem }) => {
                 fontFamily: FontFamily.poppinsMedium,
                 fontSize: FontSize.size_mini,
               }}
+              numberOfLines={1}
             >
               {foodItem.itemName}
             </Text>

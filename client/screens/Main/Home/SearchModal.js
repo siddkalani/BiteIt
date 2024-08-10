@@ -162,15 +162,15 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native";
 import * as Icon from "react-native-feather";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import { useDispatch, useSelector } from "react-redux";
 import { BASE_URL } from "@env";
 import axios from "axios";
 import { fetchcategory } from "../../../store/Slices/categorySlice";
-import SearchResults from './../SearchBar/SearchResults'
+import SearchResults from './../SearchBar/SearchResults';
 import SearchCategories from "./../SearchBar/SearchCategories"; 
 import SearchHistory from "./../SearchBar/SearchHistory";
 import { FontFamily, FontSize } from "../../../GlobalStyles";
+import Header from "../../../components/Layout/BaseHeader"; // Import the new SearchHeader component
 
 const SearchModal = ({ isModalVisible, closeSearchModal }) => {
   const dispatch = useDispatch();
@@ -244,26 +244,9 @@ const SearchModal = ({ isModalVisible, closeSearchModal }) => {
               }}
             >
               <View className="bg-white px-4 py-2 flex-1 rounded-none">
-                <View className="flex-row items-center space-x-4">
-                  <TouchableOpacity
-                    onPress={closeSearchModal}
-                    className="w-10 h-10 justify-center absolute"
-                  >
-                    <Ionicons name="arrow-back" size={24} color="black" />
-                  </TouchableOpacity>
-                  <View className="flex-1 items-center">
-                    <Text
-                      style={{
-                        fontFamily: FontFamily.poppinsMedium,
-                        fontSize: FontSize.size_lg,
-                        lineHeight: 28,
-                      }}
-                      className="text-black"
-                    >
-                      Search for dishes
-                    </Text>
-                  </View>
-                </View>
+                
+                {/* Use the separated SearchHeader component */}
+                <Header closeSearchModal={closeSearchModal} />
 
                 <View className="flex-row bg-[#F4F5F9] items-center p-3 rounded-lg mt-4">
                   <Icon.Search height="20" width="20" stroke="gray" />
@@ -284,14 +267,12 @@ const SearchModal = ({ isModalVisible, closeSearchModal }) => {
                   )
                 ) : (
                   <>
-                    {/* Recent Searches */}
                     <SearchHistory
                       searchHistory={searchHistory}
                       removeSearchItem={removeSearchItem}
                     />
 
-                    {/* Categories */}
-                    <SearchCategories/>
+                    <SearchCategories categories={category} />
                   </>
                 )}
               </View>
@@ -304,6 +285,7 @@ const SearchModal = ({ isModalVisible, closeSearchModal }) => {
 };
 
 export default SearchModal;
+
 
 
 // import React, { useState, useEffect } from "react";

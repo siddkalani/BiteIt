@@ -10,6 +10,7 @@ import NewUser from "./screens/UserAuth/NewUser";
 import FoodItem from "./screens/Main/FoodItem/FoodItem";
 import AdminHome from "./screens/Admin/AdminHome";
 import SearchResults from "./screens/Main/SearchBar/SearchResults";
+import HomeCategory from "./screens/Categories/HomeCategory";
 
 const Stack = createNativeStackNavigator();
 
@@ -23,6 +24,7 @@ function AppNavigator() {
         <Stack.Screen name="AdminHome" component={AdminHome} />
         <Stack.Screen name="NewUser" component={NewUser} /> */}
         <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="HomeCategory" component={HomeCategory} />
         <Stack.Screen name="SearchResults" component={SearchResults} />
         <Stack.Screen name="FoodItem" component={FoodItem} />
       </Stack.Navigator>

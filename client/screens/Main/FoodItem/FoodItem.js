@@ -15,6 +15,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { FontFamily, FontSize } from "../../../GlobalStyles";
 import * as Icon from "react-native-feather";
 import { BASE_URL } from "@env";
+import { BlurView } from "expo-blur";
 
 const FoodItem = () => {
   const { top, bottom } = useSafeAreaInsets();
@@ -44,37 +45,53 @@ const FoodItem = () => {
   };
 
   return (
-    <LinearGradient colors={["#d4f4d1", "#ffffff"]} className="flex-1">
-      <View
-        className="flex-1"
-        style={{
-          paddingTop: Platform.OS === "ios" ? top : StatusBar.currentHeight,
-          paddingBottom: Platform.OS === "ios" ? 0 : bottom,
-        }}
-      >
-        <StatusBar
-          barStyle="dark-content"
-          backgroundColor="transparent"
-          translucent
-        />
 
-        <View className="flex-1 flex-col items-center space-x-2 px-4 py-2">
-          <View className="w-full">
-            <TouchableOpacity onPress={handlePress} className="p-2">
-              <Ionicons name="arrow-back" size={24} color="black" />
+    <View
+      className="flex-1"
+    // style={{
+    //   paddingTop: Platform.OS === "ios" ? top : StatusBar.currentHeight,
+    //   paddingBottom: Platform.OS === "ios" ? 0 : bottom,
+    // }}
+    >
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor="transparent"
+        translucent
+      />
+
+      <View className="flex-1">
+        <View className="w-full h-full">
+          <Image
+            source={{ uri: `${BASE_URL}/items_uploads/${foodItem.image}` }}
+            className="w-full h-full"
+            resizeMode="cover"
+          />
+          <BlurView
+            intensity={40}
+            tint="dark"
+            style={{
+              position: "absolute",
+              top: top + 10, // Adjusted to place the button below the safe area
+              left: 16,
+              width: 40, // Adjust the size as needed
+              height: 40,
+              borderRadius: 24, // Ensure this is half of the width/height to make it circular
+              overflow: "hidden", // Ensures content stays within the rounded BlurView
+              justifyContent: "center", // Center the content
+              alignItems: "center",
+            }}
+          >
+            <TouchableOpacity onPress={handlePress} style={{ padding: 2 }}>
+              <Ionicons name="arrow-back" size={28} color="white" />
             </TouchableOpacity>
-          </View>
-          <View className="w-full h-full">
-            <Image
-              source={{ uri: `${BASE_URL}/items_uploads/${foodItem.image}` }}
-              className="w-full h-full"
-              resizeMode="cover"
-            />
-          </View>
+          </BlurView>
         </View>
-        <View className="flex-1">
-          <View className="space-y-3 px-4 py-2 flex-1 bg-[#F4F5F9]">
-            <View>
+
+      </View>
+      <LinearGradient colors={["#d4f4d1", "#ffffff"]} className="flex-1">
+        <View className="flex-1 rounded-t-2xl">
+          <View className="space-y-3 px-4 py-2 flex-1 rounded-t-2xl justify-between">
+            <View className=''>
               <View className="flex-row items-center justify-between">
                 <Text
                   className="text-[#54D17A]"
@@ -107,60 +124,63 @@ const FoodItem = () => {
                 </Text>
               </View>
             </View>
-            <View className="flex-row items-center justify-between bg-white rounded-lg py-2 px-3">
-              <Text className="text-gray-500 text-lg font-semibold">
-                Quantity
-              </Text>
-              <View className="flex-row items-center">
-                <TouchableOpacity
-                  onPress={decreaseQuantity}
-                  className="w-8 h-8 justify-center items-center"
-                >
-                  <Icon.Minus stroke="green" />
-                </TouchableOpacity>
-                <View className="w-12 items-center justify-center">
-                  <Text
-                    className="text-xl font-semibold"
-                    numberOfLines={1}
-                    adjustsFontSizeToFit
-                  >
-                    {quantity}
-                  </Text>
-                </View>
-                <TouchableOpacity
-                  onPress={increaseQuantity}
-                  className="w-8 h-8 justify-center items-center"
-                >
-                  <Icon.Plus stroke="green" />
-                </TouchableOpacity>
-              </View>
-            </View>
-            <LinearGradient
-              colors={["#007022", "#54d17a", "#bcffd0"]}
-              start={{ x: 0, y: 1 }}
-              end={{ x: 1.9, y: 0 }}
-              className="rounded-xl"
-            >
-              <Pressable
-                className="flex-row space-x-2 p-3 justify-center items-center"
-                onPress={handlePress}
-              >
-                <Icon.ShoppingBag width={20} height={20} stroke="white" />
-                <Text
-                  className="text-white"
-                  style={{
-                    fontFamily: FontFamily.poppinsSemiBold,
-                    fontSize: FontSize.size_lg,
-                  }}
-                >
-                  Add to cart
+            <View className='space-y-2 mb-4'>
+              <View className="flex-row items-center justify-between bg-white rounded-lg py-2 px-3">
+                <Text className="text-gray-500 text-lg font-semibold">
+                  Quantity
                 </Text>
-              </Pressable>
-            </LinearGradient>
+                <View className="flex-row items-center">
+                  <TouchableOpacity
+                    onPress={decreaseQuantity}
+                    className="w-8 h-8 justify-center items-center"
+                  >
+                    <Icon.Minus stroke="green" />
+                  </TouchableOpacity>
+                  <View className="w-12 items-center justify-center">
+                    <Text
+                      className="text-xl font-semibold"
+                      numberOfLines={1}
+                      adjustsFontSizeToFit
+                    >
+                      {quantity}
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    onPress={increaseQuantity}
+                    className="w-8 h-8 justify-center items-center"
+                  >
+                    <Icon.Plus stroke="green" />
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <LinearGradient
+                colors={["#007022", "#54d17a", "#bcffd0"]}
+                start={{ x: 0, y: 1 }}
+                end={{ x: 1.9, y: 0 }}
+                className="rounded-xl"
+              >
+                <TouchableOpacity
+                  className="flex-row space-x-2 p-3 justify-center items-center"
+                  onPress={handlePress}
+                >
+                  <Icon.ShoppingBag width={20} height={20} stroke="white" />
+                  <Text
+                    className="text-white"
+                    style={{
+                      fontFamily: FontFamily.poppinsSemiBold,
+                      fontSize: FontSize.size_lg,
+                    }}
+                  >
+                    Add to cart
+                  </Text>
+                </TouchableOpacity>
+              </LinearGradient>
+            </View>
           </View>
         </View>
-      </View>
-    </LinearGradient>
+      </LinearGradient>
+    </View>
+
   );
 };
 

@@ -1,9 +1,10 @@
 import { useRef, useState, useEffect } from "react";
-import { View, Text, Image, ScrollView, ActivityIndicator } from "react-native";
+import { View, Text, Image, ScrollView, ActivityIndicator, TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { FontFamily, FontSize } from "../../../GlobalStyles";
 import { BASE_URL } from "@env";
 import { fetchcategory } from "../../../store/Slices/categorySlice";
+import { useNavigation } from "@react-navigation/native";
 
 const Categories = () => {
   const dispatch = useDispatch();
@@ -18,6 +19,10 @@ const Categories = () => {
     }
   }, [categoryStatus, dispatch]);
 
+  const navigation = useNavigation();
+  const handlePress = () => {
+    navigation.navigate('HomeCategory');
+  };
   return (
     <View className="space-y-2">
       <Text
@@ -39,7 +44,7 @@ const Categories = () => {
           className="space-x-4"
         >
           {category.map((item) => (
-            <View key={item._id} className="items-center">
+            <TouchableOpacity onPress={handlePress} key={item._id} className="items-center">
               <Image
                 source={{ uri: `${BASE_URL}/uploads/${item.image}` }}
                 className="h-[62] w-[61] rounded-full"
@@ -53,7 +58,7 @@ const Categories = () => {
               >
                 {item.categoryName}
               </Text>
-            </View>
+            </TouchableOpacity>
           ))}
         </ScrollView>
       )}
