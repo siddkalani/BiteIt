@@ -2,8 +2,15 @@ import React from "react";
 import { View, Text, FlatList, Image, TouchableOpacity } from "react-native";
 import { FontFamily, FontSize } from "../../../GlobalStyles";
 import { BASE_URL } from "@env";
+import { useNavigation } from "@react-navigation/native";
 
 const SearchResults = ({ searchResults }) => {
+  const navigation = useNavigation();
+
+  const handleAddToCartPress = (item) => {
+    navigation.navigate("FoodItem", { foodItem: item });
+  };
+
   const renderItem = ({ item }) => (
     <View
       className="bg-white p-4 mt-2 rounded-lg shadow flex-row justify-between items-center"
@@ -38,6 +45,7 @@ const SearchResults = ({ searchResults }) => {
       <TouchableOpacity
         className="bg-blue-500 p-2 rounded-lg"
         style={{ marginLeft: 10 }}
+        onPress={() => handleAddToCartPress(item)}
       >
         <Text
           style={{
