@@ -10,7 +10,6 @@ const FoodCard = ({ foodItem }) => {
   const navigation = useNavigation();
 
   const handlePress = () => {
-    // Navigate to the FoodItem page, passing the foodItem as a parameter
     navigation.navigate("FoodItem", { foodItem });
   };
 
@@ -19,25 +18,31 @@ const FoodCard = ({ foodItem }) => {
       <View className="bg-white rounded-lg p-2 w-full items-center space-y-1">
         <Image
           source={{ uri: `${BASE_URL}/items_uploads/${foodItem.image}` }}
-          style={{ width: "100%", height: 100, borderRadius: 8 }} // Adjust style as needed
+          style={{ width: "100%", height: 100, borderRadius: 8 }}
         />
-        <Text
-          style={{
-            fontFamily: FontFamily.poppinsMedium,
-            fontSize: FontSize.size_mini,
-          }}
-          className="text-green-600"
-        >
-          {/* $10 */}${foodItem.itemPrice}
-        </Text>
-        <Text
-          style={{
-            fontFamily: FontFamily.poppinsMedium,
-            fontSize: FontSize.size_mini,
-          }}
-        >
-          {foodItem.itemName}
-        </Text>
+        <View className="w-full items-center">
+          <View>
+            <Text
+              style={{
+                fontFamily: FontFamily.poppinsMedium,
+                fontSize: FontSize.size_mini,
+              }}
+              className="text-green-600"
+            >
+              ${foodItem.itemPrice}
+            </Text>
+          </View>
+          <View>
+            <Text
+              style={{
+                fontFamily: FontFamily.poppinsMedium,
+                fontSize: FontSize.size_mini,
+              }}
+            >
+              {foodItem.itemName}
+            </Text>
+          </View>
+        </View>
         <LinearGradient
           colors={["#007022", "#54d17a", "#bcffd0"]}
           start={{ x: 0, y: 1 }}
