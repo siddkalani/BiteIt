@@ -1,41 +1,26 @@
-import React from "react";
-import { View, Text, FlatList, Image } from "react-native";
+import React, { useEffect } from "react";
+import { View, Text, FlatList, Image, TouchableOpacity, ScrollView } from "react-native";
 import { FontFamily, FontSize } from "../../../GlobalStyles";
 import { BASE_URL } from "@env";
+import { LinearGradient } from "expo-linear-gradient";
+import { Platform } from "react-native";
+import * as Icon from "react-native-feather";
+import { useDispatch, useSelector } from "react-redux";
+import FoodCard from "../FoodItem/FoodCard";
+import CategoryCard from "./CategoryCard";
 
-const SearchCategories = ({ categories }) => {
-  const renderCategoryItem = ({ item }) => (
-    <View
-      className="w-1/3 p-2"
-      style={{ alignItems: "center" }}
-    >
-      <View
-        className="bg-white rounded-lg shadow w-full py-1"
-        style={{
-          alignItems: "center",
-          shadowColor: "#000",
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.1,
-          shadowRadius: 5,
-          elevation: 3,
-        }}
-      >
-        <Image
-          source={{ uri: `${BASE_URL}/uploads/${item.image}` }}
-          className="w-16 h-16 rounded-lg"
-          style={{ resizeMode: "cover" }}
-        />
-        <Text
-          style={{
-            fontFamily: FontFamily.poppinsMedium,
-            fontSize: FontSize.size_md,
-          }}
-        >
-          {item.categoryName}
-        </Text>
-      </View>
-    </View>
-  );
+const SearchCategories = () => {
+  const dispatch = useDispatch();
+
+  const foodItems = useSelector((state) => state.foodItem.items);
+  const foodItemsStatus = useSelector((state) => state.foodItem.status);
+  const foodItemsError = useSelector((state) => state.foodItem.error);
+
+  useEffect(() => {
+    if (foodItemsStatus === "idle") {
+      dispatch(fetchFoodItems());
+    }
+  }, [foodItemsStatus, dispatch]);
 
   return (
     <View className="mt-4">
@@ -48,11 +33,17 @@ const SearchCategories = ({ categories }) => {
         Categories
       </Text>
       <FlatList
-        data={categories}
-        renderItem={renderCategoryItem}
-        keyExtractor={(item, index) => index.toString()}
-        numColumns={3}
-        contentContainerStyle={{ paddingBottom: 10 }}
+        data={foodItems}
+        renderItem={({ item }) => (
+          <View className="w-[48%] mb-4 rounded-lg shadow bg-white p-2">
+            <CategoryCard foodItem={item}/>
+          </View>
+        )}
+        keyExtractor={(item) => item._id}
+        numColumns={2} // Display items in two columns
+        columnWrapperStyle={{ justifyContent: "space-between" }} // Ensure spacing between columns
+        contentContainerStyle={{ paddingBottom: 10 }} // Extra padding at the bottom
+        showsVerticalScrollIndicator={false} // Hide the vertical scroll indicator
       />
     </View>
   );
