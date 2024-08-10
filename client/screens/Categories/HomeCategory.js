@@ -229,6 +229,7 @@ const HomeCategory = () => {
           { useNativeDriver: true }
         )}
         scrollEventThrottle={16}
+        showsVerticalScrollIndicator={false}
       >
         {/* Food Items Section */}
         <View
@@ -237,8 +238,9 @@ const HomeCategory = () => {
             borderTopRightRadius: 24,
             paddingTop: 24,
             paddingHorizontal: 16,
-            backgroundColor: '#d4f4d1',
+            backgroundColor: '#F4F5F9',
             minHeight: '100%',
+            marginTop: -28
           }}
         >
           <View className='space-y-2'>
