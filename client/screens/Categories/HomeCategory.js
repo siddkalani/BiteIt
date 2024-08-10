@@ -7,6 +7,7 @@ import {
   StatusBar,
   ScrollView,
   Pressable,
+  Animated,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -15,72 +16,133 @@ import { useNavigation } from "@react-navigation/native";
 import { FontFamily, FontSize } from "../../GlobalStyles";
 import { BlurView } from "expo-blur";
 
+const HEADER_HEIGHT = 300; // Adjust this value as needed
+
 const HomeCategory = () => {
   const { top } = useSafeAreaInsets();
   const navigation = useNavigation();
+  const scrollY = new Animated.Value(0);
 
   const foodItems = [
+
     {
+
       id: "1",
       name: "Pizza",
       price: "$10",
       image: require('../../assets/images/signIn/signIn.png'),
     },
+
     {
+
       id: "2",
+
       name: "Pizza",
+
       price: "$10",
+
       image: require('../../assets/images/signIn/signIn.png'),
+
     },
+
     {
+
       id: "3",
+
       name: "Pizza",
+
       price: "$10",
+
       image: require('../../assets/images/signIn/signIn.png'),
+
     },
+
     {
+
       id: "4",
+
       name: "Pizza",
+
       price: "$10",
+
       image: require('../../assets/images/signIn/signIn.png'),
+
     },
+
     {
+
       id: "5",
+
       name: "Pizza",
+
       price: "$10",
+
       image: require('../../assets/images/signIn/signIn.png'),
+
     },
+
     {
+
       id: "6",
+
       name: "Pizza",
+
       price: "$10",
+
       image: require('../../assets/images/signIn/signIn.png'),
+
     },
+
     {
+
       id: "7",
+
       name: "Pizza",
+
       price: "$10",
+
       image: require('../../assets/images/signIn/signIn.png'),
+
     },
+
     {
+
       id: "8",
+
       name: "Pizza",
+
       price: "$10",
+
       image: require('../../assets/images/signIn/signIn.png'),
+
     },
+
     {
+
       id: "9",
+
       name: "Pizza",
+
       price: "$10",
+
       image: require('../../assets/images/signIn/signIn.png'),
+
     },
+
     {
+
       id: "10",
+
       name: "Pizza",
+
       price: "$10",
+
       image: require('../../assets/images/signIn/signIn.png'),
+
     },
+
     // ... (other food items)
+
   ];
 
   const handlePress = () => {
@@ -119,6 +181,24 @@ const HomeCategory = () => {
         translucent
       />
 
+      {/* Fixed Image Section */}
+      <Animated.View
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: HEADER_HEIGHT,
+          zIndex: 0,
+        }}
+      >
+        <Image
+          source={require('../../assets/images/signIn/signIn.png')}
+          style={{ width: '100%', height: '100%' }}
+          resizeMode="cover"
+        />
+      </Animated.View>
+
       {/* Fixed Back Button */}
       <BlurView
         intensity={40}
@@ -142,25 +222,23 @@ const HomeCategory = () => {
       </BlurView>
 
       {/* Scrollable Content */}
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        {/* Image Section */}
-        <View className="h-80">
-          <Image
-            source={require('../../assets/images/signIn/signIn.png')}
-            className="w-full h-full"
-            resizeMode="cover"
-          />
-        </View>
-
+      <Animated.ScrollView
+        contentContainerStyle={{ paddingTop: HEADER_HEIGHT }}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+          { useNativeDriver: true }
+        )}
+        scrollEventThrottle={16}
+      >
         {/* Food Items Section */}
         <View
           style={{
             borderTopLeftRadius: 24,
             borderTopRightRadius: 24,
-            marginTop: -24,
             paddingTop: 24,
             paddingHorizontal: 16,
             backgroundColor: '#d4f4d1',
+            minHeight: '100%',
           }}
         >
           <View className='space-y-2'>
@@ -170,14 +248,14 @@ const HomeCategory = () => {
                 fontSize: FontSize.size_xl,
               }}
             >
-              Menu
+              Pizza
             </Text>
             <View>
               {foodItems.map(renderFoodItem)}
             </View>
           </View>
         </View>
-      </ScrollView>
+      </Animated.ScrollView>
     </View>
   );
 };
