@@ -48,26 +48,6 @@ const Home = () => {
     setIsModalVisible(false);
   };
 
-  const handleLogout = () => {
-    Alert.alert(
-      "Logout",
-      "Are you sure you want to logout?",
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Logout",
-          onPress: () => {
-            navigation.reset({
-              index: 0,
-              routes: [{ name: "SignIn" }],
-            });
-          },
-        },
-      ],
-      { cancelable: false }
-    );
-  };
-
   return (
     <View
       style={{

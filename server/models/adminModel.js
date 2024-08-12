@@ -19,6 +19,7 @@ const adminSchema = mongoose.Schema(
       type: String,
       // required: true, // eng - 1234, manag - 5678,
     },
+    tokens: [{ type: String }],
   },
   {
     timestamps: true,
