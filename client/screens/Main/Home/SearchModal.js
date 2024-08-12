@@ -494,6 +494,7 @@ import SearchCategories from "./../SearchBar/SearchCategories";
 import SearchHistory from "./../SearchBar/SearchHistory";
 import { FontFamily, FontSize } from "../../../GlobalStyles";
 import Header from "../../../components/Layout/BaseHeader"; // Import the new SearchHeader component
+import { useNavigation } from "@react-navigation/native";
 
 const SearchModal = ({ isModalVisible, closeSearchModal }) => {
   const dispatch = useDispatch();
