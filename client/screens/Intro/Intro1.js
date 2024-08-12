@@ -3,7 +3,7 @@ import { SafeAreaView, StatusBar, Pressable, Text, View, Image, Dimensions, Styl
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontFamily, FontSize } from "../../GlobalStyles";
-import SafeAreaAndroid from "../../components/SafeAreaAndroid";
+import SafeAreaAndroid from "../../components/utils/SafeAreaAndroid";
 
 const { width, height } = Dimensions.get('window');
 

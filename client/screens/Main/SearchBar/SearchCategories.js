@@ -35,12 +35,12 @@ const SearchCategories = () => {
       <FlatList
         data={foodItems}
         renderItem={({ item }) => (
-          <View className="w-[48%] mb-4 rounded-lg shadow bg-white p-2">
+          <View className="w-[33%] rounded-full bg-white">
             <CategoryCard foodItem={item}/>
           </View>
         )}
         keyExtractor={(item) => item._id}
-        numColumns={2} // Display items in two columns
+        numColumns={4} // Display items in two columns
         columnWrapperStyle={{ justifyContent: "space-between" }} // Ensure spacing between columns
         contentContainerStyle={{ paddingBottom: 10 }} // Extra padding at the bottom
         showsVerticalScrollIndicator={false} // Hide the vertical scroll indicator
