@@ -8,7 +8,7 @@ const router = express.Router();
 const validateToken = require("../middleware/validateTokenHandler");
 const { logout } = require("../controllers/userAuth/logout");
 
-router.use(validateToken);
+// router.use(validateToken);
 
 router.route("/all").get(getAllAdmins);
 router.route("/:phone").get(getSingleAdmin);
