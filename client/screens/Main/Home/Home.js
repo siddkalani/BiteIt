@@ -48,6 +48,10 @@ const Home = () => {
     setIsModalVisible(false);
   };
 
+  const handleCartPress = () => {
+    navigation.navigate("CartPage");
+  };
+
   return (
     <View
       style={{
@@ -71,7 +75,7 @@ const Home = () => {
           <Icon.Search height="20" width="20" stroke="gray" />
           <Text className="flex-1 ml-2">What are you craving?</Text>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleCartPress}>
           <Icon.ShoppingCart
             width="20"
             height="20"

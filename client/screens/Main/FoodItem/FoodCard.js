@@ -1,5 +1,7 @@
 import React from "react";
 import { View, Text, Image, TouchableOpacity, Platform } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart, updateCartQuantity, removeFromCart } from "../../../store/Slices/cartSlice";
 import { FontFamily, FontSize } from "../../../GlobalStyles";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Icon from "react-native-feather";
@@ -8,68 +10,95 @@ import { BASE_URL } from "@env";
 
 const FoodCard = ({ foodItem }) => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const cartItems = useSelector((state) => state.cart);
 
-  const handlePress = () => {
-    // navigation.navigate("FoodItem", { foodItem });
+  const itemInCart = cartItems.find((item) => item._id === foodItem._id);
+
+  const handleAddToCart = () => {
+    dispatch(addToCart(foodItem));
+  };
+
+  const handleIncrement = () => {
+    if (itemInCart) {
+      dispatch(updateCartQuantity({ itemId: foodItem._id, quantity: itemInCart.quantity + 1 }));
+    }
+  };
+
+  const handleDecrement = () => {
+    if (itemInCart && itemInCart.quantity > 1) {
+      dispatch(updateCartQuantity({ itemId: foodItem._id, quantity: itemInCart.quantity - 1 }));
+    } else if (itemInCart && itemInCart.quantity === 1) {
+      dispatch(removeFromCart({ itemId: foodItem._id }));
+    }
   };
 
   return (
-    <TouchableOpacity onPress={handlePress} style={{ flex: 1 }}>
+    <TouchableOpacity style={{ flex: 1 }}>
       <View className="bg-white rounded-lg p-2 w-full items-center space-y-1">
         <Image
           source={{ uri: `${BASE_URL}/items_uploads/${foodItem.image}` }}
           style={{ width: "100%", height: 100, borderRadius: 8 }}
         />
         <View className="w-full items-center">
-          <View>
-            <Text
-              style={{
-                fontFamily: FontFamily.poppinsMedium,
-                fontSize: FontSize.size_mini,
-              }}
-              className="text-green-600"
-            >
-              ${foodItem.itemPrice}
-            </Text>
-          </View>
-          <View>
-            <Text
-              style={{
-                fontFamily: FontFamily.poppinsMedium,
-                fontSize: FontSize.size_mini,
-              }}
-            >
-              {foodItem.itemName}
-            </Text>
-          </View>
+          <Text
+            style={{
+              fontFamily: FontFamily.poppinsMedium,
+              fontSize: FontSize.size_mini,
+            }}
+            className="text-green-600"
+          >
+            ${foodItem.itemPrice}
+          </Text>
+          <Text
+            style={{
+              fontFamily: FontFamily.poppinsMedium,
+              fontSize: FontSize.size_mini,
+            }}
+          >
+            {foodItem.itemName}
+          </Text>
         </View>
-        <LinearGradient
-          colors={["#007022", "#54d17a", "#bcffd0"]}
-          start={{ x: 0, y: 1 }}
-          end={{ x: 1.9, y: 0 }}
-          className="rounded-md w-full"
-        >
-          <TouchableOpacity className="py-1 justify-center items-center flex-row space-x-1">
-            <View
-              className="justify-center items-center"
-              style={{
-                height: FontSize.size_mini * 1.3,
-                marginBottom: Platform.OS === "android" ? 2 : 0,
-              }}
+        {itemInCart ? (
+          <View className="flex-row items-center space-x-2">
+            <TouchableOpacity
+              onPress={handleDecrement}
+              className="p-2 bg-gray-200 rounded-full"
+            >
+              <Icon.Minus width={16} height={16} stroke="black" />
+            </TouchableOpacity>
+            <Text>{itemInCart.quantity}</Text>
+            <TouchableOpacity
+              onPress={handleIncrement}
+              className="p-2 bg-gray-200 rounded-full"
+            >
+              <Icon.Plus width={16} height={16} stroke="black" />
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <LinearGradient
+            colors={["#007022", "#54d17a", "#bcffd0"]}
+            start={{ x: 0, y: 1 }}
+            end={{ x: 1.9, y: 0 }}
+            className="rounded-md w-full"
+          >
+            <TouchableOpacity
+              onPress={handleAddToCart}
+              className="py-1 justify-center items-center flex-row space-x-1"
             >
               <Icon.ShoppingBag width={15} height={15} stroke="white" />
-            </View>
-            <Text
-              className="text-white"
-              style={{
-                fontFamily: FontFamily.poppinsMedium,
-                fontSize: FontSize.size_mini,
-              }}
-            >
-              Add to cart
-            </Text>
-          </TouchableOpacity>
-        </LinearGradient>
+              <Text
+                className="text-white"
+                style={{
+                  fontFamily: FontFamily.poppinsMedium,
+                  fontSize: FontSize.size_mini,
+                }}
+              >
+                Add to cart
+              </Text>
+            </TouchableOpacity>
+          </LinearGradient>
+        )}
       </View>
     </TouchableOpacity>
   );
