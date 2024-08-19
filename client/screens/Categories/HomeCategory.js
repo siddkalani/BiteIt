@@ -1,4 +1,5 @@
-import React from "react";
+
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,166 +9,91 @@ import {
   ScrollView,
   Pressable,
   Animated,
+  ActivityIndicator,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { FontFamily, FontSize } from "../../GlobalStyles";
 import { BlurView } from "expo-blur";
+import { BASE_URL } from "@env";
 
 const HEADER_HEIGHT = 300; // Adjust this value as needed
 
 const HomeCategory = () => {
   const { top } = useSafeAreaInsets();
   const navigation = useNavigation();
+  const route = useRoute();
+  const [foodItems, setFoodItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const { id } = route.params; // Get the categoryId from route params
   const scrollY = new Animated.Value(0);
 
-  const foodItems = [
-
-    {
-
-      id: "1",
-      name: "Pizza",
-      price: "$10",
-      image: require('../../assets/images/signIn/signIn.png'),
-    },
-
-    {
-
-      id: "2",
-
-      name: "Pizza",
-
-      price: "$10",
-
-      image: require('../../assets/images/signIn/signIn.png'),
-
-    },
-
-    {
-
-      id: "3",
-
-      name: "Pizza",
-
-      price: "$10",
-
-      image: require('../../assets/images/signIn/signIn.png'),
-
-    },
-
-    {
-
-      id: "4",
-
-      name: "Pizza",
-
-      price: "$10",
-
-      image: require('../../assets/images/signIn/signIn.png'),
-
-    },
-
-    {
-
-      id: "5",
-
-      name: "Pizza",
-
-      price: "$10",
-
-      image: require('../../assets/images/signIn/signIn.png'),
-
-    },
-
-    {
-
-      id: "6",
-
-      name: "Pizza",
-
-      price: "$10",
-
-      image: require('../../assets/images/signIn/signIn.png'),
-
-    },
-
-    {
-
-      id: "7",
-
-      name: "Pizza",
-
-      price: "$10",
-
-      image: require('../../assets/images/signIn/signIn.png'),
-
-    },
-
-    {
-
-      id: "8",
-
-      name: "Pizza",
-
-      price: "$10",
-
-      image: require('../../assets/images/signIn/signIn.png'),
-
-    },
-
-    {
-
-      id: "9",
-
-      name: "Pizza",
-
-      price: "$10",
-
-      image: require('../../assets/images/signIn/signIn.png'),
-
-    },
-
-    {
-
-      id: "10",
-
-      name: "Pizza",
-
-      price: "$10",
-
-      image: require('../../assets/images/signIn/signIn.png'),
-
-    },
-
-    // ... (other food items)
-
-  ];
+  useEffect(() => {
+    const fetchFoodItems = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/category/get/${id}`);
+        const data = await response.json();
+        
+        // Check the data structure
+        // console.log("Fetched Data:", data);
+        
+        if (data.foodItems) {
+          setFoodItems(data.foodItems);
+        } else {
+          setError("No food items found");
+        }
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchFoodItems();
+  }, [id]);
+  
 
   const handlePress = () => {
     navigation.navigate("Home");
   };
 
   const renderFoodItem = (item) => (
-    <View key={item.id} className="bg-white rounded-lg shadow-sm flex-row items-center mb-4 p-3">
+    <View
+      key={item._id}
+      className="bg-white rounded-lg shadow-sm flex-row items-center mb-4 p-3"
+    >
       <Image
-        source={item.image}
+        source={{ uri: `${BASE_URL}/items_uploads/${item.image}` }} // Adjust image path if needed
         className="h-14 w-14 rounded-full"
         resizeMode="cover"
       />
       <View className="flex-1 ml-4">
-        <Text className="text-lg font-semibold">{item.name}</Text>
-        <Text className="text-green-500">{item.price}</Text>
+        <Text className="text-lg font-semibold">{item.itemName}</Text>
+        <Text className="text-green-500">{item.itemPrice}</Text>
       </View>
       <LinearGradient
         colors={["#007022", "#54d17a", "#bcffd0"]}
         start={{ x: 0, y: 1 }}
         end={{ x: 1.9, y: 0 }}
-        className='rounded-xl'
+        className="rounded-xl"
       >
-        <Pressable className='px-4 py-2 justify-center items-center' onPress={handlePress}>
-          <Text className='text-white' style={{ fontFamily: FontFamily.poppinsRegular, fontSize: FontSize.size_mini }}>Add</Text>
+        <Pressable
+          className="px-4 py-2 justify-center items-center"
+          onPress={handlePress}
+        >
+          <Text
+            className="text-white"
+            style={{
+              fontFamily: FontFamily.poppinsRegular,
+              fontSize: FontSize.size_mini,
+            }}
+          >
+            Add
+          </Text>
         </Pressable>
       </LinearGradient>
     </View>
@@ -184,7 +110,7 @@ const HomeCategory = () => {
       {/* Fixed Image Section */}
       <Animated.View
         style={{
-          position: 'absolute',
+          position: "absolute",
           top: 0,
           left: 0,
           right: 0,
@@ -193,8 +119,8 @@ const HomeCategory = () => {
         }}
       >
         <Image
-          source={require('../../assets/images/signIn/signIn.png')}
-          style={{ width: '100%', height: '100%' }}
+          source={require("../../assets/images/signIn/signIn.png")}
+          style={{ width: "100%", height: "100%" }}
           resizeMode="cover"
         />
       </Animated.View>
@@ -216,7 +142,10 @@ const HomeCategory = () => {
           zIndex: 10,
         }}
       >
-        <TouchableOpacity onPress={() => navigation.goBack()} style={{ padding: 2 }}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{ padding: 2 }}
+        >
           <Ionicons name="arrow-back" size={28} color="white" />
         </TouchableOpacity>
       </BlurView>
@@ -238,22 +167,28 @@ const HomeCategory = () => {
             borderTopRightRadius: 24,
             paddingTop: 24,
             paddingHorizontal: 16,
-            backgroundColor: '#F4F5F9',
-            minHeight: '100%',
-            marginTop: -28
+            backgroundColor: "#F4F5F9",
+            minHeight: "100%",
+            marginTop: -28,
           }}
         >
-          <View className='space-y-2'>
+          <View className="space-y-2">
             <Text
               style={{
                 fontFamily: FontFamily.poppinsSemiBold,
                 fontSize: FontSize.size_xl,
               }}
             >
-              Pizza
+              Food Items
             </Text>
             <View>
-              {foodItems.map(renderFoodItem)}
+              {loading ? (
+                <ActivityIndicator size="large" color="#007022" />
+              ) : error ? (
+                <Text>Error: {error}</Text>
+              ) : (
+                foodItems.map(renderFoodItem)
+              )}
             </View>
           </View>
         </View>

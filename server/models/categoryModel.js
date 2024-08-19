@@ -9,6 +9,7 @@ const categorySchema = mongoose.Schema(
     image: {
       type: String,
     },
+    foodItems: [{ type: mongoose.Schema.Types.ObjectId, ref: "FoodItem" }],
   },
   {
     timestamps: true,
