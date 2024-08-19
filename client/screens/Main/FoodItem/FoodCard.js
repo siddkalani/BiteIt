@@ -10,7 +10,7 @@ const FoodCard = ({ foodItem }) => {
   const navigation = useNavigation();
 
   const handlePress = () => {
-    navigation.navigate("FoodItem", { foodItem });
+    // navigation.navigate("FoodItem", { foodItem });
   };
 
   return (

@@ -33,7 +33,7 @@ const FoodItem = () => {
   }
 
   const handlePress = () => {
-    navigation.navigate("Home");
+    // navigation.navigate("Home");
   };
 
   const increaseQuantity = () => {
