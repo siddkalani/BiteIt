@@ -1,8 +1,8 @@
-// SearchHistory.js
 import React from "react";
 import { View, Text, FlatList, Image, TouchableOpacity } from "react-native";
 import * as Icon from "react-native-feather";
 import { FontFamily, FontSize } from "../../../GlobalStyles";
+import { BASE_URL } from "@env";
 
 const SearchHistory = ({ searchHistory, removeSearchItem }) => {
   return (
@@ -32,8 +32,8 @@ const SearchHistory = ({ searchHistory, removeSearchItem }) => {
           >
             <View className="flex-row items-center">
               <Image
-                source={item.image}
-                className="w-7 h-7 rounded-lg mr-3"
+                source={{ uri:`${BASE_URL}/items_uploads/${item.image}` }} // Ensure item.image is a valid URL or path
+                className="w-16 h-16 rounded-lg mr-3"
                 style={{ resizeMode: "contain" }}
               />
               <Text
