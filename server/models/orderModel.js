@@ -10,11 +10,15 @@ const orderSchema = mongoose.Schema(
     canteenId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Canteen",
-      required: true,
+      // required: true,
     },
     itemId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Item",
+      required: true,
+    },
+    itemName: {
+      type: String,
       required: true,
     },
     itemQuantity: {

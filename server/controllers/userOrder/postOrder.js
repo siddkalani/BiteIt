@@ -1,12 +1,12 @@
 const asyncHandler = require("express-async-handler");
 const Order = require("../../models/orderModel");
+const Item = require("../../models/foodItemModel"); 
 
 //POST -> /user/order/add
 const createOrder = asyncHandler(async (req, res) => {
-  const { userId, canteenId, itemId, itemQuantity, totalAmount,payment, status } =
-    req.body;
+  const { userId, canteenId, itemId, itemQuantity, totalAmount, payment, status } = req.body;
 
-  if (!userId || !canteenId || !itemId || !itemQuantity || !totalAmount) {
+  if (!userId || !itemId || !itemQuantity || !totalAmount) {
     return res.status(400).json({ message: "All fields are required" });
   }
 
@@ -14,13 +14,20 @@ const createOrder = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "Payment not done!" });
   }
 
+  // Fetch item details to get itemName
+  const item = await Item.findById(itemId);
+  if (!item) {
+    return res.status(404).json({ message: "Item not found" });
+  }
+
   const newOrder = new Order({
     userId,
     canteenId,
     itemId,
+    itemName: item.itemName, // Add itemName
     itemQuantity,
-    // itemImage,
     totalAmount,
+    payment,
     status,
   });
 
