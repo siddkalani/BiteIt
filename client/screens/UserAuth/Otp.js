@@ -62,7 +62,7 @@ const OTP = () => {
 
       if (
         response.status === 200 &&
-        data.message === "Phone number verified successfully!"
+        data.message === "User phone verified successfully!"
       ) {
         // Save user details and token
         await AsyncStorage.setItem("userToken", data.token);
@@ -70,13 +70,13 @@ const OTP = () => {
         await AsyncStorage.setItem("userId", data.user.id);
 
         navigation.replace("Home");
-      } else if (response.status === 200 && data.message === "Admin found") {
+      } else if (response.status === 200 && data.message === "Admin phone verified successfully!") {
         // Save user details and token
         await AsyncStorage.setItem("userToken", data.token);
-        if (data.user?.name) {
-          await AsyncStorage.setItem("userName", data.user.name);
+        if (data.admin?.name) {
+          await AsyncStorage.setItem("adminName", data.admin.name);
         }
-        await AsyncStorage.setItem("userId", data.user?.id || "");
+        await AsyncStorage.setItem("adminId", data.admin?.id || "");
 
         navigation.replace("AdminHome");
       } else if (

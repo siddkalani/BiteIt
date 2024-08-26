@@ -34,7 +34,7 @@ const addAdmin = asyncHandler(async (req, res) => {
       .status(201)
       .json({ message: "Admin added successfully", admin: newAdmin });
   } catch (error) {
-    console.error(error);
+    console.error("Error adding admin:", error);
     res.status(500).json({ message: "Error adding admin", error });
   }
 });
