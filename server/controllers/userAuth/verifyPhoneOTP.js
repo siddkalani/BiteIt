@@ -132,7 +132,7 @@ const verifyOtp = asyncHandler(async (req, res) => {
         { id: admin._id },
         process.env.ACCESSTOKEN_SECRET,
         {
-          expiresIn: "1m", // Token validity period
+          expiresIn: "3h", // Token validity period
         }
       );
 

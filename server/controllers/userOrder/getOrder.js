@@ -21,11 +21,12 @@ const getOrderHistory = asyncHandler(async (req, res) => {
   const { userId } = req.params;
 
   try {
-    const orderHistory = await OrderHistory.find({ userId }).populate(
-      "userId",
-      "name"
-    );
-    res.status(200).json({ orderHistory: orderHistory });
+    // Find orders for the given userId and sort them by orderPlacedAt in descending order
+    const orderHistory = await OrderHistory.find({ userId })
+      .populate("userId", "name")
+      .sort({ orderPlacedAt: -1 }); // Sort by orderPlacedAt in descending order
+
+    res.status(200).json({ orderHistory });
   } catch (error) {
     res
       .status(500)

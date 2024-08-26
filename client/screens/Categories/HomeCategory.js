@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -6,8 +5,6 @@ import {
   Image,
   TouchableOpacity,
   StatusBar,
-  ScrollView,
-  Pressable,
   Animated,
   ActivityIndicator,
 } from "react-native";
@@ -17,7 +14,11 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { FontFamily, FontSize } from "../../GlobalStyles";
 import { BlurView } from "expo-blur";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BASE_URL } from "@env";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart, updateCartQuantity, removeFromCart } from "../../store/Slices/cartSlice"; // Adjust the path as needed
+import { saveCartToStorage } from "../../utils/storageUtils"; // Adjust the path as needed
 
 const HEADER_HEIGHT = 300; // Adjust this value as needed
 
@@ -25,22 +26,29 @@ const HomeCategory = () => {
   const { top } = useSafeAreaInsets();
   const navigation = useNavigation();
   const route = useRoute();
+  const dispatch = useDispatch();
   const [foodItems, setFoodItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const { id } = route.params; // Get the categoryId from route params
   const scrollY = new Animated.Value(0);
+  const cartItems = useSelector((state) => state.cart);
 
   useEffect(() => {
     const fetchFoodItems = async () => {
       try {
-        const response = await fetch(`${BASE_URL}/category/get/${id}`);
+        const token = await AsyncStorage.getItem("userToken");
+
+        const response = await fetch(`${BASE_URL}/category/get/${id}`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the request headers
+          },
+        });
+
         const data = await response.json();
-        
-        // Check the data structure
-        // console.log("Fetched Data:", data);
-        
+
         if (data.foodItems) {
           setFoodItems(data.foodItems);
         } else {
@@ -52,52 +60,105 @@ const HomeCategory = () => {
         setLoading(false);
       }
     };
-  
+
     fetchFoodItems();
   }, [id]);
-  
 
-  const handlePress = () => {
-    navigation.navigate("Home");
+  const handleAddToCart = (item) => {
+    dispatch(addToCart(item));
+    saveCartToStorage(cartItems); // Save cart to AsyncStorage
   };
 
-  const renderFoodItem = (item) => (
-    <View
-      key={item._id}
-      className="bg-white rounded-lg shadow-sm flex-row items-center mb-4 p-3"
-    >
-      <Image
-        source={{ uri: `${BASE_URL}/items_uploads/${item.image}` }} // Adjust image path if needed
-        className="h-14 w-14 rounded-full"
-        resizeMode="cover"
-      />
-      <View className="flex-1 ml-4">
-        <Text className="text-lg font-semibold">{item.itemName}</Text>
-        <Text className="text-green-500">{item.itemPrice}</Text>
-      </View>
-      <LinearGradient
-        colors={["#007022", "#54d17a", "#bcffd0"]}
-        start={{ x: 0, y: 1 }}
-        end={{ x: 1.9, y: 0 }}
-        className="rounded-xl"
+  const handleIncrement = (item) => {
+    const itemInCart = cartItems.find((i) => i._id === item._id);
+    if (itemInCart) {
+      dispatch(
+        updateCartQuantity({
+          itemId: item._id,
+          quantity: itemInCart.quantity + 1,
+        })
+      );
+      saveCartToStorage(cartItems); // Save cart to AsyncStorage
+    }
+  };
+
+  const handleDecrement = (item) => {
+    const itemInCart = cartItems.find((i) => i._id === item._id);
+    if (itemInCart) {
+      if (itemInCart.quantity > 1) {
+        dispatch(
+          updateCartQuantity({
+            itemId: item._id,
+            quantity: itemInCart.quantity - 1,
+          })
+        );
+      } else {
+        dispatch(removeFromCart({ itemId: item._id }));
+      }
+      saveCartToStorage(cartItems); // Save cart to AsyncStorage
+    }
+  };
+
+  const renderFoodItem = (item) => {
+    const itemInCart = cartItems.find((i) => i._id === item._id);
+
+    return (
+      <View
+        key={item._id}
+        className="bg-white rounded-lg shadow-sm flex-row items-center mb-4 p-3"
       >
-        <Pressable
-          className="px-4 py-2 justify-center items-center"
-          onPress={handlePress}
-        >
-          <Text
-            className="text-white"
-            style={{
-              fontFamily: FontFamily.poppinsRegular,
-              fontSize: FontSize.size_mini,
-            }}
+        <Image
+          source={{ uri: `${BASE_URL}/items_uploads/${item.image}` }} // Adjust image path if needed
+          className="h-14 w-14 rounded-full"
+          resizeMode="cover"
+        />
+        <View className="flex-1 ml-4">
+          <Text className="text-lg font-semibold">{item.itemName}</Text>
+          <Text className="text-green-500">{item.itemPrice}</Text>
+        </View>
+        {itemInCart ? (
+          <View className="flex-row items-center space-x-2">
+            <TouchableOpacity
+              onPress={() => handleDecrement(item)}
+              className="p-2 bg-gray-200 rounded-full"
+            >
+              <Ionicons name="remove" size={16} color="black" />
+            </TouchableOpacity>
+            <Text>{itemInCart.quantity}</Text>
+            <TouchableOpacity
+              onPress={() => handleIncrement(item)}
+              className="p-2 bg-gray-200 rounded-full"
+            >
+              <Ionicons name="add" size={16} color="black" />
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <LinearGradient
+            colors={["#007022", "#54d17a", "#bcffd0"]}
+            start={{ x: 0, y: 1 }}
+            end={{ x: 1.9, y: 0 }}
+            className="rounded-md"
           >
-            Add
-          </Text>
-        </Pressable>
-      </LinearGradient>
-    </View>
-  );
+            <TouchableOpacity
+              onPress={() => handleAddToCart(item)}
+              className="py-1 justify-center items-center flex-row space-x-1"
+            >
+              {/* <Ionicons name="cart" size={15} color="white" /> */}
+              <Text
+                className="text-white"
+                style={{
+                  fontFamily: FontFamily.poppinsMedium,
+                  fontSize: FontSize.size_mini,
+                }}
+              >
+                Add to cart
+              </Text>
+            </TouchableOpacity>
+          </LinearGradient>
+        )}
+      </View>
+    );
+  };
 
   return (
     <View className="flex-1">

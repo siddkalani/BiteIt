@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Text, TouchableOpacity, View, Alert } from 'react-native';
 import * as Icon from 'react-native-feather';
 import { useDispatch } from 'react-redux';
@@ -35,13 +35,23 @@ const Footer = () => {
     );
   };
 
+  const handleNavigateToOrderHistory = () => {
+    navigation.navigate('OrderHistory');
+  };
+
   return (
     <View className="flex-row justify-around items-center bg-white border-t border-gray-200 py-2 shadow-lg">
       <TouchableOpacity onPress={handleLogout} className="items-center p-2 rounded-lg">
         <Icon.Home width={24} height={24} stroke="black" />
+        <Text>Home</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={handleNavigateToOrderHistory} className="items-center p-2 rounded-lg">
+        <Icon.List width={24} height={24} stroke="black" />
+        <Text>Orders</Text>
       </TouchableOpacity>
       <TouchableOpacity className="items-center p-2 rounded-lg">
         <Icon.User width={24} height={24} stroke="black" />
+        <Text>Profile</Text>
       </TouchableOpacity>
     </View>
   );

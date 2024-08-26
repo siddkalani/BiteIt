@@ -52,32 +52,18 @@ import AdminHome from "./screens/Admin/AdminHome";
 import SearchResults from "./screens/Main/SearchBar/SearchResults";
 import HomeCategory from "./screens/Categories/HomeCategory";
 import CartPage from "./screens/Cart/CartPage";
+import OrderHistoryPage from "./screens/Cart/OrderHistoryPage";
 
 const Stack = createNativeStackNavigator();
 
 function AppNavigator() {
   const dispatch = useDispatch();
-  const timeoutRef = useRef(null);
 
   useEffect(() => {
-    const handleLogout = async () => {
-      await AsyncStorage.clear();
-      dispatch(logoutUser());
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "SignIn" }],
-      });
-    };
-
     const checkAuth = async () => {
       const token = await AsyncStorage.getItem("userToken");
 
       if (token) {
-        // Automatically log the user out after 30 seconds
-        timeoutRef.current = setTimeout(() => {
-          handleLogout();
-        }, 30000);
-
         // Navigate to the home screen
         navigation.reset({
           index: 0,
@@ -94,7 +80,7 @@ function AppNavigator() {
     checkAuth();
 
     // Cleanup the timeout when the component unmounts
-    return () => clearTimeout(timeoutRef.current);
+    return () => {}; // No need to clear timeout now
   }, [dispatch]);
 
   return (
@@ -109,6 +95,7 @@ function AppNavigator() {
         <Stack.Screen name="SearchResults" component={SearchResults} />
         <Stack.Screen name="FoodItem" component={FoodItem} />
         <Stack.Screen name="CartPage" component={CartPage} />
+        <Stack.Screen name="OrderHistory" component={OrderHistoryPage} />
       </Stack.Navigator>
     </NavigationContainer>
   );
