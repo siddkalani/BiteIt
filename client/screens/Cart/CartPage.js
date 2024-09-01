@@ -94,7 +94,7 @@ const CartPage = () => {
             itemQuantity: item.quantity,
             totalAmount: totalBill,
             payment: 1,
-            status: 1, // Default status
+            status: "Pending", // Default status
           }),
         });
 

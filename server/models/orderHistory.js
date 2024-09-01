@@ -12,9 +12,18 @@ const orderHistorySchema = mongoose.Schema(
       ref: "Canteen",
       // required: true,
     },
+    canteenName: {
+      type: String,
+      required: true,
+    },
     itemId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Item",
+      ref: "FoodItem",
+      // required: true,
+    },
+    itemName: {
+      type: String,
+
       // required: true,
     },
     itemQuantity: {
@@ -30,9 +39,16 @@ const orderHistorySchema = mongoose.Schema(
       // required: true,
     },
     status: {
-      type: Number,
-      required: true,
-      default: 0, // 0 -> not delivered , 1 -> delivered
+      type: String,
+      enum: [
+        "Pending",
+        "Accepted",
+        "Rejected",
+        "Preparing",
+        "Ready",
+        "Delivered",
+      ],
+      default: "Pending",
     },
     orderPlacedAt: {
       type: Date,
@@ -44,4 +60,4 @@ const orderHistorySchema = mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("orderHistory", orderHistorySchema);
+module.exports = mongoose.model("OrderHistory", orderHistorySchema);

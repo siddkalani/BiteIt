@@ -10,15 +10,14 @@ const orderSchema = new mongoose.Schema(
     canteenId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Canteen",
-      // required: true if canteen ID will sometimes be used
     },
     canteenName: {
       type: String,
-      required: true, // Recommend making this required if canteen ID is optional
+      required: true, 
     },
     itemId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Item",
+      ref: "FoodItem",
       required: true,
     },
     itemName: {
@@ -38,17 +37,14 @@ const orderSchema = new mongoose.Schema(
       default: 0, // 0 -> not done, 1 -> payment done
       required: true,
     },
-    status: {
-      type: Number,
-      required: true,
-    },
+    status: { type: String, enum: ["Pending", "Accepted", "Rejected", "Preparing", "Ready" ,"Delivered"], default: "Pending" }, // Status field
     orderPlacedAt: {
       type: Date,
-      default: Date.now, // Optional, since timestamps include createdAt
+      default: Date.now, 
     },
   },
   {
-    timestamps: true, // Adds createdAt and updatedAt automatically
+    timestamps: true, 
   }
 );
 

@@ -53,6 +53,7 @@ import SearchResults from "./screens/Main/SearchBar/SearchResults";
 import HomeCategory from "./screens/Categories/HomeCategory";
 import CartPage from "./screens/Cart/CartPage";
 import OrderHistoryPage from "./screens/Cart/OrderHistoryPage";
+import PendingOrders from "./screens/Admin/PendingOrder";
 
 const Stack = createNativeStackNavigator();
 
@@ -96,6 +97,7 @@ function AppNavigator() {
         <Stack.Screen name="FoodItem" component={FoodItem} />
         <Stack.Screen name="CartPage" component={CartPage} />
         <Stack.Screen name="OrderHistory" component={OrderHistoryPage} />
+        <Stack.Screen name="PendingOrder" component={PendingOrders} />
       </Stack.Navigator>
     </NavigationContainer>
   );

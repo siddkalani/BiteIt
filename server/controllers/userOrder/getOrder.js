@@ -1,6 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Order = require("../../models/orderModel");
-const OrderHistory = require("../../models/orderModel");
+const OrderHistory = require("../../models/orderHistory");
 
 // Get orders placed by a specific user
 //GET -> /user/order/:userId
@@ -8,7 +8,7 @@ const getUserOrders = asyncHandler(async (req, res) => {
   const { userId } = req.params;
 
   try {
-    const orders = await Order.find({ userId }).populate("userId", "name");
+    const orders = await OrderHistory.find({ userId }).populate("userId", "name");
     res.status(200).json({ orders: orders });
   } catch (error) {
     res.status(500).json({ message: "Error fetching user's orders", error });
