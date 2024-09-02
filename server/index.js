@@ -14,7 +14,11 @@ const app = express();
 dbConnection();
 
 // Middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -38,14 +42,13 @@ app.use(errorHandler);
 
 // Initialize Socket.IO
 const { server, io } = initializeSocket(app);
-app.set('io', io); // Set the io instance on the app
+app.set("io", io); // Set the io instance on the app
 
 // Start the server
 const port = process.env.PORT || 3000;
 server.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
 });
-
 
 // const express = require("express");
 // const dotenv = require("dotenv").config();

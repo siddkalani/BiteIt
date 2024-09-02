@@ -1,11 +1,12 @@
 const asyncHandler = require("express-async-handler");
 const Order = require("../../../models/orderModel");
 const OrderHistory = require("../../../models/orderHistory");
+const {sendNotification}  = require('../../../utils/notification')
 
 const getPendingOrders = asyncHandler(async (req, res) => {
   try {
     // Find orders with status "Pending"
-    const orders = await Order.find({ status: { $in: ["Pending"] } }).select(
+    const orders = await Order.find({ status: { $in: ['Pending', 'Accepted', 'Preparing', 'Ready'] } }).select(
       "userId itemId itemName itemQuantity totalAmount payment status canteenId canteenName orderPlacedAt updatedAt"
     );
 
@@ -55,12 +56,15 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
   switch (status) {
     case "Accepted":
       io.emit("orderAccepted", order);
+      await sendNotification(order.userId, "Order Accepted", `Your order has been accepted.`);
       break;
     case "Preparing":
       io.emit("orderPreparing", order);
+      await sendNotification(order.userId, "Order Preparing", `Your order is now being prepared.`);
       break;
     case "Ready":
       io.emit("orderReady", order);
+      await sendNotification(order.userId, "Order Ready", `Your order is ready for pickup.`);
       break;
     case "Delivered":
       io.emit("orderDelivered", order);
@@ -90,9 +94,11 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
           .json({ message: "Error saving order history", error });
       }
 
+      await sendNotification(order.userId, "Order Delivered", `Your order has been delivered.`);
       break;
     case "Rejected":
       io.emit("orderRejected", order);
+      await sendNotification(order.userId, "Order Rejected", `Your order has been rejected.`);
       break;
     default:
       break;
@@ -100,4 +106,5 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
 
   res.status(200).json({ message: `Order ${status} successfully`, order });
 });
+
 module.exports = { getPendingOrders, updateOrderStatus };
