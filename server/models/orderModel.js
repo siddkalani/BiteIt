@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const orderSchema = mongoose.Schema(
+const orderSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -10,11 +10,18 @@ const orderSchema = mongoose.Schema(
     canteenId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Canteen",
-      required: true,
+    },
+    canteenName: {
+      type: String,
+      required: true, 
     },
     itemId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Item",
+      ref: "FoodItem",
+      required: true,
+    },
+    itemName: {
+      type: String,
       required: true,
     },
     itemQuantity: {
@@ -27,20 +34,17 @@ const orderSchema = mongoose.Schema(
     },
     payment: {
       type: Number,
-      default: 0,  // 0 -> not done , 1 -> payment done
+      default: 0, // 0 -> not done, 1 -> payment done
       required: true,
     },
-    status: {
-      type: Number,
-      required: true,
-    },
+    status: { type: String, enum: ["Pending", "Accepted", "Rejected", "Preparing", "Ready" ,"Delivered"], default: "Pending" }, // Status field
     orderPlacedAt: {
       type: Date,
-      default: Date.now,
+      default: Date.now, 
     },
   },
   {
-    timestamps: true,
+    timestamps: true, 
   }
 );
 

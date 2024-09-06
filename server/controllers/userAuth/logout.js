@@ -14,7 +14,7 @@ const logout = asyncHandler(async (req, res) => {
     let user = await User.findOne({ tokens: token });
     if (user) {
       // Remove token from user's tokens array
-      user.tokens = user.tokens.filter(t => t !== token);
+      user.tokens = user.tokens.filter((t) => t !== token);
       await user.save();
       return res.status(200).json({ message: "Logout successful" });
     }
@@ -23,7 +23,7 @@ const logout = asyncHandler(async (req, res) => {
     let admin = await Admin.findOne({ tokens: token });
     if (admin) {
       // Remove token from admin's tokens array
-      admin.tokens = admin.tokens.filter(t => t !== token);
+      admin.tokens = admin.tokens.filter((t) => t !== token);
       await admin.save();
       return res.status(200).json({ message: "Logout successful" });
     }

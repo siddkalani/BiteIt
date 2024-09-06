@@ -174,6 +174,7 @@ import SearchHistory from "./../SearchBar/SearchHistory";
 import { FontFamily, FontSize } from "../../../GlobalStyles";
 import Header from "../../../components/Layout/BaseHeader";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SearchModal = ({ isModalVisible, closeSearchModal }) => {
   const dispatch = useDispatch();
@@ -204,8 +205,16 @@ const SearchModal = ({ isModalVisible, closeSearchModal }) => {
     if (text.length >= 2) {
       setIsLoading(true);
       try {
+        // const response = await axios.get(`${BASE_URL}/food-item/search`, {
+        //   params: { query: text },
+        // });
+        const token = await AsyncStorage.getItem("userToken");
+
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
         const response = await axios.get(`${BASE_URL}/food-item/search`, {
           params: { query: text },
+          headers: headers, // Pass the headers here
         });
         setSearchResults(response.data.items);
       } catch (error) {
@@ -221,20 +230,21 @@ const SearchModal = ({ isModalVisible, closeSearchModal }) => {
   const updateSearchHistory = (item) => {
     setSearchHistory((prevHistory) => {
       // Remove the item if it already exists in the history
-      const updatedHistory = prevHistory.filter((historyItem) => historyItem.name !== item.itemName);
-      
+      const updatedHistory = prevHistory.filter(
+        (historyItem) => historyItem.name !== item.itemName
+      );
+
       // Add the new item to the top of the list
       updatedHistory.unshift({ name: item.itemName, image: item.image });
-  
+
       // Limit the history to the most recent 5 items
       if (updatedHistory.length > 5) {
         updatedHistory.pop(); // Remove the oldest item if history exceeds 5 items
       }
-      
+
       return updatedHistory;
     });
   };
-  
 
   const removeSearchItem = (itemName) => {
     setSearchHistory((prevHistory) =>

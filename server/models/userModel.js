@@ -4,7 +4,7 @@ const userSchema = mongoose.Schema(
   {
     phone: {
       type: String,
-      required: true,
+      // required: true,
     },
     name: {
       type: String,
@@ -19,7 +19,10 @@ const userSchema = mongoose.Schema(
     otpExpires: {
       type: Date,
     },
-    tokens: [{ type: String }],
+    pushToken: {
+      type: String,
+      // required: true,
+    },
   },
   {
     timestamps: true,
