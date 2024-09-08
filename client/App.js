@@ -5,9 +5,9 @@ import { Alert, Platform } from "react-native";
 import * as Notifications from "expo-notifications";
 import AppNavigator from "./navigation";
 import store from "./store";
-import io from 'socket.io-client';
+import io from "socket.io-client";
 import { BASE_URL } from "@env";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Configure notification channels for Android
 if (Platform.OS === "android") {
@@ -33,7 +33,8 @@ const App = () => {
     const registerForPushNotificationsAsync = async () => {
       let token;
       if (Platform.OS === "ios") {
-        const { status: existingStatus } = await Notifications.getPermissionsAsync();
+        const { status: existingStatus } =
+          await Notifications.getPermissionsAsync();
         let finalStatus = existingStatus;
         if (existingStatus !== "granted") {
           const { status } = await Notifications.requestPermissionsAsync();
@@ -48,7 +49,7 @@ const App = () => {
       try {
         token = (await Notifications.getExpoPushTokenAsync()).data;
         console.log("Expo Push Token:", token);
-        
+
         // The push token is no longer posted to the server here
       } catch (error) {
         console.error("Failed to get push token:", error);
@@ -59,7 +60,7 @@ const App = () => {
 
     const notificationListener = Notifications.addNotificationReceivedListener(
       (notification) => {
-        console.log('Notification received:', notification);
+        console.log("Notification received:", notification);
         const { title, body } = notification.request.content;
         Alert.alert(title, body);
       }
@@ -74,14 +75,14 @@ const App = () => {
     // Initialize Socket.IO
     const socket = io(BASE_URL); // Replace with your server's IP address
 
-    socket.on('connect', () => {
-      console.log('Connected to server');
+    socket.on("connect", () => {
+      console.log("Connected to server");
       // Join a room or emit events as needed
-      socket.emit('joinRoom', 'roomId');
+      socket.emit("joinRoom", "roomId");
     });
 
-    socket.on('disconnect', () => {
-      console.log('Disconnected from server');
+    socket.on("disconnect", () => {
+      console.log("Disconnected from server");
     });
 
     return () => {
@@ -103,8 +104,6 @@ const App = () => {
 };
 
 export default App;
-
-
 
 // import * as React from "react";
 // import { useFonts } from "expo-font";
