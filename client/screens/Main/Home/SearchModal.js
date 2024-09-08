@@ -269,7 +269,7 @@ const SearchModal = ({ isModalVisible, closeSearchModal }) => {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View className="flex-1 justify-start bg-black bg-opacity-50">
+          <View className="flex-1 justify-start bg-opacity-50">
             <SafeAreaView
               style={{
                 flex: 1,

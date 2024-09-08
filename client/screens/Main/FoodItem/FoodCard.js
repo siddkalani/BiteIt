@@ -187,14 +187,22 @@ const FoodCard = ({ foodItem }) => {
               onPress={handleDecrement}
               className="p-2 bg-gray-200 rounded-full"
             >
-              <Icon.Minus width={16} height={16} stroke="black" />
+              <Icon.Minus width={16} height={16} stroke="green" />
             </TouchableOpacity>
-            <Text>{itemInCart.quantity}</Text>
+            <View className="w-6 items-center justify-center">
+            <Text
+              className="text-lg font-semibold"
+              numberOfLines={1}
+              adjustsFontSizeToFit
+            >
+              {itemInCart.quantity}
+            </Text>
+            </View>
             <TouchableOpacity
               onPress={handleIncrement}
               className="p-2 bg-gray-200 rounded-full"
             >
-              <Icon.Plus width={16} height={16} stroke="black" />
+              <Icon.Plus width={16} height={16} stroke="green" />
             </TouchableOpacity>
           </View>
         ) : (

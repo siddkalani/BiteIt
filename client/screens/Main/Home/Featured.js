@@ -28,20 +28,22 @@ const Featured = () => {
       >
         Menu
       </Text>
-      <View className="flex-row flex-wrap justify-between">
+      <View className="flex-1 justify-center items-center">
         {foodItemsStatus === "loading" ? (
           <ActivityIndicator size="large" color="#007022" />
         ) : foodItemsStatus === "failed" ? (
           <Text>Error: {foodItemsError}</Text>
         ) : (
-          foodItems.map((foodItem) => (
-            <View
-              key={foodItem._id}
-              className="w-[48%] mb-4 rounded-lg shadow bg-white p-2"
-            >
-              <FoodCard foodItem={foodItem} />
-            </View>
-          ))
+          <View className="flex-row flex-wrap justify-between">
+            {foodItems.map((foodItem) => (
+              <View
+                key={foodItem._id}
+                className="w-[48%] mb-4 rounded-lg shadow bg-white p-2"
+              >
+                <FoodCard foodItem={foodItem} />
+              </View>
+            ))}
+          </View>
         )}
       </View>
     </View>
