@@ -6,7 +6,7 @@ const { searchItems } = require("../controllers/foodItemSearch/search");
 const router = express.Router();
 const validateToken = require('../middleware/validateTokenHandler')
 
-router.use(validateToken)
+// router.use(validateToken)
 
 router.route("/get/:id").get(getItem);
 router.route("/get").get(getAllItems);
