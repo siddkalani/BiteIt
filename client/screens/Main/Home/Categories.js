@@ -16,8 +16,8 @@ import { useNavigation } from "@react-navigation/native";
 const Categories = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-
   const category = useSelector((state) => state.category.items);
+  console.log(category)
   const categoryStatus = useSelector((state) => state.category.status);
   const categoryError = useSelector((state) => state.category.error);
 
