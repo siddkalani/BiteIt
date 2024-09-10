@@ -108,7 +108,11 @@
 import React from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart, updateCartQuantity, removeFromCart } from "../../../store/Slices/cartSlice"; // Adjust the path as needed
+import {
+  addToCart,
+  updateCartQuantity,
+  removeFromCart,
+} from "../../../store/Slices/cartSlice"; // Adjust the path as needed
 import { FontFamily, FontSize } from "../../../GlobalStyles";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Icon from "react-native-feather";
@@ -190,13 +194,13 @@ const FoodCard = ({ foodItem }) => {
               <Icon.Minus width={16} height={16} stroke="green" />
             </TouchableOpacity>
             <View className="w-6 items-center justify-center">
-            <Text
-              className="text-lg font-semibold"
-              numberOfLines={1}
-              adjustsFontSizeToFit
-            >
-              {itemInCart.quantity}
-            </Text>
+              <Text
+                className="text-lg font-semibold"
+                numberOfLines={1}
+                adjustsFontSizeToFit
+              >
+                {itemInCart.quantity}
+              </Text>
             </View>
             <TouchableOpacity
               onPress={handleIncrement}

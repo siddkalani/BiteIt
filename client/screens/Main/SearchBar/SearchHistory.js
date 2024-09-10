@@ -32,7 +32,7 @@ const SearchHistory = ({ searchHistory, removeSearchItem }) => {
           >
             <View className="flex-row items-center">
               <Image
-                source={{ uri:`${BASE_URL}/items_uploads/${item.image}` }} // Ensure item.image is a valid URL or path
+                source={{ uri: `${BASE_URL}/items_uploads/${item.image}` }} // Ensure item.image is a valid URL or path
                 className="w-16 h-16 rounded-lg mr-3"
                 style={{ resizeMode: "contain" }}
               />

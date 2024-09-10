@@ -6,8 +6,6 @@
 //   async () => {
 
 //     const response = await fetch(`${BASE_URL}/food-item/get`);
-  
-
 
 //     const data = await response.json();
 
@@ -45,10 +43,9 @@
 
 // export default foodItemSlice;
 
-
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { BASE_URL } from "@env";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const fetchFoodItems = createAsyncThunk(
   "foodItem/fetchFoodItems",

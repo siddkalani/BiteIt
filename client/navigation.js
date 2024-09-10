@@ -21,29 +21,29 @@ const Stack = createNativeStackNavigator();
 function AppNavigator() {
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      const token = await AsyncStorage.getItem("userToken");
+  // useEffect(() => {
+  //   const checkAuth = async () => {
+  //     const token = await AsyncStorage.getItem("userToken");
 
-      if (token) {
-        // Navigate to the home screen
-        navigation.reset({
-          index: 0,
-          routes: [{ name: "Home" }],
-        });
-      } else {
-        navigation.reset({
-          index: 0,
-          routes: [{ name: "SignIn" }],
-        });
-      }
-    };
+  //     if (token) {
+  //       // Navigate to the home screen
+  //       navigation.reset({
+  //         index: 0,
+  //         routes: [{ name: "Home" }],
+  //       });
+  //     } else {
+  //       navigation.reset({
+  //         index: 0,
+  //         routes: [{ name: "SignIn" }],
+  //       });
+  //     }
+  //   };
 
-    checkAuth();
+  //   checkAuth();
 
-    // Cleanup the timeout when the component unmounts
-    return () => {}; // No need to clear timeout now
-  }, [dispatch]);
+  //   // Cleanup the timeout when the component unmounts
+  //   return () => {}; // No need to clear timeout now
+  // }, [dispatch]);
 
   return (
     <NavigationContainer>

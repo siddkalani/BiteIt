@@ -95,27 +95,41 @@
 
 // export default SearchResults;
 
-
 import React from "react";
 import { View, Text, FlatList, Image, TouchableOpacity } from "react-native";
 import { FontFamily, FontSize } from "../../../GlobalStyles";
 import { BASE_URL } from "@env";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart, updateCartQuantity, removeFromCart } from "../../../store/Slices/cartSlice";
+import {
+  addToCart,
+  updateCartQuantity,
+  removeFromCart,
+} from "../../../store/Slices/cartSlice";
 import * as Icon from "react-native-feather";
 import { LinearGradient } from "expo-linear-gradient";
 
-const SearchResults = ({ searchResults, closeSearchModal, updateSearchHistory }) => {
+const SearchResults = ({
+  searchResults,
+  closeSearchModal,
+  updateSearchHistory,
+}) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart);
 
   const handleAddToCartPress = (item) => {
-    const existingItem = cartItems.find(cartItem => cartItem._id === item._id);
+    const existingItem = cartItems.find(
+      (cartItem) => cartItem._id === item._id
+    );
 
     if (existingItem) {
-      dispatch(updateCartQuantity({ itemId: item._id, quantity: existingItem.quantity + 1 }));
+      dispatch(
+        updateCartQuantity({
+          itemId: item._id,
+          quantity: existingItem.quantity + 1,
+        })
+      );
     } else {
       dispatch(addToCart({ ...item, quantity: 1 }));
     }
@@ -125,14 +139,14 @@ const SearchResults = ({ searchResults, closeSearchModal, updateSearchHistory })
   };
 
   const handleIncrement = (itemId) => {
-    const item = cartItems.find(cartItem => cartItem._id === itemId);
+    const item = cartItems.find((cartItem) => cartItem._id === itemId);
     if (item) {
       dispatch(updateCartQuantity({ itemId, quantity: item.quantity + 1 }));
     }
   };
 
   const handleDecrement = (itemId) => {
-    const item = cartItems.find(cartItem => cartItem._id === itemId);
+    const item = cartItems.find((cartItem) => cartItem._id === itemId);
     if (item && item.quantity > 1) {
       dispatch(updateCartQuantity({ itemId, quantity: item.quantity - 1 }));
     } else if (item && item.quantity === 1) {
@@ -141,7 +155,9 @@ const SearchResults = ({ searchResults, closeSearchModal, updateSearchHistory })
   };
 
   const renderItem = ({ item }) => {
-    const existingItem = cartItems.find(cartItem => cartItem._id === item._id);
+    const existingItem = cartItems.find(
+      (cartItem) => cartItem._id === item._id
+    );
 
     return (
       <View
@@ -179,7 +195,12 @@ const SearchResults = ({ searchResults, closeSearchModal, updateSearchHistory })
             <TouchableOpacity
               onPress={() => handleDecrement(item._id)}
               className="p-2 bg-gray-200 rounded-full"
-              style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center' }}
+              style={{
+                width: 30,
+                height: 30,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
             >
               <Icon.Minus width={16} height={16} stroke="black" />
             </TouchableOpacity>
@@ -187,7 +208,12 @@ const SearchResults = ({ searchResults, closeSearchModal, updateSearchHistory })
             <TouchableOpacity
               onPress={() => handleIncrement(item._id)}
               className="p-2 bg-gray-200 rounded-full"
-              style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center' }}
+              style={{
+                width: 30,
+                height: 30,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
             >
               <Icon.Plus width={16} height={16} stroke="black" />
             </TouchableOpacity>

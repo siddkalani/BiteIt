@@ -1,5 +1,12 @@
 import React, { useEffect } from "react";
-import { View, Text, FlatList, Image, TouchableOpacity, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import { FontFamily, FontSize } from "../../../GlobalStyles";
 import { BASE_URL } from "@env";
 import { LinearGradient } from "expo-linear-gradient";
@@ -36,7 +43,7 @@ const SearchCategories = () => {
         data={foodItems}
         renderItem={({ item }) => (
           <View className="w-[33%] rounded-full bg-white">
-            <CategoryCard foodItem={item}/>
+            <CategoryCard foodItem={item} />
           </View>
         )}
         keyExtractor={(item) => item._id}
