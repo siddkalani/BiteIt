@@ -83,7 +83,7 @@ const CartPage = () => {
       );
     }
   };
-  
+
 
   const totalBill = cartItems.reduce(
     (total, item) => total + item.itemPrice * item.quantity,
@@ -159,52 +159,51 @@ const CartPage = () => {
       </TouchableOpacity> */}
 
       <View className="flex-row items-center space-x-2 mt-2 bg-gray-200 rounded-md">
-          <TouchableOpacity
-            onPress={() => handleDecrement(item._id)}
-            className="p-2"
-          >
-            <Icon.Minus width={16} height={16} stroke="green" strokeWidth='3'/>
-          </TouchableOpacity>
-          <View className='w-3.5 items-center justify-center'>
+        <TouchableOpacity
+          onPress={() => handleDecrement(item._id)}
+          className="p-2"
+        >
+          <Icon.Minus width={16} height={16} stroke="green" strokeWidth='3' />
+        </TouchableOpacity>
+        <View className='w-3.5 items-center justify-center'>
           <Text adjustsFontSizeToFit numberOfLines={1} className='font-bold'>{item.quantity}</Text>
-          </View>
-          <TouchableOpacity
-            onPress={() => handleIncrement(item._id)}
-            className="p-2"
-          >
-            <Icon.Plus width={16} height={16} stroke="green" strokeWidth='3'/>
-          </TouchableOpacity>
         </View>
+        <TouchableOpacity
+          onPress={() => handleIncrement(item._id)}
+          className="p-2"
+        >
+          <Icon.Plus width={16} height={16} stroke="green" strokeWidth='3' />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 
   return (
-<SafeAreaView className="flex-1 bg-gray-100">
-      {/* Status bar and header with white background */}
-      <StatusBar
-        barStyle={Platform.OS === "android" ? "dark-content" : "default"}
-        backgroundColor="white"
-      />
-      
-      {/* Back Button */}
-      <View className="bg-white px-4 py-3">
-        <CartHeader />
-      </View>
-
-      {cartItems.length === 0 ? (
-        <Text className="text-center text-lg font-semibold">
-          Your cart is empty
-        </Text>
-      ) : (
-        <View className="flex-1 justify-between px-4">
-          <FlatList
-            data={cartItems}
-            keyExtractor={(item) => item._id}
-            renderItem={renderCartItem}
-            className="my-2"
-            showsVerticalScrollIndicator={false}
-          />
-          <View className='mb-2'>
+    <SafeAreaView className="flex-1 bg-white">
+    {/* Status bar with white background */}
+    <StatusBar
+      barStyle="dark-content"
+      backgroundColor="white" // For Android
+      translucent={false} // Ensures the status bar is not transparent
+    />
+  
+    {/* Back Button with white background */}
+    <View className="bg-white px-4 py-3">
+      <CartHeader />
+    </View>
+  
+    {cartItems.length === 0 ? (
+      <Text className="text-center text-lg font-semibold">Your cart is empty</Text>
+    ) : (
+      <View className="flex-1 justify-between px-4 bg-gray-100">
+        <FlatList
+          data={cartItems}
+          keyExtractor={(item) => item._id}
+          renderItem={renderCartItem}
+          className="my-2"
+          showsVerticalScrollIndicator={false}
+        />
+        <View className="mb-2">
           <View className="bg-white flex-row p-3 items-center rounded-lg shadow-md justify-between">
             <Text className="text-lg font-semibold">Total</Text>
             <Text>${totalBill.toFixed(2)}</Text>
@@ -215,10 +214,7 @@ const CartPage = () => {
             end={{ x: 1.9, y: 0 }}
             className="rounded-xl mt-2"
           >
-            <Pressable
-              className="p-3 justify-center items-center"
-              onPress={handlePlaceOrder}
-            >
+            <Pressable className="p-3 justify-center items-center" onPress={handlePlaceOrder}>
               <Text
                 className="text-white"
                 style={{
@@ -230,10 +226,11 @@ const CartPage = () => {
               </Text>
             </Pressable>
           </LinearGradient>
-          </View>
         </View>
-      )}
-    </SafeAreaView>
+      </View>
+    )}
+  </SafeAreaView>
+  
   );
 };
 

@@ -39,6 +39,10 @@ const Footer = () => {
     navigation.navigate('OrderHistory');
   };
 
+  const handleNavigateToProfile = () => {
+    navigation.navigate('Profile');
+  };
+
   return (
     <View className="flex-row justify-around items-center bg-white border-t border-gray-200 shadow-lg">
       <TouchableOpacity onPress={handleLogout} className="items-center p-2 rounded-lg">
@@ -49,7 +53,7 @@ const Footer = () => {
         <Icon.List width={20} height={20} stroke="black" />
         <Text className='text-xs'>Orders</Text>
       </TouchableOpacity>
-      <TouchableOpacity className="items-center p-2 rounded-lg">
+      <TouchableOpacity onPress={handleNavigateToProfile} className="items-center p-2 rounded-lg">
         <Icon.User width={20} height={20} stroke="black" />
         <Text className='text-xs'>Profile</Text>
       </TouchableOpacity>

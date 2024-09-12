@@ -15,6 +15,7 @@ import HomeCategory from "./screens/Categories/HomeCategory";
 import CartPage from "./screens/Cart/CartPage";
 import OrderHistoryPage from "./screens/Cart/OrderHistoryPage";
 import PendingOrders from "./screens/Admin/PendingOrder";
+import Profile from "./screens/profile/Profile";
 
 const Stack = createNativeStackNavigator();
 
@@ -53,6 +54,7 @@ function AppNavigator() {
         <Stack.Screen name="AdminHome" component={AdminHome} />
         <Stack.Screen name="NewUser" component={NewUser} /> */}
         <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="HomeCategory" component={HomeCategory} />
         <Stack.Screen name="SearchResults" component={SearchResults} />
         <Stack.Screen name="FoodItem" component={FoodItem} />
