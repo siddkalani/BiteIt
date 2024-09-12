@@ -35,7 +35,7 @@ const SearchCategories = () => {
       <FlatList
         data={foodItems}
         renderItem={({ item }) => (
-          <View className="w-[33%] rounded-full bg-white">
+          <View className="w-[22%] bg-white">
             <CategoryCard foodItem={item}/>
           </View>
         )}

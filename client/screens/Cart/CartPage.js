@@ -8,6 +8,7 @@ import {
   Alert,
   Platform,
   StatusBar,
+  Pressable,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -24,6 +25,9 @@ import {
 } from "../../utils/storageUtils"; // Adjust the path as needed
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import CartHeader from "./CartHeader";
+import { LinearGradient } from "expo-linear-gradient";
+import { FontFamily, FontSize } from "../../GlobalStyles";
 
 const CartPage = () => {
   const cartItems = useSelector((state) => state.cart);
@@ -55,13 +59,31 @@ const CartPage = () => {
   const handleDecrement = (itemId) => {
     const item = cartItems.find((item) => item._id === itemId);
     if (item && item.quantity > 1) {
+      // Decrease the quantity
       dispatch(updateCartQuantity({ itemId, quantity: item.quantity - 1 }));
       saveCartToStorage(cartItems); // Save cart to AsyncStorage
     } else if (item && item.quantity === 1) {
-      dispatch(removeFromCart({ itemId }));
-      saveCartToStorage(cartItems); // Save cart to AsyncStorage
+      // Show confirmation alert
+      Alert.alert(
+        "Remove Item",
+        "Are you sure you want to remove this item from the cart?",
+        [
+          {
+            text: "Cancel",
+            style: "cancel",
+          },
+          {
+            text: "Yes",
+            onPress: () => {
+              dispatch(removeFromCart({ itemId }));
+              saveCartToStorage(cartItems); // Save cart to AsyncStorage
+            },
+          },
+        ]
+      );
     }
   };
+  
 
   const totalBill = cartItems.reduce(
     (total, item) => total + item.itemPrice * item.quantity,
@@ -119,7 +141,7 @@ const CartPage = () => {
   };
 
   const renderCartItem = ({ item }) => (
-    <View className="flex-row items-center space-x-2 py-2 px-4 bg-white rounded-lg mb-2">
+    <View className="flex-row items-center space-x-2 my-1 py-3 px-4 bg-white rounded-lg">
       <Image
         source={{ uri: `${BASE_URL}/items_uploads/${item.image}` }}
         style={{ width: 60, height: 60, borderRadius: 8 }}
@@ -127,42 +149,46 @@ const CartPage = () => {
       <View className="flex-1">
         <Text className="font-semibold text-lg">{item.itemName}</Text>
         <Text className="text-gray-500">${item.itemPrice}</Text>
-        <View className="flex-row items-center space-x-2 mt-2">
-          <TouchableOpacity
-            onPress={() => handleDecrement(item._id)}
-            className="p-2 bg-gray-200 rounded-full"
-          >
-            <Icon.Minus width={16} height={16} stroke="black" />
-          </TouchableOpacity>
-          <Text>{item.quantity}</Text>
-          <TouchableOpacity
-            onPress={() => handleIncrement(item._id)}
-            className="p-2 bg-gray-200 rounded-full"
-          >
-            <Icon.Plus width={16} height={16} stroke="black" />
-          </TouchableOpacity>
-        </View>
+
       </View>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={() => handleRemoveFromCart(item._id)}
         className="p-2 bg-red-500 rounded-full"
       >
         <Icon.Trash2 width={16} height={16} stroke="white" />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
+
+      <View className="flex-row items-center space-x-2 mt-2 bg-gray-200 rounded-md">
+          <TouchableOpacity
+            onPress={() => handleDecrement(item._id)}
+            className="p-2"
+          >
+            <Icon.Minus width={16} height={16} stroke="green" strokeWidth='3'/>
+          </TouchableOpacity>
+          <View className='w-3.5 items-center justify-center'>
+          <Text adjustsFontSizeToFit numberOfLines={1} className='font-bold'>{item.quantity}</Text>
+          </View>
+          <TouchableOpacity
+            onPress={() => handleIncrement(item._id)}
+            className="p-2"
+          >
+            <Icon.Plus width={16} height={16} stroke="green" strokeWidth='3'/>
+          </TouchableOpacity>
+        </View>
     </View>
   );
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-100 p-4">
+<SafeAreaView className="flex-1 bg-gray-100">
+      {/* Status bar and header with white background */}
+      <StatusBar
+        barStyle={Platform.OS === "android" ? "dark-content" : "default"}
+        backgroundColor="white"
+      />
+      
       {/* Back Button */}
-      <View className="flex-row items-center mb-4">
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          className="p-2 bg-gray-200 rounded-full"
-        >
-          <Icon.ChevronLeft width={24} height={24} stroke="black" />
-        </TouchableOpacity>
-        <Text className="ml-4 text-lg font-semibold">Cart</Text>
+      <View className="bg-white px-4 py-3">
+        <CartHeader />
       </View>
 
       {cartItems.length === 0 ? (
@@ -170,29 +196,49 @@ const CartPage = () => {
           Your cart is empty
         </Text>
       ) : (
-        <>
+        <View className="flex-1 justify-between px-4">
           <FlatList
             data={cartItems}
             keyExtractor={(item) => item._id}
             renderItem={renderCartItem}
+            className="my-2"
+            showsVerticalScrollIndicator={false}
           />
-          <View className="bg-white p-4 rounded-lg shadow-md mt-4">
-            <Text className="text-lg font-semibold">
-              Total: ${totalBill.toFixed(2)}
-            </Text>
+          <View className='mb-2'>
+          <View className="bg-white flex-row p-3 items-center rounded-lg shadow-md justify-between">
+            <Text className="text-lg font-semibold">Total</Text>
+            <Text>${totalBill.toFixed(2)}</Text>
           </View>
-          <TouchableOpacity
-            onPress={handlePlaceOrder}
-            className="bg-green-500 p-4 rounded-lg mt-4"
+          <LinearGradient
+            colors={["#007022", "#54d17a", "#bcffd0"]}
+            start={{ x: 0, y: 1 }}
+            end={{ x: 1.9, y: 0 }}
+            className="rounded-xl mt-2"
           >
-            <Text className="text-center text-white font-semibold text-lg">
-              Place Order
-            </Text>
-          </TouchableOpacity>
-        </>
+            <Pressable
+              className="p-3 justify-center items-center"
+              onPress={handlePlaceOrder}
+            >
+              <Text
+                className="text-white"
+                style={{
+                  fontFamily: FontFamily.poppinsSemiBold,
+                  fontSize: FontSize.size_lg,
+                }}
+              >
+                Place order
+              </Text>
+            </Pressable>
+          </LinearGradient>
+          </View>
+        </View>
       )}
     </SafeAreaView>
   );
 };
 
 export default CartPage;
+
+
+
+

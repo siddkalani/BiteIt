@@ -40,18 +40,18 @@ const Footer = () => {
   };
 
   return (
-    <View className="flex-row justify-around items-center bg-white border-t border-gray-200 py-2 shadow-lg">
+    <View className="flex-row justify-around items-center bg-white border-t border-gray-200 shadow-lg">
       <TouchableOpacity onPress={handleLogout} className="items-center p-2 rounded-lg">
-        <Icon.Home width={24} height={24} stroke="black" />
-        <Text>Home</Text>
+        <Icon.Home width={20} height={20} stroke="black" />
+        <Text className='text-xs'>Home</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={handleNavigateToOrderHistory} className="items-center p-2 rounded-lg">
-        <Icon.List width={24} height={24} stroke="black" />
-        <Text>Orders</Text>
+        <Icon.List width={20} height={20} stroke="black" />
+        <Text className='text-xs'>Orders</Text>
       </TouchableOpacity>
       <TouchableOpacity className="items-center p-2 rounded-lg">
-        <Icon.User width={24} height={24} stroke="black" />
-        <Text>Profile</Text>
+        <Icon.User width={20} height={20} stroke="black" />
+        <Text className='text-xs'>Profile</Text>
       </TouchableOpacity>
     </View>
   );

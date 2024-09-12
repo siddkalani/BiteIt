@@ -11,15 +11,14 @@ const CategoryCard = ({ foodItem }) => {
 
   const handlePress = () => {
     navigation.navigate("FoodItem", { foodItem });
-
   };
 
   return (
     <TouchableOpacity style={{ flex: 1 }} className=''>
-      <View className="bg-white rounded-lg p-2 w-full items-center space-y-1">
+      <View className="bg-white rounded-lg py-2 w-full items-center space-y-1">
         <Image
           source={{ uri: `${BASE_URL}/items_uploads/${foodItem.image}` }}
-          style={{ width: "100%", height: 100, borderRadius: 8 }}
+          style={{ width: "100%", height:72}}
           resizeMode="cover"
           className='rounded-full'
         />
