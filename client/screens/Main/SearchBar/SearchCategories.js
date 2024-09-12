@@ -1,5 +1,12 @@
 import React, { useEffect } from "react";
-import { View, Text, FlatList, Image, TouchableOpacity, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import { FontFamily, FontSize } from "../../../GlobalStyles";
 import { BASE_URL } from "@env";
 import { LinearGradient } from "expo-linear-gradient";

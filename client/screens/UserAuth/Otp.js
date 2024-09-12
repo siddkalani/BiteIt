@@ -478,14 +478,25 @@
 
 // export default OTP;
 
-import React, { useState, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Pressable, SafeAreaView, StyleSheet, Alert, Platform, StatusBar } from 'react-native'; // Ensure StatusBar is imported from react-native
-import { useNavigation, useRoute } from '@react-navigation/native';
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { LinearGradient } from 'expo-linear-gradient';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import * as Notifications from 'expo-notifications';
+import React, { useState, useRef } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  Alert,
+  Platform,
+  StatusBar,
+} from "react-native"; // Ensure StatusBar is imported from react-native
+import { useNavigation, useRoute } from "@react-navigation/native";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { LinearGradient } from "expo-linear-gradient";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import * as Notifications from "expo-notifications";
 
 import { BASE_URL } from "@env"; // Replace with your backend URL
 
@@ -537,7 +548,7 @@ const OTP = () => {
         await AsyncStorage.setItem("userToken", data.token);
         await AsyncStorage.setItem("userName", data.user.name);
         await AsyncStorage.setItem("userId", data.user.id);
-        console.log(data.token)
+        console.log(data.token);
         // Post the push token to the backend
         await postPushToken();
 
@@ -547,7 +558,7 @@ const OTP = () => {
         data.message === "Admin phone verified successfully!"
       ) {
         await AsyncStorage.setItem("adminToken", data.token);
- 
+
         if (data.admin?.name) {
           await AsyncStorage.setItem("adminName", data.admin.name);
         }
@@ -588,7 +599,7 @@ const OTP = () => {
 
   const postPushToken = async () => {
     try {
-      const userId = await AsyncStorage.getItem('userId');
+      const userId = await AsyncStorage.getItem("userId");
       const pushToken = await getPushTokenFromDevice(); // Get the push token from the device
 
       const response = await axios.post(`${BASE_URL}/user/pushToken`, {
@@ -596,23 +607,24 @@ const OTP = () => {
         token: pushToken,
       });
 
-      console.log('Push token posted successfully:', response.data);
+      console.log("Push token posted successfully:", response.data);
     } catch (error) {
-      console.error('Error posting push token to backend:', error);
+      console.error("Error posting push token to backend:", error);
     }
   };
 
   const getPushTokenFromDevice = async () => {
-    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    const { status: existingStatus } =
+      await Notifications.getPermissionsAsync();
     let finalStatus = existingStatus;
 
-    if (existingStatus !== 'granted') {
+    if (existingStatus !== "granted") {
       const { status } = await Notifications.requestPermissionsAsync();
       finalStatus = status;
     }
 
-    if (finalStatus !== 'granted') {
-      Alert.alert('Failed to get push token for push notification!');
+    if (finalStatus !== "granted") {
+      Alert.alert("Failed to get push token for push notification!");
       return;
     }
 

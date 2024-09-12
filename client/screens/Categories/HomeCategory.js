@@ -17,7 +17,11 @@ import { BlurView } from "expo-blur";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BASE_URL } from "@env";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart, updateCartQuantity, removeFromCart } from "../../store/Slices/cartSlice"; // Adjust the path as needed
+import {
+  addToCart,
+  updateCartQuantity,
+  removeFromCart,
+} from "../../store/Slices/cartSlice"; // Adjust the path as needed
 import { saveCartToStorage } from "../../utils/storageUtils"; // Adjust the path as needed
 
 const HEADER_HEIGHT = 300; // Adjust this value as needed

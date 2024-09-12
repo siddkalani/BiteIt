@@ -7,7 +7,6 @@
 //   async () => {
 
 //     const response = await fetch(`${BASE_URL}/category/get`);
-    
 
 //     const data = await response.json();
 //     // return data;
@@ -40,10 +39,9 @@
 
 // export default categorySlice;
 
-
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { BASE_URL } from "@env";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const fetchcategory = createAsyncThunk(
   "category/fetchcategory",
