@@ -19,11 +19,10 @@ const SearchHistory = ({ searchHistory, removeSearchItem }) => {
         data={searchHistory}
         renderItem={({ item }) => (
           <View
-            className="bg-white p-4 mt-2 rounded-lg shadow flex-row justify-between items-center"
+            className="p-2.5 mt-2 rounded-lg shadow flex-row justify-between items-center bg-slate-100"
             style={{
               width: "98%",
               alignSelf: "center",
-              shadowColor: "#000",
               shadowOffset: { width: 0, height: 2 },
               shadowOpacity: 0.1,
               shadowRadius: 5,
@@ -33,8 +32,8 @@ const SearchHistory = ({ searchHistory, removeSearchItem }) => {
             <View className="flex-row items-center">
               <Image
                 source={{ uri: `${BASE_URL}/items_uploads/${item.image}` }} // Ensure item.image is a valid URL or path
-                className="w-16 h-16 rounded-lg mr-3"
-                style={{ resizeMode: "contain" }}
+                className="w-14 h-12 rounded-md mr-3"
+                style={{ resizeMode: "cover" }}
               />
               <Text
                 style={{
@@ -46,12 +45,11 @@ const SearchHistory = ({ searchHistory, removeSearchItem }) => {
               </Text>
             </View>
             <TouchableOpacity onPress={() => removeSearchItem(item.name)}>
-              <Icon.X width={20} height={20} stroke="red" />
+              <Icon.X width={20} height={20} stroke="gray" strokeWidth={3} />
             </TouchableOpacity>
           </View>
         )}
         keyExtractor={(item, index) => index.toString()}
-        contentContainerStyle={{ paddingBottom: 10 }}
       />
     </View>
   );

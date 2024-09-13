@@ -16,6 +16,7 @@ import CartPage from "./screens/Cart/CartPage";
 import OrderHistoryPage from "./screens/Cart/OrderHistoryPage";
 import PendingOrders from "./screens/Admin/PendingOrder";
 import Profile from "./screens/profile/Profile";
+import PaymentService from "./screens/payment/PaymentService";
 
 const Stack = createNativeStackNavigator();
 
@@ -61,6 +62,7 @@ function AppNavigator() {
         <Stack.Screen name="CartPage" component={CartPage} />
         <Stack.Screen name="OrderHistory" component={OrderHistoryPage} />
         <Stack.Screen name="PendingOrder" component={PendingOrders} />
+        <Stack.Screen name="PaymentService" component={PaymentService} />
       </Stack.Navigator>
     </NavigationContainer>
   );

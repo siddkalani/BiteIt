@@ -64,14 +64,14 @@ const SearchResults = ({
 
     return (
       <View
-        className="bg-white p-4 mt-2 rounded-lg shadow flex-row justify-between items-center"
-        style={{ flexDirection: "row", marginVertical: 8 }}
+        className="w-full py-3 px-3 mt-4 rounded-lg bg-gray-100 flex-row justify-between items-center"
+        // style={{ flexDirection: "row", marginVertical: 8 }}
       >
         <View className="flex-row items-center">
           <Image
             source={{ uri: `${BASE_URL}/items_uploads/${item.image}` }}
-            className="w-16 h-16 rounded-lg mr-3"
-            style={{ resizeMode: "contain" }}
+            className="w-12 h-12 rounded-lg mr-3"
+            style={{ resizeMode: "cover" }}
           />
           <View>
             <Text
@@ -85,7 +85,7 @@ const SearchResults = ({
             <Text
               style={{
                 fontFamily: FontFamily.poppinsRegular,
-                fontSize: FontSize.size_sm,
+                fontSize: FontSize.size_mini,
                 color: "#888",
               }}
             >
@@ -94,55 +94,44 @@ const SearchResults = ({
           </View>
         </View>
         {existingItem ? (
-          <View className="flex-row items-center space-x-2">
-            <TouchableOpacity
-              onPress={() => handleDecrement(item._id)}
-              className="p-2 bg-gray-200 rounded-full"
-              style={{
-                width: 30,
-                height: 30,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Icon.Minus width={16} height={16} stroke="black" />
-            </TouchableOpacity>
-            <Text>{existingItem.quantity}</Text>
-            <TouchableOpacity
-              onPress={() => handleIncrement(item._id)}
-              className="p-2 bg-gray-200 rounded-full"
-              style={{
-                width: 30,
-                height: 30,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Icon.Plus width={16} height={16} stroke="black" />
-            </TouchableOpacity>
-          </View>
+           <View className="flex-row items-center space-x-2 mt-2 bg-gray-200 rounded-md">
+           <TouchableOpacity
+             onPress={() => handleDecrement(item._id)}
+             className="p-2"
+           >
+             <Icon.Minus width={16} height={16} stroke="green" strokeWidth='3' />
+           </TouchableOpacity>
+           <View className='w-3.5 items-center justify-center'>
+             <Text adjustsFontSizeToFit numberOfLines={1} className='font-bold'>{existingItem.quantity}</Text>
+           </View>
+           <TouchableOpacity
+             onPress={() => handleIncrement(item._id)}
+             className="p-2"
+           >
+             <Icon.Plus width={16} height={16} stroke="green" strokeWidth='3' />
+           </TouchableOpacity>
+         </View>
         ) : (
           <LinearGradient
             colors={["#007022", "#54d17a", "#bcffd0"]}
             start={{ x: 0, y: 1 }}
             end={{ x: 1.9, y: 0 }}
             className="rounded-md"
-            style={{ paddingHorizontal: 10, paddingVertical: 5 }}
+            style={{ paddingHorizontal: 10, paddingVertical:6 }}
           >
             <TouchableOpacity
               onPress={() => handleAddToCartPress(item)}
               className="flex-row items-center justify-center"
               style={{ borderRadius: 5 }}
             >
-              <Icon.ShoppingBag width={15} height={15} stroke="white" />
+              <Icon.Plus width={15} height={15} stroke="white" strokeWidth={3}/>
               <Text
-                className="text-white ml-2"
-                style={{
-                  fontFamily: FontFamily.poppinsMedium,
-                  fontSize: FontSize.size_xs,
-                }}
+                className="text-white ml-1 font-bold"
+                // style={{
+                //   fontFamily: FontFamily.poppinsMedium,
+                // }}
               >
-                Add to Cart
+                Add
               </Text>
             </TouchableOpacity>
           </LinearGradient>

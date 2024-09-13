@@ -91,46 +91,52 @@ const CartPage = () => {
   );
 
   const handlePlaceOrder = async () => {
-    try {
-      // Retrieve user token and userId from AsyncStorage
-      const token = await AsyncStorage.getItem("userToken");
-      const userId = await AsyncStorage.getItem("userId");
+    
 
-      if (!token || !userId) {
-        Alert.alert("Error", "User is not authenticated");
-        return;
-      }
+    try {
+      navigation.navigate('PaymentService');
+      // Retrieve user token and userId from AsyncStorage
+      // const token = await AsyncStorage.getItem("userToken");
+      // const userId = await AsyncStorage.getItem("userId");
+
+      // if (!token || !userId) {
+      //   Alert.alert("Error", "User is not authenticated");
+      //   return;
+      // }
 
       // Post each order item separately
       for (const item of cartItems) {
-        const response = await fetch(`${BASE_URL}/user/order/add`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            userId,
-            canteenName: "Engineering Canteen",
-            itemId: item._id,
-            itemQuantity: item.quantity,
-            totalAmount: totalBill,
-            payment: 1,
-            status: "Pending", // Default status
-          }),
-        });
+      //   const response = await fetch(`${BASE_URL}/user/order/add`, {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //       Authorization: `Bearer ${token}`,
+      //     },
+      //     body: JSON.stringify({
+      //       userId,
+      //       canteenName: "Engineering Canteen",
+      //       itemId: item._id,
+      //       itemQuantity: item.quantity,
+      //       totalAmount: totalBill,
+      //       payment: 1,
+      //       status: "Pending", // Default status
+      //     }),
+      //   });
 
-        const result = await response.json();
+      //   const result = await response.json();
 
-        if (!response.ok) {
-          throw new Error(result.message || "Something went wrong");
-        }
+      //   if (!response.ok) {
+      //     throw new Error(result.message || "Something went wrong");
+      //   }
+
+       
+
       }
 
       Alert.alert("Order Placed", `Your total is $${totalBill.toFixed(2)}`);
       dispatch(clearCart()); // Use clearCart action here
       saveCartToStorage([]); // Clear cart from AsyncStorage
-      navigation.goBack(); // Navigate back to the previous screen
+      // navigation.goBack(); // Navigate back to the previous screen
     } catch (error) {
       console.error("Error placing order:", error);
       Alert.alert(
