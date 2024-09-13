@@ -68,7 +68,7 @@ const PaymentService = () => {
                         >
                             <Image
                                 source={option.image}
-                                style={{ width: 60, height: 60, resizeMode: "cover",borderRadius:8}}
+                                style={{ width: 80, height: 90, resizeMode: "cover",borderRadius:8}}
                             />
                             <Text
                                 className="ml-4 text-base font-medium"
