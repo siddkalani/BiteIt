@@ -1,37 +1,48 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import App from './App';
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import './index.css'
+// Import components and store
+import Index from './routes/Index';
 import ProductManagementDashboard from './App';
-import './index.css';
+import Dashboard from './pages/Dashboard';
+import OrderList from './pages/OrderList';
+import History from './pages/History';
+import Bills from './pages/Bills';
 
-// Define the main routing structure
-const Main = () => {
-  return (
-    <BrowserRouter>
-      <Routes>
-        {/* Main app route */}
-        <Route path="/" element={<App />}>
-          {/* Nested routes under App */}
-          
-          {/* Parent route for product management */}
-          <Route path="products" element={<ProductManagementDashboard />}>
-            
-            {/* Child route for product details */}
-            {/* <Route path=":productId" element={<ProductDetails />} /> */}
-            
-          </Route>
-        </Route>
-        
-        {/* You can define other routes outside App if needed */}
-      </Routes>
-    </BrowserRouter>
-  );
-};
+const router = createBrowserRouter([
+
+  {
+    path: '/',
+    element: <Index />,
+    children: [
+      {
+        index:true,
+        path:'/',
+        element: <ProductManagementDashboard />
+      },
+      {
+        path:'/dashboard',
+        element: <Dashboard />
+      },
+      {
+        path:'/order-list',
+        element: <OrderList />
+      },
+      {
+        path:'/history',
+        element: <History />
+      },
+      {
+        path:'/bills',
+        element: <Bills />
+      }
+    ]
+  }
+]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <Main />
-  </React.StrictMode>
-);
-
+        <RouterProvider router={router} />
+  </React.StrictMode>,
+)
