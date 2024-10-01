@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Search, Bell, ChevronDown, MoreVertical, ChevronRight, Upload } from 'lucide-react';
 
 const ProductManagementDashboard = () => {
-  const [activeTab, setActiveTab] = useState('Main course');
+  const [activeTab, setActiveTab] = useState('All');
   const [products, setProducts] = useState([
     { name: 'Crispy Dory Sambal Matah', code: '#12345', category: 'Food', stock: 120, price: '$123.00' },
     { name: 'Kopag Benedict', code: '#12345', category: 'Food', stock: 120, price: '$123.00' },
@@ -14,7 +14,7 @@ const ProductManagementDashboard = () => {
   ]);
 
   return (
-      <main className="w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow">
+      <main className="w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 mt-12">
         <div className="flex space-x-8">
           {/* Left Column */}
           <div className="flex-grow flex flex-col">

@@ -58,7 +58,7 @@ const StatCard = ({ Icon, title, value, change, changeType }) => (
 
 const Dashboard = () => {
   return (
-    <div className="bg-gray-100 min-h-screen p-8">
+    <div className="bg-gray-100 min-h-screen p-8 mt-12">
       <div className="w-full mx-auto">
         <header className="flex justify-between items-center mb-8">
           <div>

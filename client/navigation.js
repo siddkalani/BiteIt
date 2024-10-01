@@ -17,7 +17,12 @@ import OrderHistoryPage from "./screens/Cart/OrderHistoryPage";
 import PendingOrders from "./screens/Admin/PendingOrder";
 import Profile from "./screens/profile/Profile";
 import PaymentService from "./screens/payment/PaymentService";
+<<<<<<< HEAD
 // import AdminDashboard from "./admin/src/pages/Dashboard";
+=======
+import Intro1 from "./screens/Intro/Intro1";
+import KeyboardTestComponent from "./screens/UserAuth/KeyboardTest";
+>>>>>>> refs/remotes/origin/main
 
 const Stack = createNativeStackNavigator();
 
@@ -51,10 +56,18 @@ function AppNavigator() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
+<<<<<<< HEAD
         <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="Otp" component={OTP} />
         <Stack.Screen name="AdminHome" component={AdminHome} />
         {/* <Stack.Screen name="AdminDashboard" component={AdminDashboard} /> */}
+=======
+      {/* <Stack.Screen name="Intro" component={Intro1} /> */}
+      {/* <Stack.Screen name="Keyboard" component={KeyboardTestComponent} /> */}
+        <Stack.Screen name="SignIn" component={SignIn} />
+        <Stack.Screen name="Otp" component={OTP} />
+        <Stack.Screen name="AdminHome" component={AdminHome} />
+>>>>>>> refs/remotes/origin/main
         <Stack.Screen name="NewUser" component={NewUser} />
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Profile" component={Profile} />
