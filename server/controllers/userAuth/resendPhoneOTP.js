@@ -2,7 +2,7 @@ const asyncHandler = require("express-async-handler");
 const User = require("../../models/userModel");
 const bcrypt = require("bcrypt");
 const otpGenerator = require("otp-generator");
-const { sendPhoneOTP } = require('../../services/authService'); // Adjust path as necessary
+const { sendPhoneOTP } = require("../../services/authService"); // Adjust path as necessary
 
 // POST -> /user/resend/phone/otp
 const resendOtp = asyncHandler(async (req, res) => {
