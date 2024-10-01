@@ -28,7 +28,7 @@ const History = () => {
   ];
 
   return (
-    <div className="bg-gray-100 min-h-screen">
+    <div className="bg-gray-100 min-h-screen mt-12">
 
       <main className="flex flex-grow w-full px-4 sm:px-6 lg:px-8 py-8">
         <div className="w-2/3 flex flex-col">

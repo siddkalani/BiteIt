@@ -4,7 +4,7 @@ import { Search, Bell, PersonStanding, User, MenuSquare, Menu, SquareActivityIco
 
 const Header = () => {
   return (
-    <header className="bg-white shadow-sm">
+    <header className="bg-white shadow-sm fixed w-full z-50">
       <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
 

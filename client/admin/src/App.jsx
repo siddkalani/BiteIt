@@ -14,7 +14,7 @@ const ProductManagementDashboard = () => {
   ]);
 
   return (
-      <main className="w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow">
+      <main className="w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 mt-12">
         <div className="flex space-x-8">
           {/* Left Column */}
           <div className="flex-grow flex flex-col">
