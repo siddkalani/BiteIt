@@ -4,7 +4,10 @@ const verifyOtp = require("../controllers/userAuth/verifyPhoneOTP");
 const resendOtp = require("../controllers/userAuth/resendPhoneOTP");
 const { logout } = require("../controllers/userAuth/logout");
 const validateToken = require("../middleware/validateTokenHandler");
-const { postPushToken, getPushToken } = require("../controllers/userAuth/pushToken");
+const {
+  postPushToken,
+  getPushToken,
+} = require("../controllers/userAuth/pushToken");
 
 const router = express.Router();
 

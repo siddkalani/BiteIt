@@ -17,6 +17,7 @@ import OrderHistoryPage from "./screens/Cart/OrderHistoryPage";
 import PendingOrders from "./screens/Admin/PendingOrder";
 import Profile from "./screens/profile/Profile";
 import PaymentService from "./screens/payment/PaymentService";
+// import AdminDashboard from "./admin/src/pages/Dashboard";
 
 const Stack = createNativeStackNavigator();
 
@@ -50,10 +51,11 @@ function AppNavigator() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {/* <Stack.Screen name="SignIn" component={SignIn} />
+        <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="Otp" component={OTP} />
         <Stack.Screen name="AdminHome" component={AdminHome} />
-        <Stack.Screen name="NewUser" component={NewUser} /> */}
+        {/* <Stack.Screen name="AdminDashboard" component={AdminDashboard} /> */}
+        <Stack.Screen name="NewUser" component={NewUser} />
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="HomeCategory" component={HomeCategory} />
