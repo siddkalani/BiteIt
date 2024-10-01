@@ -17,6 +17,8 @@ import OrderHistoryPage from "./screens/Cart/OrderHistoryPage";
 import PendingOrders from "./screens/Admin/PendingOrder";
 import Profile from "./screens/profile/Profile";
 import PaymentService from "./screens/payment/PaymentService";
+import Intro1 from "./screens/Intro/Intro1";
+import KeyboardTestComponent from "./screens/UserAuth/KeyboardTest";
 
 const Stack = createNativeStackNavigator();
 
@@ -50,10 +52,12 @@ function AppNavigator() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {/* <Stack.Screen name="SignIn" component={SignIn} />
+      {/* <Stack.Screen name="Intro" component={Intro1} /> */}
+      {/* <Stack.Screen name="Keyboard" component={KeyboardTestComponent} /> */}
+        <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="Otp" component={OTP} />
         <Stack.Screen name="AdminHome" component={AdminHome} />
-        <Stack.Screen name="NewUser" component={NewUser} /> */}
+        <Stack.Screen name="NewUser" component={NewUser} />
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="HomeCategory" component={HomeCategory} />

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { Search, Bell } from 'lucide-react';
+import { Search, Bell, PersonStanding, User, MenuSquare, Menu, SquareActivityIcon } from 'lucide-react';
 
 const Header = () => {
   return (
@@ -17,11 +17,9 @@ const Header = () => {
             {[
               {
                 name: 'Dashboard',
-                path: '/dashboard',
+                path: '/',
                 icon: (
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-                  </svg>
+                  <SquareActivityIcon className="w-5 h-5 mr-2"/>
                 ),
               },
               {
@@ -53,7 +51,7 @@ const Header = () => {
               },
               {
                 name: 'Products Management',
-                path: '/',
+                path: '/product',
                 icon: (
                   <svg className="w-5 h-5 mr-2 none" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
@@ -74,9 +72,9 @@ const Header = () => {
             ))}
           </nav>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 justify-center">
             <Bell size={20} className="text-gray-500" />
-            <img src="/api/placeholder/32/32" alt="User" className="w-8 h-8 rounded-full" />
+            <User size={21} className="text-gray-500" />
           </div>
         </div>
       </div>

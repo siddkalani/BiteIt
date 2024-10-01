@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Bell, User, ChevronDown, MoreVertical, ChevronRight } from 'lucide-react';
 
 const History = () => {
   const navItems = ['Dashboard', 'Order list', 'History', 'Bills', 'Products management'];
+  const [activeTab, setActiveTab] = useState('All');
   const filterOptions = ['All', 'Waiting', 'Completed', 'Ready to Serve', 'Canceled'];
   const orderHistory = [
     { number: '#01015', dateTime: '10:00 AM', status: 'Paid', amount: 123.00 },
@@ -29,25 +30,33 @@ const History = () => {
   return (
     <div className="bg-gray-100 min-h-screen">
 
-      <main className="flex flex-grow w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="w-2/3 flex flex-col overflow-hidden">
+      <main className="flex flex-grow w-full px-4 sm:px-6 lg:px-8 py-8">
+        <div className="w-2/3 flex flex-col">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold">History</h1>
             <span className="text-sm text-gray-500">Showing 9 order list</span>
           </div>
 
-          <div className="flex space-x-2 mb-6">
-            {filterOptions.map((option, index) => (
-              <button
-                key={index}
-                className={`px-4 py-2 rounded-full ${
-                  option === 'All' ? 'bg-gray-200' : 'bg-white border'
-                }`}
-              >
-                {option}
-              </button>
-            ))}
-          </div>
+          <div className="relative flex justify-between bg-slate-300 mb-6 rounded-lg w-full">
+              <div className="absolute top-0 left-0 w-full h-full">
+                <div
+                  className={`absolute bg-white rounded-lg drop-shadow-lg h-full w-1/5 transform transition-all ease-in-out duration-300`}
+                  style={{
+                    transform: `translateX(${['All', 'Waiting', 'Completed', 'Ready to Serve', 'Canceled'].indexOf(activeTab) * 100}%)`,
+                  }}
+                />
+              </div>
+              {['All', 'Waiting', 'Completed', 'Ready to Serve', 'Canceled'].map((tab) => (
+                <button
+                  key={tab}
+                  className={`relative px-4 py-2 whitespace-nowrap w-full z-10 ${activeTab === tab ? 'text-blue-600 font-semibold' : 'text-gray-600'
+                    }`}
+                  onClick={() => setActiveTab(tab)}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
 
           <div className="bg-white rounded-lg shadow flex flex-col flex-grow overflow-hidden">
             <div className="flex justify-between items-center p-4 border-b">
