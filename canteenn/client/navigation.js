@@ -19,6 +19,7 @@ import Profile from "./screens/profile/Profile";
 import PaymentService from "./screens/payment/PaymentService";
 import Intro1 from "./screens/Intro/Intro1";
 import KeyboardTestComponent from "./screens/UserAuth/KeyboardTest";
+import PaymentOption from "./screens/payment/PaymentOption";
 
 const Stack = createNativeStackNavigator();
 
@@ -67,6 +68,7 @@ function AppNavigator() {
         <Stack.Screen name="OrderHistory" component={OrderHistoryPage} />
         <Stack.Screen name="PendingOrder" component={PendingOrders} />
         <Stack.Screen name="PaymentService" component={PaymentService} />
+        <Stack.Screen name="PaymentOption" component={PaymentOption} />
       </Stack.Navigator>
     </NavigationContainer>
   );

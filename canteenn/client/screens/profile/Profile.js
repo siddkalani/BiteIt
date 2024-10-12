@@ -10,8 +10,8 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome, Feather, MaterialIcons } from "@expo/vector-icons";
-import ProfileHeader from "./ProfileHeader";
 import { FontFamily, FontSize } from "../../GlobalStyles";
+import GlobalHeader from "../../components/Layout/GlobalHeader";
 
 const ProfilePage = () => {
     const [isEditingDetails, setIsEditingDetails] = useState(false);
@@ -55,7 +55,7 @@ const ProfilePage = () => {
                 <View className="flex-1 bg-gray-100">
                     {/* Back Button with white background */}
                     <View className="bg-white px-4 py-3">
-                        <ProfileHeader />
+                    <GlobalHeader title="About Me" />
                     </View>
 
                     {/* Personal Details Section */}

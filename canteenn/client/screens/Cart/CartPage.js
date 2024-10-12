@@ -30,8 +30,8 @@ import {
   loadCartFromStorage,
 } from "../../utils/storageUtils"; // Adjust the path as needed
 import { useNavigation } from "@react-navigation/native";
-import CartHeader from "./CartHeader";
 import { LinearGradient } from "expo-linear-gradient";
+import GlobalHeader from "../../components/Layout/GlobalHeader";
 
 const { width } = Dimensions.get("window");
 
@@ -48,6 +48,10 @@ const CartPage = () => {
   const offerDiscount = 63; // Example discount (Cashback)
   const taxes = 25.25; // Example taxes
   const donation = 5; // Example donation
+
+  const handlePayment = () => {
+    navigation.navigate('PaymentOption');
+};
 
   useEffect(() => {
     // Load cart data when the component mounts
@@ -153,6 +157,7 @@ const CartPage = () => {
 
 
   const { top, bottom } = useSafeAreaInsets();
+
   const renderCartItem = ({ item }) => (
     <View className="flex-row items-center space-x-2 my-1 py-3 px-4 bg-white rounded-lg">
       <Image
@@ -185,12 +190,14 @@ const CartPage = () => {
   );
 
   return (
-    <View className="flex-1 bg-white"
-    style={{
-      flex: 1,
-      paddingTop: Platform.OS === "ios" ? top : StatusBar.currentHeight,
-      paddingBottom: Platform.OS === "ios" ? 0 : bottom,
-    }}>
+    <View
+      className="flex-1 bg-white"
+      style={{
+        flex: 1,
+        paddingTop: Platform.OS === "ios" ? top : 0, // Apply paddingTop only for iOS
+        paddingBottom: Platform.OS === "ios" ? 0 : bottom, // Apply paddingBottom for Android
+      }}
+    >
       {/* Status bar with white background */}
       <StatusBar
         barStyle="dark-content"
@@ -198,9 +205,9 @@ const CartPage = () => {
         translucent={false}
       />
 
-      {/* Back Button with white background */}
+      {/* Header */}
       <View className="bg-white px-4 py-3">
-        <CartHeader />
+      <GlobalHeader title="Food Cart" />
       </View>
 
       {cartItems.length === 0 ? (
@@ -209,13 +216,17 @@ const CartPage = () => {
         </View>
       ) : (
         <View className="flex-1 bg-gray-100">
-          <ScrollView className="flex-1 px-4" contentContainerStyle={{ paddingBottom: 100 }}>
+          <ScrollView
+            className="flex-1 px-4"
+            contentContainerStyle={{ paddingBottom: 100 }}
+            showsVerticalScrollIndicator={false} // Hide ScrollView scroll indicator
+          >
             <FlatList
               data={cartItems}
               keyExtractor={(item) => item._id}
               renderItem={renderCartItem}
               className="my-2"
-              showsVerticalScrollIndicator={false}
+              showsVerticalScrollIndicator={false} // Hide FlatList scroll indicator
               scrollEnabled={false} // Disable FlatList scrolling
             />
 
@@ -253,7 +264,7 @@ const CartPage = () => {
             </View>
 
             {/* Billing Details */}
-            <View className="bg-white p-3 rounded-lg shadow-md">
+            <View className="bg-white p-3 rounded-lg shadow-md mb-2">
               <View className="flex-row justify-between items-center">
                 <Text className="text-lg font-semibold">Item Total ({totalItems} items)</Text>
                 <Text>₹{totalBill.toFixed(2)}</Text>
@@ -275,10 +286,23 @@ const CartPage = () => {
                 <Text className="font-semibold">₹{(totalBill + deliveryCharge + taxes + donation - offerDiscount).toFixed(2)}</Text>
               </View>
             </View>
+
+            {/* Payment method */}
+
+            <TouchableOpacity
+              onPress={handlePayment}
+              className="bg-white p-3 rounded-lg shadow-md mb-2 flex-row justify-between"
+            >
+              <View>
+                <Text className="text-lg font-semibold">Payment Method</Text>
+                <Text className="text-gray-500 mt-1">UPI (Default)</Text>
+              </View>
+              <Icon.ChevronRight width={24} height={24} stroke="gray" />
+            </TouchableOpacity>
           </ScrollView>
 
-         {/* Slide to Pay Section */}
-         <View style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: 16 }}>
+          {/* Slide to Pay Section */}
+          <View style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: 16 }}>
             <View style={{ alignItems: "center" }}>
               <LinearGradient
                 colors={["green", "green"]}
@@ -291,11 +315,9 @@ const CartPage = () => {
                   justifyContent: "center",
                 }}
               >
-                <View style={{ flex: 1, justifyContent: "center" }}>
-                  <Text style={{ textAlign: "center", color: "white", fontSize: 16 }}>
-                    Slide to Pay
-                  </Text>
-                </View>
+                <Text style={{ textAlign: "center", color: "white", fontSize: 16 }}>
+                  Slide to Pay
+                </Text>
                 <Animated.View
                   {...panResponder.panHandlers}
                   style={{
