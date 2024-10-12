@@ -171,10 +171,9 @@ import { fetchcategory } from "../../../store/Slices/categorySlice";
 import SearchResults from "./../SearchBar/SearchResults";
 import SearchCategories from "./../SearchBar/SearchCategories";
 import SearchHistory from "./../SearchBar/SearchHistory";
-import { FontFamily, FontSize } from "../../../GlobalStyles";
-import Header from "../../../components/Layout/BaseHeader";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import GlobalHeader from "../../../components/Layout/GlobalHeader";
 
 const SearchModal = ({ isModalVisible, closeSearchModal }) => {
   const dispatch = useDispatch();
@@ -279,7 +278,7 @@ const SearchModal = ({ isModalVisible, closeSearchModal }) => {
             >
               <View className="bg-white px-4 py-2 flex-1 rounded-none">
                 {/* Use the separated SearchHeader component */}
-                <Header closeSearchModal={closeSearchModal} />
+                <GlobalHeader title="Search For dishes" onBackPress={closeSearchModal}/>
 
                 <View className="flex-row bg-[#F4F5F9] items-center p-3 rounded-lg mt-4">
                   <Icon.Search height="20" width="20" stroke="gray" />

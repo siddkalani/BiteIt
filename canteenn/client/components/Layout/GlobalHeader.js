@@ -4,11 +4,15 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { FontFamily, FontSize } from "../../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
 
-const PaymentHeader = () => {
+const GlobalHeader = ({ title = "Service Type", onBackPress }) => {
   const navigation = useNavigation();
-  
+
   const handlePress = () => {
-    navigation.navigate('CartPage');
+    if (onBackPress) {
+      onBackPress(); // Call custom back action if provided
+    } else {
+      navigation.goBack(); 
+    }
   };
 
   return (
@@ -25,18 +29,18 @@ const PaymentHeader = () => {
         >
           <Ionicons name="arrow-back" size={24} color="black" />
         </TouchableOpacity>
-        
+
         <View className="flex-1 items-center">
           <Text
             style={{
               fontFamily: FontFamily.poppinsMedium,
               fontSize: FontSize.size_lg,
               lineHeight: 28,
-              textAlign: 'center', // Ensure the text is centered
+              textAlign: 'center',
             }}
             className="text-black"
           >
-            Service Type
+            {title}
           </Text>
         </View>
       </View>
@@ -44,4 +48,4 @@ const PaymentHeader = () => {
   );
 };
 
-export default PaymentHeader;
+export default GlobalHeader;

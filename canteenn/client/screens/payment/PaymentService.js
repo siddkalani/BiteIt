@@ -6,11 +6,13 @@ import {
     SafeAreaView,
     StatusBar,
     Image,
+    Platform,
     TouchableOpacity,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontFamily, FontSize } from "../../GlobalStyles";
-import PaymentHeader from "./PaymentHeader"; // Keeping your existing header component
+import GlobalHeader from "../../components/Layout/GlobalHeader";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const options = [
     {
@@ -35,14 +37,21 @@ const PaymentService = () => {
         // Handle option press here (e.g., navigation or state update)
         console.log("Selected option:", optionId);
     };
-
+    const { top, bottom } = useSafeAreaInsets();
     return (
-        <SafeAreaView className="flex-1 bg-white">
+        <View
+      className="flex-1 bg-white"
+      style={{
+        flex: 1,
+        paddingTop: Platform.OS === "ios" ? top : 0, // Apply paddingTop only for iOS
+        paddingBottom: Platform.OS === "ios" ? 0 : bottom, // Apply paddingBottom for Android
+      }}
+    >
             <StatusBar barStyle="dark-content" backgroundColor="white" />
             <View className="flex-1 bg-gray-100">
                 {/* Back Button with white background */}
                 <View className="bg-white px-4 py-3">
-                    <PaymentHeader />
+                <GlobalHeader title="Service Type" />
                 </View>
 
                 {/* Question Text */}
@@ -105,7 +114,7 @@ const PaymentService = () => {
                     </LinearGradient>
                 </View> */}
             </View>
-        </SafeAreaView>
+        </View>
     );
 };
 
