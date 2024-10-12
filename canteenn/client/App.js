@@ -6,7 +6,7 @@ import * as Notifications from "expo-notifications";
 import AppNavigator from "./navigation";
 import store from "../shared/store"
 import io from "socket.io-client";
-import { BASE_URL } from "@env";
+import { BASE_URL } from "../shared/constants/constant";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 if (Platform.OS === "android") {

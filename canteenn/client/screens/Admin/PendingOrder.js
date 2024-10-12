@@ -131,7 +131,7 @@ import { View, Text, FlatList, TouchableOpacity, Image, Alert, Platform, StyleSh
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { BASE_URL } from "@env";
+import { BASE_URL } from "../../../shared/constants/constant";
 import * as Icon from "react-native-feather";
 import io from "socket.io-client";
 import * as Notifications from "expo-notifications";

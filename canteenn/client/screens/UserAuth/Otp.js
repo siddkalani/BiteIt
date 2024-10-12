@@ -17,7 +17,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import * as Notifications from "expo-notifications";
 
-import { BASE_URL } from "@env";
+import { BASE_URL } from "../../../shared/constants/constant";
 
 const OTP = () => {
   const [otp, setOtp] = useState(["", "", "", "", ""]);

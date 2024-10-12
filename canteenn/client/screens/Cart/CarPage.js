@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { removeFromCart, updateCartQuantity } from "../../store/Slices/cartSlice";
 import * as Icon from "react-native-feather";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { BASE_URL } from "@env";
+import { BASE_URL } from "../../../shared/constants/constant";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { FontFamily, FontSize } from "../../GlobalStyles";
 

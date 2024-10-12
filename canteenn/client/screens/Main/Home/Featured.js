@@ -3,7 +3,7 @@ import { View, Text, ActivityIndicator } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import FoodCard from "../FoodItem/FoodCard";
 import { FontFamily, FontSize } from "../../../GlobalStyles";
-import { fetchFoodItems } from "../../../store/Slices/foodItemSlice";
+import { fetchFoodItems } from "../../../../shared/store/Slices/foodItemSlice";
 
 const Featured = () => {
   const dispatch = useDispatch();

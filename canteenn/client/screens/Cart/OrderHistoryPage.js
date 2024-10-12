@@ -10,7 +10,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { BASE_URL } from "@env";
+import { BASE_URL } from "../../../shared/constants/constant";
 import * as Icon from "react-native-feather";
 
 const OrderHistoryPage = () => {

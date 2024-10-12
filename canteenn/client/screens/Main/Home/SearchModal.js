@@ -165,9 +165,9 @@ import {
 import { SafeAreaView } from "react-native";
 import * as Icon from "react-native-feather";
 import { useDispatch, useSelector } from "react-redux";
-import { BASE_URL } from "@env";
+import { BASE_URL } from "../../../../shared/constants/constant";
 import axios from "axios";
-import { fetchcategory } from "../../../store/Slices/categorySlice";
+import { fetchcategory } from "../../../../shared/store/Slices/categorySlice";
 import SearchResults from "./../SearchBar/SearchResults";
 import SearchCategories from "./../SearchBar/SearchCategories";
 import SearchHistory from "./../SearchBar/SearchHistory";

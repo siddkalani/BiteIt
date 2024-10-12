@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { BASE_URL } from "@env";
+import { BASE_URL } from "../../constants/constant";
 // import { BASE_URL } from "../../../shared/constants/constants";
 
 // Async thunk for logging in the user

@@ -3,7 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
-import { logoutUser } from "./store/Slices/userDetailSlice";
+// import { logoutUser } from "./store/Slices/userDetailSlice";
 import SignIn from "./screens/UserAuth/SignIn";
 import Home from "./screens/Main/Home/Home";
 import OTP from "./screens/UserAuth/Otp";
@@ -57,7 +57,7 @@ function AppNavigator() {
         {/* <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="Otp" component={OTP} />
         <Stack.Screen name="AdminHome" component={AdminHome} />
-        <Stack.Screen name="NewUser" component={NewUser} /> */}
+        <Stack.Screen name="NewUser" component={NewUser} />  */}
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="HomeCategory" component={HomeCategory} />

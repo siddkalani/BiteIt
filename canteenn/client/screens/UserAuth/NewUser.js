@@ -15,7 +15,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { FontFamily, FontSize } from "../../GlobalStyles";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
-import { BASE_URL } from "@env";
+import { BASE_URL } from "../../../shared/constants/constant";
 
 const NewUser = () => {
   const [name, setName] = useState("");

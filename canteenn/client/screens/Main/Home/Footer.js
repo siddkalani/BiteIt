@@ -3,7 +3,7 @@ import { Text, TouchableOpacity, View, Alert } from 'react-native';
 import * as Icon from 'react-native-feather';
 import { useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { logoutUser } from '../../../store/Slices/userDetailSlice';
+import { logoutUser } from '../../../../shared/store/Slices/userDetailSlice';
 import { useNavigation } from '@react-navigation/native';
 
 const Footer = () => {

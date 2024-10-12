@@ -2,20 +2,21 @@ import React from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { FontFamily, FontSize } from "../../../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
-import { BASE_URL } from "@env";
+import { BASE_URL } from "../../../../shared/constants/constant";
 
-const CategoryCard = ({ foodItem }) => {
+const CategoryCard = ({ category }) => {
   const navigation = useNavigation();
 
   const handlePress = () => {
-    navigation.navigate("FoodItem", { foodItem });
+    // navigation.navigate("FoodItem", { category});
+    console.log("category page")
   };
 
   return (
     <TouchableOpacity style={{ flex: 1 }} onPress={handlePress}>
       <View className="bg-white rounded-lg mt-4 w-full items-center">
         <Image
-          source={{ uri: `${BASE_URL}/items_uploads/${foodItem.image}` }}
+          source={{ uri: `${BASE_URL}/uploads/${category.image}` }}
           className="w-full h-[90px] rounded-lg" // Use Tailwind for the circle image
           resizeMode="cover"
         />
@@ -27,7 +28,7 @@ const CategoryCard = ({ foodItem }) => {
           }}
           numberOfLines={1}
         >
-          {foodItem.itemName}
+          {category.categoryName}
         </Text>
       </View>
     </TouchableOpacity>

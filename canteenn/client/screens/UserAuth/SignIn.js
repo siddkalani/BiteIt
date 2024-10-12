@@ -15,7 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontFamily, FontSize } from "../../GlobalStyles";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../../store/Slices/userDetailSlice";
+import { loginUser } from "../../../shared/store/Slices/userDetailSlice";
 
 const SignIn = () => {
   const [phone, setPhone] = useState("");

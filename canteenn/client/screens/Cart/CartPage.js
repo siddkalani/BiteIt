@@ -21,10 +21,10 @@ import {
   updateCartQuantity,
   clearCart,
   addToCart,
-} from "../../store/Slices/cartSlice"; // Adjust the path as needed
+} from "../../../shared/store/Slices/cartSlice"; // Adjust the path as needed
 import * as Icon from "react-native-feather";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
-import { BASE_URL } from "@env";
+import { BASE_URL } from "../../../shared/constants/constant";
 import {
   saveCartToStorage,
   loadCartFromStorage,
@@ -53,11 +53,18 @@ const CartPage = () => {
     // Load cart data when the component mounts
     const loadCart = async () => {
       const savedCart = await loadCartFromStorage();
-      savedCart.forEach((item) => dispatch(addToCart(item)));
+      
+      // Ensure items are only added to the cart if they are not already present
+      savedCart.forEach((item) => {
+        const itemInCart = cartItems.find(cartItem => cartItem._id === item._id);
+        if (!itemInCart) {
+          dispatch(addToCart(item));
+        }
+      });
     };
     loadCart();
-  }, [dispatch]);
-
+  }, [dispatch, cartItems]);
+  
   // Total number of items in the cart
   const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
 
@@ -67,6 +74,9 @@ const CartPage = () => {
     0
   );
 
+
+
+  
   const handlePlaceOrder = async () => {
     try {
       navigation.navigate('PaymentService');
@@ -123,13 +133,25 @@ const CartPage = () => {
     }).start();
   };
 
-  const handleIncrement = (id) => {
-    dispatch(updateCartQuantity({ id, increment: true }));
+  const handleRemoveFromCart = (itemId) => {
+    dispatch(removeFromCart({ itemId }));
   };
 
-  const handleDecrement = (id) => {
-    dispatch(updateCartQuantity({ id, increment: false }));
+  const handleIncrement = (itemId) => {
+    const item = cartItems.find(item => item._id === itemId);
+    if (item) {
+      dispatch(updateCartQuantity({ itemId, quantity: item.quantity + 1 }));
+    }
   };
+
+  const handleDecrement = (itemId) => {
+    const item = cartItems.find(item => item._id === itemId);
+    if (item && item.quantity > 1) {
+      dispatch(updateCartQuantity({ itemId, quantity: item.quantity - 1 }));
+    }
+  };
+
+
   const { top, bottom } = useSafeAreaInsets();
   const renderCartItem = ({ item }) => (
     <View className="flex-row items-center space-x-2 my-1 py-3 px-4 bg-white rounded-lg">

@@ -14,7 +14,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { FontFamily, FontSize } from "../../../GlobalStyles";
 import * as Icon from "react-native-feather";
-import { BASE_URL } from "@env";
+import { BASE_URL } from "../../../../shared/constants/constant";
 import { BlurView } from "expo-blur";
 
 const FoodItem = () => {

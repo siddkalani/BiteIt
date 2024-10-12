@@ -9,8 +9,8 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { FontFamily, FontSize } from "../../../GlobalStyles";
-import { BASE_URL } from "@env";
-import { fetchcategory } from "../../../store/Slices/categorySlice";
+import { BASE_URL } from "../../../../shared/constants/constant";
+import { fetchcategory } from "../../../../shared/store/Slices/categorySlice";
 import { useNavigation } from "@react-navigation/native";
 
 const Categories = () => {

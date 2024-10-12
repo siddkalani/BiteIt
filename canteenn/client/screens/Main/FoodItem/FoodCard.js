@@ -112,12 +112,12 @@ import {
   addToCart,
   updateCartQuantity,
   removeFromCart,
-} from "../../../store/Slices/cartSlice"; // Adjust the path as needed
+} from "../../../../shared/store/Slices/cartSlice"; // Adjust the path as needed
 import { FontFamily, FontSize } from "../../../GlobalStyles";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Icon from "react-native-feather";
 import { useNavigation } from "@react-navigation/native";
-import { BASE_URL } from "@env";
+import { BASE_URL } from "../../../../shared/constants/constant";
 import { saveCartToStorage } from "../../../utils/storageUtils"; // Adjust the path as needed
 
 const FoodCard = ({ foodItem }) => {
@@ -152,10 +152,10 @@ const FoodCard = ({ foodItem }) => {
           quantity: itemInCart.quantity - 1,
         })
       );
-      saveCartToStorage(cartItems); // Save cart to AsyncStorage
+      saveCartToStorage(cartItems); 
     } else if (itemInCart && itemInCart.quantity === 1) {
       dispatch(removeFromCart({ itemId: foodItem._id }));
-      saveCartToStorage(cartItems); // Save cart to AsyncStorage
+      saveCartToStorage(cartItems);
     }
   };
 
