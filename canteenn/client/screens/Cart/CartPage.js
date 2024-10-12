@@ -13,6 +13,7 @@ import {
   Animated,
   Dimensions,
   ScrollView,
+  Platform,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -22,7 +23,7 @@ import {
   addToCart,
 } from "../../store/Slices/cartSlice"; // Adjust the path as needed
 import * as Icon from "react-native-feather";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { BASE_URL } from "@env";
 import {
   saveCartToStorage,
@@ -129,7 +130,7 @@ const CartPage = () => {
   const handleDecrement = (id) => {
     dispatch(updateCartQuantity({ id, increment: false }));
   };
-
+  const { top, bottom } = useSafeAreaInsets();
   const renderCartItem = ({ item }) => (
     <View className="flex-row items-center space-x-2 my-1 py-3 px-4 bg-white rounded-lg">
       <Image
@@ -162,7 +163,12 @@ const CartPage = () => {
   );
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <View className="flex-1 bg-white"
+    style={{
+      flex: 1,
+      paddingTop: Platform.OS === "ios" ? top : StatusBar.currentHeight,
+      paddingBottom: Platform.OS === "ios" ? 0 : bottom,
+    }}>
       {/* Status bar with white background */}
       <StatusBar
         barStyle="dark-content"
@@ -325,7 +331,7 @@ const CartPage = () => {
           </Modal>
         </View>
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 
