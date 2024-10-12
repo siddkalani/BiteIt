@@ -12,8 +12,11 @@ import { LinearGradient } from "expo-linear-gradient";
 import { FontAwesome, Feather, MaterialIcons } from "@expo/vector-icons";
 import { FontFamily, FontSize } from "../../GlobalStyles";
 import GlobalHeader from "../../components/Layout/GlobalHeader";
+import { Platform } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const ProfilePage = () => {
+    const { top, bottom } = useSafeAreaInsets();
     const [isEditingDetails, setIsEditingDetails] = useState(false);
     const [isEditingPassword, setIsEditingPassword] = useState(false);
     const [details, setDetails] = useState({
@@ -49,7 +52,12 @@ const ProfilePage = () => {
     };
 
     return (
-        <SafeAreaView className="flex-1 bg-white">
+        <SafeAreaView className="flex-1 bg-white"
+        style={{
+            flex: 1,
+            paddingTop: Platform.OS === "ios" ? 0 : StatusBar.currentHeight,
+            paddingBottom: Platform.OS === "ios" ? 0 : bottom,
+          }}>
             <StatusBar barStyle="dark-content" backgroundColor="white" />
             {/* <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}> */}
                 <View className="flex-1 bg-gray-100">

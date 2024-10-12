@@ -27,57 +27,53 @@ const Footer = () => {
   };
 
   return (
-    <View className="flex-row justify-between items-center bg-[#309624] py-2 px-6 shadow-lg">
+    <View className="flex-row justify-between items-center bg-white border-t border-t-slate-200 py-2 px-6 shadow-lg">
       {/* Home Button */}
-      <TouchableOpacity 
-        onPress={handleNavigateToHome} 
-        className="items-center"
-      >
+      <TouchableOpacity onPress={handleNavigateToHome} className="items-center">
         <Icon.Home 
-          width={28} 
-          height={28} 
-          stroke={isActive('Home') ? '#fff' : '#BDBDBD'} // Active state color
+          width={25} 
+          height={25} 
+          stroke={isActive('Home') ? 'green' : 'gray'} // Change stroke color for active state
         />
-        <Text className={`text-xs ${isActive('Home') ? 'text-white' : 'text-gray-300'}`}>Home</Text>
+        <Text className={`text-xs font-bold ${isActive('Home') ? 'text-green-700' : 'text-gray-500'}`}>
+          Home
+        </Text>
       </TouchableOpacity>
       
       {/* Cart Button */}
-      <TouchableOpacity 
-        onPress={handleNavigateToCart} 
-        className="items-center"
-      >
+      <TouchableOpacity onPress={handleNavigateToCart} className="items-center">
         <Icon.ShoppingBag 
-          width={28} 
-          height={28} 
-          stroke={isActive('CartPage') ? '#fff' : '#BDBDBD'} // Active state color
+          width={25} 
+          height={25} 
+          stroke={isActive('CartPage') ? 'green' : 'gray'} // Change stroke color for active state
         />
-        <Text className={`text-xs ${isActive('CartPage') ? 'text-white' : 'text-gray-300'}`}>Cart</Text>
+        <Text className={`text-xs font-bold ${isActive('CartPage') ? 'text-green-500' : 'text-gray-500'}`}>
+          Cart
+        </Text>
       </TouchableOpacity>
 
       {/* Orders Button */}
-      <TouchableOpacity 
-        onPress={handleNavigateToOrders} 
-        className="items-center"
-      >
+      <TouchableOpacity onPress={handleNavigateToOrders} className="items-center">
         <Icon.Clock 
-          width={28} 
-          height={28} 
-          stroke={isActive('OrderHistory') ? '#fff' : '#BDBDBD'} // Active state color
+          width={25} 
+          height={25} 
+          stroke={isActive('OrderHistory') ? 'green' : 'gray'} // Change stroke color for active state
         />
-        <Text className={`text-xs ${isActive('OrderHistory') ? 'text-white' : 'text-gray-300'}`}>Orders</Text>
+        <Text className={`text-xs font-bold ${isActive('OrderHistory') ? 'text-green-500' : 'text-gray-500'}`}>
+          Orders
+        </Text>
       </TouchableOpacity>
       
       {/* Profile Button */}
-      <TouchableOpacity 
-        onPress={handleNavigateToProfile} 
-        className="items-center"
-      >
+      <TouchableOpacity onPress={handleNavigateToProfile} className="items-center">
         <Icon.User 
-          width={28} 
-          height={28} 
-          stroke={isActive('Profile') ? '#fff' : '#BDBDBD'} // Active state color
+          width={25} 
+          height={25} 
+          stroke={isActive('Profile') ? 'green' : 'gray'} // Change stroke color for active state
         />
-        <Text className={`text-xs ${isActive('Profile') ? 'text-white' : 'text-gray-300'}`}>Profile</Text>
+        <Text className={`text-xs font-bold ${isActive('Profile') ? 'text-green-500' : 'text-gray-500'}`}>
+          Profile
+        </Text>
       </TouchableOpacity>
     </View>
   );

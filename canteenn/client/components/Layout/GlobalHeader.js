@@ -19,7 +19,7 @@ const GlobalHeader = ({ title = "Service Type", onBackPress }) => {
     <SafeAreaView
       style={{
         backgroundColor: 'white',
-        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+        // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
       }}
     >
       <View className="flex-row items-center space-x-3">
