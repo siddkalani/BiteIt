@@ -74,7 +74,7 @@ const Home = () => {
     >
       <StatusBar
         barStyle="light-content"
-        backgroundColor="#FFA500"
+        backgroundColor="#309624"
         translucent
       />
       <View className="bg-[#309624]">
@@ -94,7 +94,7 @@ const Home = () => {
           </View>
 
           {/* SearchBar */}
-          <View className="flex-row items-center space-x-2 px-4 mt-2">
+          <View className="flex-row items-center space-x-2 px-4 my-2">
             <TouchableOpacity
               className="flex-row flex-1 bg-white items-center p-3 rounded-lg shadow"
               onPress={openSearchModal}
@@ -114,7 +114,7 @@ const Home = () => {
         showsVerticalScrollIndicator={false}
       >
         <View className="">
-          <View className="bg-[#309624] px-4 pb-2 pt-2 rounded-b-3xl">
+          <View className="bg-[#309624] px-4 pb-2 rounded-b-3xl">
             <Image
               source={require("../../../assets/images/home/home-slider.png")}
               resizeMode="contain"
@@ -140,12 +140,18 @@ const Home = () => {
         animationOut="slideOutUp"  // Slide-out animation to the top
         style={{ justifyContent: "flex-start", margin: 0 }}
       >
+
         <View style={{
           paddingTop: Platform.OS === "ios" ? top : 0, // Apply paddingTop only for iOS
           // paddingBottom: Platform.OS === "ios" ? 0 : bottom, // Apply paddingBottom for Android
         }} className="bg-white rounded-b-3xl p-4">
+          <StatusBar
+            barStyle="dark-content"
+            backgroundColor="white"
+            transparent
+          />
           <View className='py-2 mb-4'>
-          <GlobalHeader title="Select Canteen" onBackPress={closeLocationModal}/>
+            <GlobalHeader title="Select Canteen" onBackPress={closeLocationModal} />
           </View>
           <TouchableOpacity
             className="bg-[#FFA500] p-3 rounded-lg mb-2"
