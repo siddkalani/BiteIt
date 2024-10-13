@@ -9,7 +9,7 @@ import Home from "./screens/Main/Home/Home";
 import OTP from "./screens/UserAuth/Otp";
 import NewUser from "./screens/UserAuth/NewUser";
 import FoodItem from "./screens/Main/FoodItem/FoodItem";
-import AdminHome from "./screens/Admin/AdminHome";
+import AdminHome from "./screens/Admin/Main/Home/AdminHome";
 import SearchResults from "./screens/Main/SearchBar/SearchResults";
 import HomeCategory from "./screens/Categories/HomeCategory";
 import CartPage from "./screens/Cart/CartPage";
@@ -56,9 +56,9 @@ function AppNavigator() {
         {/* <Stack.Screen name="Intro" component={Intro1} /> */}
         {/* <Stack.Screen name="Keyboard" component={KeyboardTestComponent} /> */}
         {/* <Stack.Screen name="SignIn" component={SignIn} />
-        <Stack.Screen name="Otp" component={OTP} />
+        <Stack.Screen name="Otp" component={OTP} /> */}
         <Stack.Screen name="AdminHome" component={AdminHome} />
-        <Stack.Screen name="NewUser" component={NewUser} />  */}
+        <Stack.Screen name="NewUser" component={NewUser} /> 
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="HomeCategory" component={HomeCategory} />
