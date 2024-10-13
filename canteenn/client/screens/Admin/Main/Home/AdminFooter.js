@@ -31,15 +31,15 @@ const AdminFooter = () => {
     <View className="flex-row justify-between items-center bg-white border-t border-t-slate-200 py-2 px-6 shadow-lg">
       {/* Home Button */}
       <TouchableOpacity onPress={handleNavigateToHome} className="items-center">
-      <Icon name="fast-food-outline" size={30} color="#900" />
-        <Text className={`text-xs font-bold ${isActive('Home') ? 'text-green-700' : 'text-gray-500'}`}>
+      <Icon name={`${isActive('AdminHome') ? 'fast-food' : 'fast-food-outline'}`} size={30} color="green" />
+        <Text className={`text-xs font-bold ${isActive('AdminHome') ? 'text-green-700' : 'text-gray-500'}`}>
           Orders
         </Text>
       </TouchableOpacity>
 
       {/* Cart Button */}
       <TouchableOpacity onPress={handleNavigateToCart} className="items-center">
-      <Icon name="storefront-outline" size={30} color="#900" />
+      <Icon name={`${isActive('Inventory') ? 'storefront' : 'storefront-outline'}`} size={30} color="green" />
         <Text className={`text-xs font-bold ${isActive('CartPage') ? 'text-green-500' : 'text-gray-500'}`}>
           inventory
         </Text>
@@ -47,7 +47,7 @@ const AdminFooter = () => {
 
       {/* Orders Button */}
       <TouchableOpacity onPress={handleNavigateToOrders} className="items-center">
-      <Icon name="document-text-outline" size={30} color="#900" />
+      <Icon name={`${isActive('Bills') ? 'document-text' : 'document-text-outline'}`} size={30} color="green" />
         <Text className={`text-xs font-bold ${isActive('OrderHistory') ? 'text-green-500' : 'text-gray-500'}`}>
           Bills
         </Text>
@@ -55,7 +55,7 @@ const AdminFooter = () => {
 
       {/* Profile Button */}
       <TouchableOpacity onPress={handleNavigateToProfile} className="items-center">
-        <Icon name="people-circle-outline" size={30} color="#900" />
+        <Icon name={`${isActive('AdminProfile') ? 'people-circle' : 'people-circle-outline'}`} size={30} color="green" />
         <Text className={`text-xs font-bold ${isActive('Profile') ? 'text-green-500' : 'text-gray-500'}`}>
           Profile
         </Text>
