@@ -11,6 +11,7 @@ import {
   FlatList,
   ImageBackground,
   Animated,
+  ScrollView
 } from "react-native";
 import * as Icon from "react-native-feather";
 import { useNavigation } from "@react-navigation/native";
@@ -205,243 +206,289 @@ const AdminHome = () => {
         <View className="flex-row justify-between space-x-2">
           <TouchableOpacity
             onPress={() => setActiveTab("Pending")}
-            className={`flex-1 items-center py-2 ${
-              activeTab === "Pending" ? "bg-yellow-200" : "bg-gray-100"
-            } rounded-lg`}
+            className={`flex-1 items-center py-2 ${activeTab === "Pending" ? "bg-yellow-200" : "bg-gray-100"
+              } rounded-lg`}
           >
             <Text className="text-gray-400">Pending ({pendingOrders.length})</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => setActiveTab("Preparing")}
-            className={`flex-1 items-center py-2 ${
-              activeTab === "Preparing" ? "bg-yellow-200" : "bg-gray-100"
-            } rounded-lg`}
+            className={`flex-1 items-center py-2 ${activeTab === "Preparing" ? "bg-yellow-200" : "bg-gray-100"
+              } rounded-lg`}
           >
             <Text className="text-gray-400">Preparing ({orders.length})</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => setActiveTab("Ready")}
-            className={`flex-1 items-center py-2 ${
-              activeTab === "Ready" ? "bg-yellow-200" : "bg-gray-100"
-            } rounded-lg`}
+            className={`flex-1 items-center py-2 ${activeTab === "Ready" ? "bg-yellow-200" : "bg-gray-100"
+              } rounded-lg`}
           >
             <Text className="text-gray-400">Ready ({readyOrders.length})</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => setActiveTab("PickedUp")}
-            className={`flex-1 items-center py-2 ${
-              activeTab === "PickedUp" ? "bg-yellow-200" : "bg-gray-100"
-            } rounded-lg`}
+            className={`flex-1 items-center py-2 ${activeTab === "PickedUp" ? "bg-yellow-200" : "bg-gray-100"
+              } rounded-lg`}
           >
             <Text className="text-gray-400">Picked Up ({pickedUpOrders.length})</Text>
           </TouchableOpacity>
         </View>
 
+        {/* Promo Banner with Pagination */}
+        <View className="">
+          <FlatList
+            ref={flatListRef}
+            data={slides}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(_, index) => index.toString()}
+            onMomentumScrollEnd={handleMomentumScrollEnd}
+            renderItem={({ item }) => (
+              <ImageBackground
+                source={item.image}
+                style={{ width: screenWidth - 32, height: 150 }}
+                imageStyle={{ borderRadius: 12 }}
+              >
+                <View className="flex-1 bg-opacity-40 rounded-lg p-4 justify-between">
+                  <View>
+                    <Text className="text-white text-xl font-bold">
+                      {item.title}
+                    </Text>
+                    <Text className="text-white text-sm">{item.subtitle}</Text>
+                  </View>
+                  <TouchableOpacity className="bg-yellow-400 rounded-full py-2 px-4 self-start">
+                    <Text className="text-black font-semibold">Click Here</Text>
+                  </TouchableOpacity>
+                </View>
+              </ImageBackground>
+            )}
+          />
+          <View className="flex-row justify-center mt-2">
+            {slides.map((_, index) => (
+              <Animated.View
+                key={index}
+                style={{
+                  height: 8,
+                  width: index === currentSlide ? 16 : 8,
+                  backgroundColor: index === currentSlide ? "#333" : "#ccc",
+                  borderRadius: 4,
+                  marginHorizontal: 4,
+                  transition: "width 0.2s",
+                }}
+              />
+            ))}
+          </View>
+        </View>
+
         {/* Pending/Preparing/Ready/PickedUp Orders List */}
-        {activeTab === "Pending" && pendingOrders.length > 0 ? (
-          <View>
-            {pendingOrders.map((order) => (
-              <View
-                key={order.id}
-                className="p-4 bg-gray-50 rounded-lg shadow-sm my-2"
-              >
-                <View className="flex-row justify-between">
-                  <Text className="text-xl font-bold">ID: {order.id}</Text>
-                  <Text className="text-gray-500">{order.time}</Text>
-                </View>
-                <Text className="text-sm text-blue-500">
-                  1st order by {order.customerName}
-                </Text>
-                {order.items.map((item, idx) => (
-                  <View key={idx} className="flex-row justify-between mt-2">
-                    <Text className="text-base">
-                      {item.quantity} x {item.name}
-                    </Text>
-                    <Text className="text-base">₹{item.price}</Text>
+        <ScrollView>
+          {activeTab === "Pending" && pendingOrders.length > 0 ? (
+            <View>
+              {pendingOrders.map((order) => (
+                <View
+                  key={order.id}
+                  className="p-4 bg-gray-50 rounded-lg shadow-sm my-2"
+                >
+                  <View className="flex-row justify-between">
+                    <Text className="text-xl font-bold">ID: {order.id}</Text>
+                    <Text className="text-gray-500">{order.time}</Text>
                   </View>
-                ))}
-                <View className="flex-row justify-between mt-2">
-                  <Text className="text-base font-bold">Total Bill</Text>
-                  <Text className="text-base font-bold">₹{order.total}</Text>
-                </View>
-
-                {/* Set Preparation Time */}
-                <View className="flex-row items-center justify-between mt-2">
-                  <Text className="text-sm text-gray-500">
-                    set food preparation time
+                  <Text className="text-sm text-blue-500">
+                    1st order by {order.customerName}
                   </Text>
-                  <View className="flex-row items-center">
-                    <TouchableOpacity className="p-2">
-                      <Text>-</Text>
+                  {order.items.map((item, idx) => (
+                    <View key={idx} className="flex-row justify-between mt-2">
+                      <Text className="text-base">
+                        {item.quantity} x {item.name}
+                      </Text>
+                      <Text className="text-base">₹{item.price}</Text>
+                    </View>
+                  ))}
+                  <View className="flex-row justify-between mt-2">
+                    <Text className="text-base font-bold">Total Bill</Text>
+                    <Text className="text-base font-bold">₹{order.total}</Text>
+                  </View>
+
+                  {/* Set Preparation Time */}
+                  <View className="flex-row items-center justify-between mt-2">
+                    <Text className="text-sm text-gray-500">
+                      set food preparation time
+                    </Text>
+                    <View className="flex-row items-center">
+                      <TouchableOpacity className="p-2">
+                        <Text>-</Text>
+                      </TouchableOpacity>
+                      <Text className="px-2">15 mins</Text>
+                      <TouchableOpacity className="p-2">
+                        <Text>+</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+
+                  {/* Accept & Reject Buttons (Keep original styling) */}
+                  <View className="flex-row justify-between mt-4">
+                    <TouchableOpacity
+                      onPress={() => handleRejectOrder(order.id)}
+                      className="flex-1 bg-red-100 rounded-lg py-2 mr-2"
+                    >
+                      <Text className="text-red-500 text-center">Reject</Text>
                     </TouchableOpacity>
-                    <Text className="px-2">15 mins</Text>
-                    <TouchableOpacity className="p-2">
-                      <Text>+</Text>
+                    <TouchableOpacity
+                      onPress={() => handleAcceptOrder(order.id)}
+                      className="flex-1 bg-yellow-400 rounded-lg py-2"
+                    >
+                      <Text className="text-center text-white">
+                        Accept (4:57)
+                      </Text>
                     </TouchableOpacity>
                   </View>
                 </View>
-
-                {/* Accept & Reject Buttons (Keep original styling) */}
-                <View className="flex-row justify-between mt-4">
-                  <TouchableOpacity
-                    onPress={() => handleRejectOrder(order.id)}
-                    className="flex-1 bg-red-100 rounded-lg py-2 mr-2"
-                  >
-                    <Text className="text-red-500 text-center">Reject</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => handleAcceptOrder(order.id)}
-                    className="flex-1 bg-yellow-400 rounded-lg py-2"
-                  >
-                    <Text className="text-center text-white">
-                      Accept (4:57)
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            ))}
-          </View>
-        ) : activeTab === "Preparing" && orders.length > 0 ? (
-          <View>
-            {orders.map((order) => (
-              <View
-                key={order.id}
-                className="p-4 bg-gray-50 rounded-lg shadow-sm my-2"
-              >
-                <View className="flex-row justify-between">
-                  <Text className="text-xl font-bold">ID: {order.id}</Text>
-                  <Text className="text-gray-500">{order.time}</Text>
-                </View>
-                <Text className="text-sm text-blue-500">
-                  1st order by {order.customerName}
-                </Text>
-                {order.items.map((item, idx) => (
-                  <View key={idx} className="flex-row justify-between mt-2">
-                    <Text className="text-base">
-                      {item.quantity} x {item.name}
-                    </Text>
-                    <Text className="text-base">₹{item.price}</Text>
+              ))}
+            </View>
+          ) : activeTab === "Preparing" && orders.length > 0 ? (
+            <View>
+              {orders.map((order) => (
+                <View
+                  key={order.id}
+                  className="p-4 bg-gray-50 rounded-lg shadow-sm my-2"
+                >
+                  <View className="flex-row justify-between">
+                    <Text className="text-xl font-bold">ID: {order.id}</Text>
+                    <Text className="text-gray-500">{order.time}</Text>
                   </View>
-                ))}
-                <View className="flex-row justify-between mt-2">
-                  <Text className="text-base font-bold">Total Bill</Text>
-                  <Text className="text-base font-bold">₹{order.total}</Text>
-                </View>
-
-                {/* Set Preparation Time */}
-                <View className="flex-row items-center justify-between mt-2">
-                  <Text className="text-sm text-gray-500">
-                    set food preparation time
+                  <Text className="text-sm text-blue-500">
+                    1st order by {order.customerName}
                   </Text>
-                  <View className="flex-row items-center">
-                    <TouchableOpacity className="p-2">
-                      <Text>-</Text>
-                    </TouchableOpacity>
-                    <Text className="px-2">15 mins</Text>
-                    <TouchableOpacity className="p-2">
-                      <Text>+</Text>
-                    </TouchableOpacity>
+                  {order.items.map((item, idx) => (
+                    <View key={idx} className="flex-row justify-between mt-2">
+                      <Text className="text-base">
+                        {item.quantity} x {item.name}
+                      </Text>
+                      <Text className="text-base">₹{item.price}</Text>
+                    </View>
+                  ))}
+                  <View className="flex-row justify-between mt-2">
+                    <Text className="text-base font-bold">Total Bill</Text>
+                    <Text className="text-base font-bold">₹{order.total}</Text>
                   </View>
-                </View>
 
-                {/* Ready Button (Keep original styling) */}
-                <View className="flex-row justify-between mt-4">
-                  <TouchableOpacity
-                    onPress={() => handleOrderReady(order.id)}
-                    className="bg-yellow-500 p-2 rounded-lg"
-                  >
-                    <Text className="text-white">Order Ready</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            ))}
-          </View>
-        ) : activeTab === "Ready" && readyOrders.length > 0 ? (
-          <View>
-            {readyOrders.map((order) => (
-              <View
-                key={order.id}
-                className="p-4 bg-gray-50 rounded-lg shadow-sm my-2"
-              >
-                <View className="flex-row justify-between">
-                  <Text className="text-xl font-bold">ID: {order.id}</Text>
-                  <Text className="text-gray-500">{order.time}</Text>
-                </View>
-                <Text className="text-sm text-blue-500">
-                  1st order by {order.customerName}
-                </Text>
-                {order.items.map((item, idx) => (
-                  <View key={idx} className="flex-row justify-between mt-2">
-                    <Text className="text-base">
-                      {item.quantity} x {item.name}
+                  {/* Set Preparation Time */}
+                  <View className="flex-row items-center justify-between mt-2">
+                    <Text className="text-sm text-gray-500">
+                      set food preparation time
                     </Text>
-                    <Text className="text-base">₹{item.price}</Text>
+                    <View className="flex-row items-center">
+                      <TouchableOpacity className="p-2">
+                        <Text>-</Text>
+                      </TouchableOpacity>
+                      <Text className="px-2">15 mins</Text>
+                      <TouchableOpacity className="p-2">
+                        <Text>+</Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
-                ))}
-                <View className="flex-row justify-between mt-2">
-                  <Text className="text-base font-bold">Total Bill</Text>
-                  <Text className="text-base font-bold">₹{order.total}</Text>
-                </View>
 
-                {/* Picked Up Button (Keep original styling) */}
-                <View className="flex-row justify-between mt-4">
-                  <TouchableOpacity
-                    onPress={() => handlePickedUpOrder(order.id)}
-                    className="bg-green-500 p-2 rounded-lg"
-                  >
-                    <Text className="text-white">Order Picked Up</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            ))}
-          </View>
-        ) : activeTab === "PickedUp" && pickedUpOrders.length > 0 ? (
-          <View>
-            {pickedUpOrders.map((order) => (
-              <View
-                key={order.id}
-                className="p-4 bg-gray-50 rounded-lg shadow-sm my-2"
-              >
-                <View className="flex-row justify-between">
-                  <Text className="text-xl font-bold">ID: {order.id}</Text>
-                  <Text className="text-gray-500">{order.time}</Text>
-                </View>
-                <Text className="text-sm text-blue-500">
-                  1st order by {order.customerName}
-                </Text>
-                {order.items.map((item, idx) => (
-                  <View key={idx} className="flex-row justify-between mt-2">
-                    <Text className="text-base">
-                      {item.quantity} x {item.name}
-                    </Text>
-                    <Text className="text-base">₹{item.price}</Text>
+                  {/* Ready Button (Keep original styling) */}
+                  <View className="flex-row justify-between mt-4">
+                    <TouchableOpacity
+                      onPress={() => handleOrderReady(order.id)}
+                      className="bg-yellow-500 p-2 rounded-lg"
+                    >
+                      <Text className="text-white">Order Ready</Text>
+                    </TouchableOpacity>
                   </View>
-                ))}
-                <View className="flex-row justify-between mt-2">
-                  <Text className="text-base font-bold">Total Bill</Text>
-                  <Text className="text-base font-bold">₹{order.total}</Text>
                 </View>
+              ))}
+            </View>
+          ) : activeTab === "Ready" && readyOrders.length > 0 ? (
+            <View>
+              {readyOrders.map((order) => (
+                <View
+                  key={order.id}
+                  className="p-4 bg-gray-50 rounded-lg shadow-sm my-2"
+                >
+                  <View className="flex-row justify-between">
+                    <Text className="text-xl font-bold">ID: {order.id}</Text>
+                    <Text className="text-gray-500">{order.time}</Text>
+                  </View>
+                  <Text className="text-sm text-blue-500">
+                    1st order by {order.customerName}
+                  </Text>
+                  {order.items.map((item, idx) => (
+                    <View key={idx} className="flex-row justify-between mt-2">
+                      <Text className="text-base">
+                        {item.quantity} x {item.name}
+                      </Text>
+                      <Text className="text-base">₹{item.price}</Text>
+                    </View>
+                  ))}
+                  <View className="flex-row justify-between mt-2">
+                    <Text className="text-base font-bold">Total Bill</Text>
+                    <Text className="text-base font-bold">₹{order.total}</Text>
+                  </View>
 
-                <Text className="text-base text-green-500 font-bold mt-2">
-                  Order Picked Up
-                </Text>
-              </View>
-            ))}
-          </View>
-        ) : (
-          <View className="flex-1 justify-center items-center">
-            <Image
-              source={require("../../../../assets/images/admin/storeOpen.png")}
-              style={{ width: 150, height: 150 }}
-              resizeMode="contain"
-            />
-            <Text className="text-2xl font-bold mt-4">You are Online</Text>
-            <Text className="text-gray-500 text-lg">
-              Waiting for new orders
-            </Text>
-          </View>
-        )}
+                  {/* Picked Up Button (Keep original styling) */}
+                  <View className="flex-row justify-between mt-4">
+                    <TouchableOpacity
+                      onPress={() => handlePickedUpOrder(order.id)}
+                      className="bg-green-500 p-2 rounded-lg"
+                    >
+                      <Text className="text-white">Order Picked Up</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              ))}
+            </View>
+          ) : activeTab === "PickedUp" && pickedUpOrders.length > 0 ? (
+            <View>
+              {pickedUpOrders.map((order) => (
+                <View
+                  key={order.id}
+                  className="p-4 bg-gray-50 rounded-lg shadow-sm my-2"
+                >
+                  <View className="flex-row justify-between">
+                    <Text className="text-xl font-bold">ID: {order.id}</Text>
+                    <Text className="text-gray-500">{order.time}</Text>
+                  </View>
+                  <Text className="text-sm text-blue-500">
+                    1st order by {order.customerName}
+                  </Text>
+                  {order.items.map((item, idx) => (
+                    <View key={idx} className="flex-row justify-between mt-2">
+                      <Text className="text-base">
+                        {item.quantity} x {item.name}
+                      </Text>
+                      <Text className="text-base">₹{item.price}</Text>
+                    </View>
+                  ))}
+                  <View className="flex-row justify-between mt-2">
+                    <Text className="text-base font-bold">Total Bill</Text>
+                    <Text className="text-base font-bold">₹{order.total}</Text>
+                  </View>
+
+                  <Text className="text-base text-green-500 font-bold mt-2">
+                    Order Picked Up
+                  </Text>
+                </View>
+              ))}
+            </View>
+          ) : (
+            <View className="flex-1 justify-center items-center">
+              <Image
+                source={require("../../../../assets/images/admin/storeOpen.png")}
+                style={{ width: 150, height: 150 }}
+                resizeMode="contain"
+              />
+              <Text className="text-2xl font-bold mt-4">You are Online</Text>
+              <Text className="text-gray-500 text-lg">
+                Waiting for new orders
+              </Text>
+            </View>
+          )}
+        </ScrollView>
       </View>
+
 
       {/* Footer */}
       <AdminFooter />
