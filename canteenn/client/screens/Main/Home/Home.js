@@ -63,6 +63,33 @@ const Home = () => {
     navigation.navigate("CartPage");
   };
 
+  // Animate Deliver Section Upwards on Scroll
+  const translateY = scrollY.interpolate({
+    inputRange: [0, 50], // Starts translating upwards after scrolling 50px
+    outputRange: [0, -50], // Moves upwards by 50px
+    extrapolate: "clamp",
+  });
+
+  const translateYView = scrollY.interpolate({
+    inputRange: [0, 50], // Starts translating upwards after scrolling 50px
+    outputRange: [0, -50], // Moves upwards by 50px
+    extrapolate: "clamp",
+  });
+
+  // Animate Opacity for Deliver Section
+  const headerOpacity = scrollY.interpolate({
+    inputRange: [0, 50],
+    outputRange: [1, 0],
+    extrapolate: "clamp",
+  });
+
+  // Animate Search Bar to stick to the top
+  const searchBarTranslateY = scrollY.interpolate({
+    inputRange: [0, 50],
+    outputRange: [0, -50], // Moves upwards as well
+    extrapolate: "clamp",
+  });
+
   return (
     <View
       style={{
@@ -77,42 +104,62 @@ const Home = () => {
         backgroundColor="#309624"
         translucent
       />
+
+      {/* Header Section */}
       <View className="bg-[#309624]">
         <SafeAreaView>
-          {/* Location Section */}
-          <View className="flex-row items-center justify-between px-4 mt-2">
-            <TouchableOpacity onPress={openLocationModal}>
-              <Text className="text-white text-xs">DELIVER TO</Text>
-              <View className="flex-row items-center">
-                <Text className="text-white font-bold mr-1">Current Location</Text>
-                <Icon.ChevronDown height="20" width="20" stroke="white" />
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Icon.Bell height="24" width="24" stroke="white" />
-            </TouchableOpacity>
-          </View>
+          {/* Animate the Location Section */}
+          <Animated.View
+            style={{
+              transform: [{ translateY: translateY }],
+              opacity: headerOpacity,
+            }}
+          >
+            <View className="flex-row items-center justify-between px-4 mt-2">
+              <TouchableOpacity onPress={openLocationModal}>
+                <Text className="text-white text-xs">DELIVER TO</Text>
+                <View className="flex-row items-center">
+                  <Text className="text-white font-bold mr-1">
+                    Current Location
+                  </Text>
+                  <Icon.ChevronDown height="20" width="20" stroke="white" />
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <Icon.Bell height="24" width="24" stroke="white" />
+              </TouchableOpacity>
+            </View>
+          </Animated.View>
 
-          {/* SearchBar */}
-          <View className="flex-row items-center space-x-2 px-4 my-2">
-            <TouchableOpacity
-              className="flex-row flex-1 bg-white items-center p-3 rounded-lg shadow"
-              onPress={openSearchModal}
-            >
-              <Icon.Search height="20" width="20" stroke="gray" />
-              <Text className="flex-1 ml-2">What are you craving?</Text>
-            </TouchableOpacity>
-          </View>
+          {/* Sticky Search Bar */}
+          <Animated.View
+            style={{
+              transform: [{ translateY: searchBarTranslateY }],
+              zIndex: 100, // Ensure search bar is above the content
+              backgroundColor: "#309624", // Keep background color consistent
+            }}
+          >
+            <View className="flex-row items-center space-x-2 px-4 my-2">
+              <TouchableOpacity
+                className="flex-row flex-1 bg-white items-center p-3 rounded-lg shadow"
+                onPress={openSearchModal}
+              >
+                <Icon.Search height="20" width="20" stroke="gray" />
+                <Text className="flex-1 ml-2">What are you craving?</Text>
+              </TouchableOpacity>
+            </View>
+          </Animated.View>
         </SafeAreaView>
       </View>
 
-      {/* Scroll Content */}
+      {/* Scrollable Content */}
       <Animated.ScrollView
         onScroll={handleScroll}
         onMomentumScrollEnd={handleScrollEnd}
         scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
       >
+        {/* Home Slider */}
         <View className="">
           <View className="bg-[#309624] px-4 pb-2 rounded-b-3xl">
             <Image
@@ -123,12 +170,16 @@ const Home = () => {
             />
           </View>
         </View>
+
+        {/* Categories */}
         <View className="px-4 pb-4 pt-2 space-y-2">
           <Categories />
         </View>
-        {/* Featured */}
+
+        {/* Featured Section */}
         <Featured />
       </Animated.ScrollView>
+
       {/* Footer */}
       <Footer />
 
@@ -136,21 +187,22 @@ const Home = () => {
       <Modal
         isVisible={isLocationModalVisible}
         onBackdropPress={closeLocationModal}
-        animationIn="slideInDown"  // Slide-in animation from the top
-        animationOut="slideOutUp"  // Slide-out animation to the top
+        animationIn="slideInDown" // Slide-in animation from the top
+        animationOut="slideOutUp" // Slide-out animation to the top
         style={{ justifyContent: "flex-start", margin: 0 }}
       >
-
-        <View style={{
-          paddingTop: Platform.OS === "ios" ? top : 0, // Apply paddingTop only for iOS
-          // paddingBottom: Platform.OS === "ios" ? 0 : bottom, // Apply paddingBottom for Android
-        }} className="bg-white rounded-b-3xl p-4">
+        <View
+          style={{
+            paddingTop: Platform.OS === "ios" ? top : 0, // Apply paddingTop only for iOS
+          }}
+          className="bg-white rounded-b-3xl p-4"
+        >
           <StatusBar
             barStyle="dark-content"
             backgroundColor="white"
             transparent
           />
-          <View className='py-2 mb-4'>
+          <View className="py-2 mb-4">
             <GlobalHeader title="Select Canteen" onBackPress={closeLocationModal} />
           </View>
           <TouchableOpacity
