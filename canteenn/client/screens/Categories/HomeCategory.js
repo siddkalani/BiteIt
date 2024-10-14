@@ -43,7 +43,6 @@ const HomeCategory = () => {
     const fetchFoodItems = async () => {
       try {
         const token = await AsyncStorage.getItem("userToken");
-
         const response = await fetch(`${BASE_URL}/category/get/${id}`, {
           method: "GET",
           headers: {
@@ -52,6 +51,7 @@ const HomeCategory = () => {
         });
 
         const data = await response.json();
+
 
         if (data.foodItems) {
           setFoodItems(data.foodItems);
@@ -68,41 +68,58 @@ const HomeCategory = () => {
     fetchFoodItems();
   }, [id]);
 
-  const handleAddToCart = (item) => {
-    dispatch(addToCart(item));
-    saveCartToStorage(cartItems); // Save cart to AsyncStorage
+  const handleAddToCart = (foodItem) => {
+    const itemInCart = cartItems.find((i) => i._id === foodItem._id); // Check if the item is in the cart
+
+    if (itemInCart) {
+      handleIncrement(foodItem); // If it is, increment the quantity
+    } else {
+      dispatch(addToCart({ ...foodItem, quantity: 1 })); // Add item to cart with quantity 1
+      saveCartToStorage([...cartItems, { ...foodItem, quantity: 1 }]); // Save new item to AsyncStorage
+    }
   };
 
-  const handleIncrement = (item) => {
-    const itemInCart = cartItems.find((i) => i._id === item._id);
+  const handleIncrement = (foodItem) => {
+    const itemInCart = cartItems.find((i) => i._id === foodItem._id);
+
     if (itemInCart) {
+      const newQuantity = itemInCart.quantity + 1; // Increment quantity
       dispatch(
         updateCartQuantity({
-          itemId: item._id,
-          quantity: itemInCart.quantity + 1,
+          itemId: foodItem._id,
+          quantity: newQuantity,
         })
       );
-      saveCartToStorage(cartItems); // Save cart to AsyncStorage
+      saveCartToStorage(cartItems.map(item => 
+        item._id === foodItem._id ? { ...item, quantity: newQuantity } : item
+      )); // Update storage
     }
   };
 
-  const handleDecrement = (item) => {
-    const itemInCart = cartItems.find((i) => i._id === item._id);
+  const handleDecrement = (foodItem) => {
+    const itemInCart = cartItems.find((i) => i._id === foodItem._id);
+
     if (itemInCart) {
-      if (itemInCart.quantity > 1) {
+      const newQuantity = itemInCart.quantity - 1; // Decrement quantity
+
+      if (newQuantity > 0) {
         dispatch(
           updateCartQuantity({
-            itemId: item._id,
-            quantity: itemInCart.quantity - 1,
+            itemId: foodItem._id,
+            quantity: newQuantity,
           })
         );
+        saveCartToStorage(cartItems.map(item => 
+          item._id === foodItem._id ? { ...item, quantity: newQuantity } : item
+        )); // Update storage
       } else {
-        dispatch(removeFromCart({ itemId: item._id }));
+        // If quantity is 0, remove item from cart
+        dispatch(removeFromCart({ itemId: foodItem._id }));
+        saveCartToStorage(cartItems.filter(item => item._id !== foodItem._id)); // Remove from storage
       }
-      saveCartToStorage(cartItems); // Save cart to AsyncStorage
     }
   };
-
+  
   const renderFoodItem = (item) => {
     const itemInCart = cartItems.find((i) => i._id === item._id);
 

@@ -44,7 +44,7 @@ const OrderHistoryPage = () => {
         const sortedOrders = data.orders?.sort(
           (a, b) => new Date(b.orderPlacedAt) - new Date(a.orderPlacedAt)
         );
-        setOrderHistory(data.orders || []);
+        setOrderHistory(sortedOrders || []);
       } catch (error) {
         console.error("Error fetching order history:", error);
         Alert.alert(
@@ -68,20 +68,39 @@ const OrderHistoryPage = () => {
     });
 
     return (
-      <View className="flex-row items-center space-x-2 py-2 px-4 bg-white rounded-lg mb-2">
-        {/* <Image
-          source={{ uri: `${BASE_URL}/items_uploads/${item.itemImage}` }}
-          style={{ width: 60, height: 60, borderRadius: 8 }}
-        /> */}
-        <View className="flex-1">
-          <Text className="font-semibold text-lg">{item.itemName}</Text>
-          <Text className="text-gray-500">Quantity: {item.itemQuantity}</Text>
-          <Text className="text-gray-500">Total: ${item.totalAmount}</Text>
-          <Text className="text-gray-500">Canteen: {item.canteenName}</Text>
-          <Text className="text-gray-500">
-            Ordered On: {formattedDate} at {formattedTime}
-          </Text>
-        </View>
+      <View className="bg-white p-4 rounded-lg mb-4">
+        <Text className="font-bold text-lg mb-2">Order Details</Text>
+        <Text className="text-gray-500 mb-2">Canteen: {item.canteenName}</Text>
+        <Text className="text-gray-500 mb-2">
+          Ordered On: {formattedDate} at {formattedTime}
+        </Text>
+        <Text className="font-bold mb-2">Items:</Text>
+        
+        {/* Loop through all items in the order */}
+        {item.items.map((orderItem) => (
+          <View
+            key={orderItem.itemId}
+            className="flex-row items-center justify-between mb-2"
+          >
+            {/* Display item image if available */}
+            {orderItem.itemImage && (
+              <Image
+                source={{ uri: `${BASE_URL}/items_uploads/${orderItem.itemImage}` }}
+                style={{ width: 50, height: 50, borderRadius: 8 }}
+              />
+            )}
+            <View className="flex-1 ml-4">
+              {/* Display item name */}
+              <Text className="font-semibold">{orderItem.itemName}</Text>
+              <Text className="text-gray-500">Quantity: {orderItem.itemQuantity}</Text>
+            </View>
+          </View>
+        ))}
+        
+        <Text className="text-gray-500 mt-2">Total: ${item.totalAmount}</Text>
+        <Text className={`mt-2 ${item.status === 'Delivered' ? 'text-green-600' : 'text-gray-500'}`}>
+          Status: {item.status}
+        </Text>
       </View>
     );
   };

@@ -8,7 +8,7 @@ const upload = require("../middleware/multer");
 const router = express.Router();
 const validateToken = require('../middleware/validateTokenHandler')
 
-// router.use(validateToken)
+router.use(validateToken)
 
 router.route("/get/:id").get(getCategory);
 router.route("/get").get(getAllCategories);
