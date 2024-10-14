@@ -20,35 +20,87 @@ const FoodCard = ({ foodItem }) => {
 
   const itemInCart = cartItems.find((item) => item._id === foodItem._id);
 
+  // const handleAddToCart = () => {
+  //   dispatch(addToCart(foodItem));
+  //   saveCartToStorage(cartItems); // Save cart to AsyncStorage
+  // };
+
+  // const handleIncrement = () => {
+  //   if (itemInCart) {
+  //     dispatch(
+  //       updateCartQuantity({
+  //         itemId: foodItem._id,
+  //         quantity: itemInCart.quantity + 1,
+  //       })
+  //     );
+  //     saveCartToStorage(cartItems); // Save cart to AsyncStorage
+  //   }
+  // };
+
+  // const handleDecrement = () => {
+  //   if (itemInCart && itemInCart.quantity > 1) {
+  //     dispatch(
+  //       updateCartQuantity({
+  //         itemId: foodItem._id,
+  //         quantity: itemInCart.quantity - 1,
+  //       })
+  //     );
+  //     saveCartToStorage(cartItems);
+  //   } else if (itemInCart && itemInCart.quantity === 1) {
+      
+  //     dispatch(removeFromCart({ itemId: foodItem._id }));
+  //     // saveCartToStorage(cartItems);,
+  //   }
+  
+  //   saveCartToStorage(cartItems); 
+  // };
+
   const handleAddToCart = () => {
-    dispatch(addToCart(foodItem));
-    saveCartToStorage(cartItems); // Save cart to AsyncStorage
+    // Check if the item is already in the cart
+    if (itemInCart) {
+      // If it is, just increment the quantity
+      handleIncrement();
+    } else {
+      // If not, add it to the cart
+      dispatch(addToCart(foodItem));
+      saveCartToStorage([...cartItems, { ...foodItem, quantity: 1 }]); // Save new item to AsyncStorage
+    }
   };
 
   const handleIncrement = () => {
     if (itemInCart) {
+      const newQuantity = itemInCart.quantity + 1;
       dispatch(
         updateCartQuantity({
           itemId: foodItem._id,
-          quantity: itemInCart.quantity + 1,
+          quantity: newQuantity,
         })
       );
-      saveCartToStorage(cartItems); // Save cart to AsyncStorage
+      saveCartToStorage(cartItems.map(item => 
+        item._id === foodItem._id ? { ...item, quantity: newQuantity } : item
+      )); // Update storage
     }
   };
 
   const handleDecrement = () => {
-    if (itemInCart && itemInCart.quantity > 1) {
-      dispatch(
-        updateCartQuantity({
-          itemId: foodItem._id,
-          quantity: itemInCart.quantity - 1,
-        })
-      );
-      saveCartToStorage(cartItems);
-    } else if (itemInCart && itemInCart.quantity === 1) {
-      dispatch(removeFromCart({ itemId: foodItem._id }));
-      saveCartToStorage(cartItems);
+    if (itemInCart) {
+      const newQuantity = itemInCart.quantity - 1;
+
+      if (newQuantity > 0) {
+        dispatch(
+          updateCartQuantity({
+            itemId: foodItem._id,
+            quantity: newQuantity,
+          })
+        );
+        saveCartToStorage(cartItems.map(item => 
+          item._id === foodItem._id ? { ...item, quantity: newQuantity } : item
+        )); // Update storage
+      } else {
+        // If quantity is 0, remove item from cart
+        dispatch(removeFromCart({ itemId: foodItem._id }));
+        saveCartToStorage(cartItems.filter(item => item._id !== foodItem._id)); // Remove from storage
+      }
     }
   };
 

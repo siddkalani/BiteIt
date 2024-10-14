@@ -5,38 +5,34 @@ const orderHistorySchema = mongoose.Schema(
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      // required: true,
     },
     canteenId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Canteen",
-      // required: true,
     },
     canteenName: {
       type: String,
       required: true,
     },
-    itemId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "FoodItem",
-      // required: true,
-    },
-    itemName: {
-      type: String,
-
-      // required: true,
-    },
-    itemQuantity: {
-      type: Number,
-      required: true,
-    },
-    itemImage: {
-      type: String,
-      //   required: true,
-    },
+    items: [
+      {
+        itemId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "FoodItem",
+        },
+        itemName: {
+          type: String,
+        },
+        itemQuantity: {
+          type: Number,
+        },
+        itemImage: {
+          type: String,
+        },
+      },
+    ], // Array to store multiple ordered items
     totalAmount: {
       type: Number,
-      // required: true,
     },
     status: {
       type: String,

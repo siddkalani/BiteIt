@@ -103,31 +103,3 @@ const App = () => {
 };
 
 export default App;
-
-// import * as React from "react";
-// import { useFonts } from "expo-font";
-// import AppNavigator from "./navigation";
-// import { Provider } from "react-redux";
-// import store from "./store";
-
-// const App = () => {
-//   const [fontsLoaded] = useFonts({
-//     "Poppins-Regular": require("./assets/fonts/Poppins-Regular.ttf"),
-//     "Poppins-Medium": require("./assets/fonts/Poppins-Medium.ttf"),
-//     "Poppins-SemiBold": require("./assets/fonts/Poppins-SemiBold.ttf"),
-//     "Poppins-Bold": require("./assets/fonts/Poppins-Bold.ttf"),
-//     "Inter-Medium": require("./assets/fonts/Inter-Medium.ttf"),
-//   });
-
-//   if (!fontsLoaded) {
-//     return null;
-//   }
-
-//   return (
-//     <Provider store={store}>
-//       <AppNavigator />
-//     </Provider>
-//   );
-// };
-
-// export default App;
