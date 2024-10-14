@@ -52,63 +52,66 @@ const OTP = () => {
     navigation.navigate("SignIn");
   };
 
-  const handleVerify = async () => {
-    try {
-      const response = await axios.post(`${BASE_URL}/user/verify/phone/otp`, {
-        phone: phone,
-        otp: otp.join(""),
-      });
-      const data = response.data;
+  // const handleVerify = async () => {
+  //   try {
+  //     const response = await axios.post(`${BASE_URL}/user/verify/phone/otp`, {
+  //       phone: phone,
+  //       otp: otp.join(""),
+  //     });
+  //     const data = response.data;
 
-      if (
-        response.status === 200 &&
-        data.message === "User phone verified successfully!"
-      ) {
-        await AsyncStorage.setItem("userToken", data.token);
-        await AsyncStorage.setItem("userName", data.user.name);
-        await AsyncStorage.setItem("userId", data.user.id);
-        console.log(data.token);
-        await postPushToken();
-        navigation.replace("Home");
-      } else if (
-        response.status === 200 &&
-        data.message === "Admin phone verified successfully!"
-      ) {
-        await AsyncStorage.setItem("adminToken", data.token);
+  //     if (
+  //       response.status === 200 &&
+  //       data.message === "User phone verified successfully!"
+  //     ) {
+  //       await AsyncStorage.setItem("userToken", data.token);
+  //       await AsyncStorage.setItem("userName", data.user.name);
+  //       await AsyncStorage.setItem("userId", data.user.id);
+  //       console.log(data.token);
+  //       await postPushToken();
+  //       navigation.replace("Home");
+  //     } else if (
+  //       response.status === 200 &&
+  //       data.message === "Admin phone verified successfully!"
+  //     ) {
+  //       await AsyncStorage.setItem("adminToken", data.token);
 
-        if (data.admin?.name) {
-          await AsyncStorage.setItem("adminName", data.admin.name);
-        }
-        await AsyncStorage.setItem("adminId", data.admin?.id || "");
-        await postPushToken();
-        navigation.replace("AdminHome");
-      } else if (
-        response.status === 400 &&
-        data.error === "Name is required for new users"
-      ) {
-        navigation.replace("NewUser", { phone: phone, otp: otp.join("") });
-      } else {
-        Alert.alert("Error", "Invalid OTP");
-      }
-    } catch (error) {
-      console.error("Verification Error:", error);
-      if (error.response) {
-        const errorData = error.response.data;
-        const errorStatus = error.response.status;
-        if (
-          errorStatus === 400 &&
-          errorData.error === "Name is required for new users"
-        ) {
-          navigation.replace("NewUser", { phone: phone, otp: otp.join("") });
-        } else {
-          Alert.alert("Error", "Failed to verify OTP");
-        }
-      } else {
-        Alert.alert("Error", "Network Error. Please try again.");
-      }
-    }
-  };
+  //       if (data.admin?.name) {
+  //         await AsyncStorage.setItem("adminName", data.admin.name);
+  //       }
+  //       await AsyncStorage.setItem("adminId", data.admin?.id || "");
+  //       await postPushToken();
+  //       navigation.replace("AdminHome");
+  //     } else if (
+  //       response.status === 400 &&
+  //       data.error === "Name is required for new users"
+  //     ) {
+  //       navigation.replace("NewUser", { phone: phone, otp: otp.join("") });
+  //     } else {
+  //       Alert.alert("Error", "Invalid OTP");
+  //     }
+  //   } catch (error) {
+  //     console.error("Verification Error:", error);
+  //     if (error.response) {
+  //       const errorData = error.response.data;
+  //       const errorStatus = error.response.status;
+  //       if (
+  //         errorStatus === 400 &&
+  //         errorData.error === "Name is required for new users"
+  //       ) {
+  //         navigation.replace("NewUser", { phone: phone, otp: otp.join("") });
+  //       } else {
+  //         Alert.alert("Error", "Failed to verify OTP");
+  //       }
+  //     } else {
+  //       Alert.alert("Error", "Network Error. Please try again.");
+  //     }
+  //   }
+  // };
 
+  const handleVerify = () => {
+    navigation.navigate("Home");
+  }
   const postPushToken = async () => {
     try {
       const userId = await AsyncStorage.getItem("userId");
