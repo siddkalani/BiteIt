@@ -16,7 +16,8 @@ import {
 import * as Icon from "react-native-feather";
 import { useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import AdminFooter from "./AdminFooter";
+import AdminLayout from "../AdminLayout/AdminLayout";
+import AdminFooter from "../AdminLayout/AdminFooter";
 
 const AdminHome = () => {
   const navigation = useNavigation();
@@ -165,6 +166,7 @@ const AdminHome = () => {
   };
 
   return (
+
     <View
       style={{
         flex: 1,
@@ -491,8 +493,9 @@ const AdminHome = () => {
 
 
       {/* Footer */}
-      <AdminFooter />
+      {/* <AdminFooter /> */}
     </View>
+
   );
 };
 

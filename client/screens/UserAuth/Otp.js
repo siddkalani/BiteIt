@@ -110,7 +110,7 @@ const OTP = () => {
   // };
 
   const handleVerify = () => {
-    navigation.navigate("Home");
+    navigation.navigate("AdminFooter");
   }
   const postPushToken = async () => {
     try {
