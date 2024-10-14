@@ -5,7 +5,6 @@ import {
   Text,
   View,
   Image,
-  TextInput,
   Alert,
   KeyboardAvoidingView,
   Platform,
@@ -16,29 +15,46 @@ import { LinearGradient } from "expo-linear-gradient";
 import { FontFamily, FontSize } from "../../GlobalStyles";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../../shared/store/Slices/userDetailSlice";
+import { AntDesign } from '@expo/vector-icons'; // To use arrow icon
+import { TouchableOpacity } from "react-native";
+import * as Google from "expo-auth-session/providers/google";
+import * as WebBrowser from "expo-web-browser";
 
-const SignIn = () => {
-  const [phone, setPhone] = useState("");
-  const dispatch = useDispatch();
+WebBrowser.maybeCompleteAuthSession();
+
+const LogIn = () => {
   const navigation = useNavigation();
   const loginStatus = useSelector((state) => state.users.loginStatus);
   const loading = useSelector((state) => state.users.loading);
   const error = useSelector((state) => state.users.error);
 
-  // const handleLogin = async () => {
-  //   try {
-  //     await dispatch(loginUser({ phone: phone })).unwrap();
-  //     navigation.navigate("Otp", { phone: phone });
-  //   } catch (error) {
-  //     console.error("Login Error:", error);
-  //     Alert.alert("Error", `Failed to log in: ${error.message}`);
-  //   }
-  // };
-  
-  //dummy navigation
+  // Google Auth State
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    clientId: '908599769443-pc2g0ipv4mqbuj5luio3d3ltdvcebnrm.apps.googleusercontent.com',
+    redirectUri: 'https://canteenApp.expoapp.com/__/auth/handler',
+  });
+
+  React.useEffect(() => {
+    if (response?.type === "success") {
+      const { authentication } = response;
+      // Handle authentication (e.g., store token, navigate, etc.)
+      Alert.alert("Success", "Logged in with Google!");
+      navigation.navigate("FacultyHome"); // Navigate to the next page
+    } else if (response?.type === "error") {
+      Alert.alert("Error", "Login failed. Please try again.");
+    }
+  }, [response]);
+
+  // Handle Google Login
+  const handleFacultyLogin = () => {
+    promptAsync(); // Initiate Google Login
+  };
+
+  // Dummy navigation for continue button
   const handleLogin = () => {
     navigation.navigate("Otp");
-  }
+  };
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"} // Avoid scrolling when keyboard appears
@@ -72,31 +88,25 @@ const SignIn = () => {
               Log in or Sign up{" "}
             </Text>
           </View>
-          <View className="space-y-2">
-            <View style={styles.inputContainer} className="space-x-2">
-              <Text
-                className="text-green-700"
-                style={{
-                  fontFamily: FontFamily.poppinsRegular,
-                  fontSize: FontSize.size_mini,
-                  fontWeight: 600,
-                }}
-              >
-                +91
-              </Text>
-              <TextInput
-                placeholder="Enter phone number"
-                value={phone}
-                onChangeText={setPhone}
-                keyboardType="phone-pad"
-                style={{
-                  fontFamily: FontFamily.poppinsRegular,
-                  fontSize: FontSize.size_mini,
-                }}
-                className="flex-1"
-              />
-            </View>
-          </View>
+
+          {/* Faculty Login Option */}
+          <TouchableOpacity
+            onPress={handleFacultyLogin} // Trigger Google Login
+            style={[styles.facultyLoginContainer, styles.inputContainer]}
+          >
+            <Text
+              style={{
+                fontFamily: FontFamily.poppinsRegular,
+                fontSize: FontSize.size_mini,
+                fontWeight: 600,
+              }}
+            >
+              Faculty Login
+            </Text>
+            <AntDesign name="right" size={20} color="black" />
+          </TouchableOpacity>
+
+          {/* Continue Button */}
           <LinearGradient
             colors={["#007022", "#54d17a", "#bcffd0"]}
             start={{ x: 0, y: 1 }}
@@ -114,7 +124,6 @@ const SignIn = () => {
                   fontSize: FontSize.size_lg,
                 }}
               >
-                {/* {loading ? "Loading..." : "Continue"} */}
                 Continue
               </Text>
             </Pressable>
@@ -133,6 +142,11 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 8,
   },
+  facultyLoginContainer: {
+    justifyContent: "space-between",
+    paddingHorizontal: 15,
+    marginVertical: 10,
+  },
 });
 
-export default SignIn;
+export default LogIn;

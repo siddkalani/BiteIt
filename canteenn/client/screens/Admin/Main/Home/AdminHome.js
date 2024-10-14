@@ -172,7 +172,7 @@ const AdminHome = () => {
       }}
       className="bg-white"
     >
-      <StatusBar barStyle="dark-content" translucent />
+      <StatusBar barStyle="dark-content" backgroundColor={"white"} translucent />
 
       <View className="flex-1 py-3 px-4 space-y-2">
         {/* Top Header */}
@@ -206,31 +206,31 @@ const AdminHome = () => {
         <View className="flex-row justify-between space-x-2">
           <TouchableOpacity
             onPress={() => setActiveTab("Pending")}
-            className={`flex-1 items-center py-2 ${activeTab === "Pending" ? "bg-yellow-200" : "bg-gray-100"
+            className={`flex-1 items-center px-1 py-2 ${activeTab === "Pending" ? "bg-yellow-200" : "bg-gray-100"
               } rounded-lg`}
           >
-            <Text className="text-gray-400">Pending ({pendingOrders.length})</Text>
+            <Text numberOfLines={1} className="text-gray-400">Pending ({pendingOrders.length})</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => setActiveTab("Preparing")}
-            className={`flex-1 items-center py-2 ${activeTab === "Preparing" ? "bg-yellow-200" : "bg-gray-100"
+            className={`flex-1 items-center px-1 py-2 ${activeTab === "Preparing" ? "bg-yellow-200" : "bg-gray-100"
               } rounded-lg`}
           >
-            <Text className="text-gray-400">Preparing ({orders.length})</Text>
+            <Text numberOfLines={1} className="text-gray-400">Preparing ({orders.length})</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => setActiveTab("Ready")}
-            className={`flex-1 items-center py-2 ${activeTab === "Ready" ? "bg-yellow-200" : "bg-gray-100"
+            className={`flex-1 items-center px-1 py-2 ${activeTab === "Ready" ? "bg-yellow-200" : "bg-gray-100"
               } rounded-lg`}
           >
             <Text className="text-gray-400">Ready ({readyOrders.length})</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => setActiveTab("PickedUp")}
-            className={`flex-1 items-center py-2 ${activeTab === "PickedUp" ? "bg-yellow-200" : "bg-gray-100"
+            className={`flex-1 items-center px-1 py-2 ${activeTab === "PickedUp" ? "bg-yellow-200" : "bg-gray-100"
               } rounded-lg`}
           >
-            <Text className="text-gray-400">Picked Up ({pickedUpOrders.length})</Text>
+            <Text numberOfLines={1} className="text-gray-400">Picked Up ({pickedUpOrders.length})</Text>
           </TouchableOpacity>
         </View>
 

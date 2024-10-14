@@ -5,6 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
 // import { logoutUser } from "./store/Slices/userDetailSlice";
 import SignIn from "./screens/UserAuth/SignIn";
+import LogIn from "./screens/UserAuth/LogIn";
 import Home from "./screens/Main/Home/Home";
 import OTP from "./screens/UserAuth/Otp";
 import NewUser from "./screens/UserAuth/NewUser";
@@ -18,8 +19,9 @@ import PendingOrders from "./screens/Admin/PendingOrder";
 import Profile from "./screens/profile/Profile";
 import PaymentService from "./screens/payment/PaymentService";
 import Intro1 from "./screens/Intro/Intro1";
-import KeyboardTestComponent from "./screens/UserAuth/KeyboardTest";
+import KeyboardTestComponent from "./components/KeyboardTest";
 import PaymentOption from "./screens/payment/PaymentOption";
+import FacultyLogin from "./screens/UserAuth/FacultyLogin";
 
 const Stack = createNativeStackNavigator();
 
@@ -53,10 +55,12 @@ function AppNavigator() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {/* <Stack.Screen name="Intro" component={Intro1} /> */}
+        <Stack.Screen name="Intro" component={Intro1} />
         {/* <Stack.Screen name="Keyboard" component={KeyboardTestComponent} /> */}
-        {/* <Stack.Screen name="SignIn" component={SignIn} />
-        <Stack.Screen name="Otp" component={OTP} /> */}
+         <Stack.Screen name="SignIn" component={SignIn} /> 
+         <Stack.Screen name="LogIn" component={LogIn} />
+         {/* <Stack.Screen name="FacultyLogin" component={FacultyLogin} /> */}
+        <Stack.Screen name="Otp" component={OTP} /> 
         <Stack.Screen name="AdminHome" component={AdminHome} />
         <Stack.Screen name="NewUser" component={NewUser} /> 
         <Stack.Screen name="Home" component={Home} />
