@@ -1,6 +1,6 @@
 import React from "react";
 import { View } from "react-native";
-import AdminFooter from "./AdminFooter";
+import AdminFooter from "./AdminTabs";
 import { useNavigation } from "@react-navigation/native";
 
 const AdminLayout = ({ children }) => {

@@ -17,7 +17,7 @@ import * as Icon from "react-native-feather";
 import { useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import AdminLayout from "../AdminLayout/AdminLayout";
-import AdminFooter from "../AdminLayout/AdminFooter";
+import AdminFooter from "../AdminLayout/AdminTabs";
 
 const AdminHome = () => {
   const navigation = useNavigation();
@@ -178,14 +178,15 @@ const AdminHome = () => {
 
       <View className="flex-1 py-3 px-4 space-y-2">
         {/* Top Header */}
-        <View className="  flex-row items-center justify-between">
+        <View className="flex-row items-center justify-between h-8">
           <View className="flex-row items-center space-x-2">
-            <Text className="text-lg font-bold">Online</Text>
+            <Text className="text-2xl font-bold">Online</Text>
             <Switch
               value={isOnline}
               onValueChange={toggleOnlineStatus}
               trackColor={{ false: "#767577", true: "green" }}
               thumbColor={isOnline ? "white" : "white"}
+              
             />
           </View>
           <View className="flex-row items-center space-x-4">

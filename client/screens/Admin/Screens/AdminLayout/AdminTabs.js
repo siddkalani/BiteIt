@@ -8,7 +8,7 @@ import AdminAccount from '../AdminAccount/AdminAccount';
 
 const Tab = createBottomTabNavigator();
 
-const AdminFooter = () => {
+const AdminTabs = () => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -17,7 +17,7 @@ const AdminFooter = () => {
 
           // Assign icons based on route name
           switch (route.name) {
-            case 'AdminHome':
+            case 'Orders':
               iconName = focused ? 'home' : 'home-outline'; // Adjust icons as needed
               break;
             case 'Inventory':
@@ -26,7 +26,7 @@ const AdminFooter = () => {
             case 'Bills':
               iconName = focused ? 'document-text' : 'document-text-outline';
               break;
-            case 'AdminAccount':
+            case 'Account':
               iconName = focused ? 'person-circle' : 'person-circle-outline';
               break;
           }
@@ -34,19 +34,19 @@ const AdminFooter = () => {
           return <Icon name={iconName} size={size} color={color} />;
         },
         headerShown: false,
-        tabBarActiveTintColor: 'green',
+        tabBarActiveTintColor: 'orange',
         tabBarInactiveTintColor: 'gray',
         tabBarLabelStyle: { fontSize: 12, fontWeight: 'bold' },
         tabBarStyle: { backgroundColor: 'white', borderTopWidth: 1, borderTopColor: '#ccc' },
       })}
     >
-      <Tab.Screen name="AdminHome" component={AdminHome} />
+      <Tab.Screen name="Orders" component={AdminHome} />
       <Tab.Screen name="Inventory" component={Inventory} />
       <Tab.Screen name="Bills" component={Bills} />
-      <Tab.Screen name="AdminAccount" component={AdminAccount} />
+      <Tab.Screen name="Account" component={AdminAccount} />
       {/* <Tab.Screen name="Debug" component={() => <Text>Footer is showing</Text>} /> */}
     </Tab.Navigator>
   );
 };
 
-export default AdminFooter;
+export default AdminTabs;

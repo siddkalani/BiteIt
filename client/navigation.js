@@ -25,8 +25,9 @@ import FacultyLogin from "./screens/UserAuth/FacultyLogin";
 import Inventory from "./screens/Admin/Screens/Inventory/Inventory";
 import AdminAccount from "./screens/Admin/Screens/AdminAccount/AdminAccount";
 import Bills from "./screens/Admin/Screens/Bills/Bills";
-import AdminFooter from "./screens/Admin/Screens/AdminLayout/AdminFooter";
+import AdminFooter from "./screens/Admin/Screens/AdminLayout/AdminTabs";
 import AdminLayout from "./screens/Admin/Screens/AdminLayout/AdminLayout";
+import AdminTabs from "./screens/Admin/Screens/AdminLayout/AdminTabs";
 
 const Stack = createNativeStackNavigator();
 
@@ -67,7 +68,7 @@ function AppNavigator() {
          {/* <Stack.Screen name="FacultyLogin" component={FacultyLogin} /> */}
         <Stack.Screen name="Otp" component={OTP} /> 
         {/* client side */}
-        {/* <Stack.Screen name="NewUser" component={NewUser} /> 
+        <Stack.Screen name="NewUser" component={NewUser} /> 
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="HomeCategory" component={HomeCategory} />
@@ -77,15 +78,15 @@ function AppNavigator() {
         <Stack.Screen name="OrderHistory" component={OrderHistoryPage} />
         <Stack.Screen name="PendingOrder" component={PendingOrders} />
         <Stack.Screen name="PaymentService" component={PaymentService} />
-        <Stack.Screen name="PaymentOption" component={PaymentOption} /> */}
+        <Stack.Screen name="PaymentOption" component={PaymentOption} />
         {/* admin side */}
-        <Stack.Screen name="AdminFooter" component={AdminFooter} />
+        <Stack.Screen name="AdminTabs" component={AdminTabs} />
         <Stack.Screen name="AdminHome" component={AdminHome} />
         <Stack.Screen name="Inventory" component={Inventory} />
         <Stack.Screen name="Bills" component={Bills} />
         <Stack.Screen name="AdminAccount" component={AdminAccount} />
         
-        <Stack.Screen name="AdminLayout" component={AdminLayout} />
+        {/* <Stack.Screen name="AdminLayout" component={AdminLayout} /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
