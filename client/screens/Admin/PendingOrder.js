@@ -125,7 +125,6 @@
 
 // export default PendingOrders;
 
-
 import React, { useState, useEffect } from "react";
 import { View, Text, FlatList, TouchableOpacity, Image, Alert, Platform, StyleSheet, Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -141,7 +140,6 @@ const PendingOrders = () => {
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
   const windowWidth = Dimensions.get('window').width;
-
   useEffect(() => {
     const socket = io(BASE_URL);
 
@@ -178,17 +176,16 @@ const PendingOrders = () => {
       }
     };
 
+    // Fetch pending orders when the component mounts
     fetchPendingOrders();
 
+    // Listen for new order events
     socket.on("newOrder", (order) => {
-      console.log("New order received:", order);
-      setPendingOrders((prevOrders) => [order, ...prevOrders]);
+      console.log("New order received:");
+      setPendingOrders((prevOrders) => [order, ...prevOrders]); // Update the state with the new order
     });
 
-    const interval = setInterval(fetchPendingOrders, 10000);
-
     return () => {
-      clearInterval(interval);
       socket.off("newOrder");
       socket.disconnect();
     };
@@ -201,7 +198,7 @@ const PendingOrders = () => {
         Alert.alert("Error", "Admin is not authenticated");
         return;
       }
-
+  
       const response = await fetch(`${BASE_URL}/admin/order/status/${id}`, {
         method: "PATCH",
         headers: {
@@ -210,24 +207,29 @@ const PendingOrders = () => {
         },
         body: JSON.stringify({ status }),
       });
-
+  
       const data = await response.json();
       if (!response.ok) {
         throw new Error(data.message || "Failed to update order status");
       }
-
+  
       Alert.alert("Success", `Order status updated to ${status}`);
-      setPendingOrders((prevOrders) =>
-        prevOrders.map((order) =>
-          order._id === id ? { ...order, status } : order
-        )
-      );
+  
+      // Remove the order from the pending orders state if status is Rejected or Delivered
+      if (status === "Rejected" || status === "Delivered") {
+        setPendingOrders((prevOrders) => prevOrders.filter(order => order._id !== id));
+      } else {
+        setPendingOrders((prevOrders) =>
+          prevOrders.map((order) =>
+            order._id === id ? { ...order, status } : order
+          )
+        );
+      }
     } catch (error) {
       console.error("Error updating order status:", error);
       Alert.alert("Error", error.message || "Something went wrong. Please try again.");
     }
   };
-
   const renderOrderItem = ({ item }) => {
     const orderDate = new Date(item.orderPlacedAt);
     const formattedDate = orderDate.toLocaleDateString();

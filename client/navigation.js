@@ -11,6 +11,7 @@ import OTP from "./screens/UserAuth/Otp";
 import NewUser from "./screens/UserAuth/NewUser";
 import FoodItem from "./screens/Main/FoodItem/FoodItem";
 import AdminHome from "./screens/Admin/Screens/AdminHome/AdminHome";
+import OldAdmin from "./screens/Admin/AdminHome";
 import SearchResults from "./screens/Main/SearchBar/SearchResults";
 import HomeCategory from "./screens/Categories/HomeCategory";
 import CartPage from "./screens/Cart/CartPage";
@@ -65,12 +66,13 @@ function AppNavigator() {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {/* <Stack.Screen name="Intro" component={Intro1} /> */}
         {/* <Stack.Screen name="Keyboard" component={KeyboardTestComponent} /> */}
-         {/* <Stack.Screen name="SignIn" component={SignIn} /> 
-         <Stack.Screen name="LogIn" component={LogIn} /> */}
+         <Stack.Screen name="SignIn" component={SignIn} /> 
+         <Stack.Screen name="LogIn" component={LogIn} />
          {/* <Stack.Screen name="FacultyLogin" component={FacultyLogin} /> */}
-        {/* <Stack.Screen name="Otp" component={OTP} />  */}
-        {/* <Stack.Screen name="AdminHome" component={AdminHome} />
-        <Stack.Screen name="NewUser" component={NewUser} />  */}
+        <Stack.Screen name="Otp" component={OTP} /> 
+        {/* <Stack.Screen name="AdminHome" component={OldAdmin} /> */}
+        <Stack.Screen name="AdminHome" component={AdminHome} />
+        <Stack.Screen name="NewUser" component={NewUser} /> 
         <Stack.Screen name="ClientTabs" component={ClientTabs} />
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Profile" component={Profile} />

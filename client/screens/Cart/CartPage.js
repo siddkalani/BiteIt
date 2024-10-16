@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import {
   View,
   Text,
@@ -32,6 +32,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import GlobalHeader from "../../components/Layout/GlobalHeader";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width } = Dimensions.get("window");
 
@@ -49,34 +50,50 @@ const CartPage = () => {
   const taxes = 25.25; // Example taxes
   const donation = 5; // Example donation
 
+  const totalItems = useMemo(
+    () => cartItems.reduce((total, item) => total + item.quantity, 0),
+    [cartItems]
+  );
+
+  const totalBill = useMemo(
+    () => cartItems.reduce((total, item) => total + item.itemPrice * item.quantity, 0),
+    [cartItems]
+  );
+
+  const finalTotal = useMemo(
+    () => totalBill + deliveryCharge + taxes + donation - offerDiscount,
+    [totalBill]
+  );
+
   const handlePayment = () => {
     navigation.navigate('PaymentOption');
+};
+
+useEffect(() => {
+  // Load cart data when the component mounts
+  const loadCart = async () => {
+    const savedCart = await loadCartFromStorage();
+
+    // Ensure items are only added to the cart if they are not already present
+    savedCart.forEach((item) => {
+      const itemInCart = cartItems.find(cartItem => cartItem._id === item._id);
+      if (!itemInCart) {
+        dispatch(addToCart(item));
+      }
+    });
   };
 
-  useEffect(() => {
-    // Load cart data when the component mounts
-    const loadCart = async () => {
-      const savedCart = await loadCartFromStorage();
-      // Ensure items are only added to the cart if they are not already present
-      savedCart.forEach((item) => {
-        const itemInCart = cartItems.find(cartItem => cartItem._id === item._id);
-        if (!itemInCart) {
-          dispatch(addToCart(item));
-        }
-      });
-    };
-
-    loadCart(); // Call the loadCart function
-  }, [dispatch]); // Remove cartIt
-
+  loadCart(); // Call the loadCart function
+}, [dispatch]); // Remove cartIt
+  
   // Total number of items in the cart
-  const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
+  // const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
 
-  // Calculate the total bill without taxes and discounts
-  const totalBill = cartItems.reduce(
-    (total, item) => total + item.itemPrice * item.quantity,
-    0
-  );
+  // // Calculate the total bill without taxes and discounts
+  // const totalBill = cartItems.reduce(
+  //   (total, item) => total + item.itemPrice * item.quantity,
+  //   0
+  // );
 
   // const handlePlaceOrder = async () => {
   //   try {
@@ -96,64 +113,58 @@ const CartPage = () => {
   //   }
   // };
   // const finalTotal = totalBill + deliveryCharge + taxes + donation - offerDiscount;
+  const handlePlaceOrder = async () => {
+    try {
+      // Retrieve necessary data from AsyncStorage
+      const userId = await AsyncStorage.getItem('userId');
+      const canteenName = "Engineering Canteen"
+      const totalBill = cartItems.reduce((sum, item) => sum + item.itemPrice * item.quantity, 0); // Calculate total bill
 
-  //main logic- sidd comment
-  //   const handlePlaceOrder = async () => {
-  //     try {
-  //       // Retrieve necessary data from AsyncStorage
-  //       const userId = await AsyncStorage.getItem('userId');
-  //       const canteenName = "Engineering Canteen"
-  //       const totalBill = cartItems.reduce((sum, item) => sum + item.itemPrice * item.quantity, 0); // Calculate total bill
+// const finalTotal = totalBill + deliveryCharge + taxes + donation - offerDiscount;
+const totalAmount = finalTotal.toFixed(2);
+      // Prepare data for each cart item
+      const orderData = cartItems.map(item => ({
+        itemId: item._id,
+        itemName:item.itemName,
+        itemQuantity: item.quantity,
+      }));
+  
+      const payload = {
+        userId,
+        canteenName,
+        totalAmount,
+        items: orderData,
+        payment:1,
+        status:"Pending"
+      };
+      const token = await AsyncStorage.getItem("userToken");
+      const response = await fetch(`${BASE_URL}/user/order/add`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+           Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(payload),
+      });
+  
+      if (response.ok) {
+        // Navigate to payment service
+        navigation.navigate('PaymentService');
+  
+        // Clear the cart
+        dispatch(clearCart()); // Clear Redux cart state
+        saveCartToStorage([]); // Clear cart from AsyncStorage
+  
+        Alert.alert("Order Placed", `Your total is ₹${totalAmount}`);
+      } else {
+        throw new Error('Failed to place order. Please try again.');
+      }
+    } catch (error) {
+      console.error("Error placing order:", error);
+      Alert.alert("Order Failed", error.message || "Something went wrong. Please try again.");
+    }
+  };
 
-  // // const finalTotal = totalBill + deliveryCharge + taxes + donation - offerDiscount;
-  // const totalAmount = finalTotal.toFixed(2);
-  //       // Prepare data for each cart item
-  //       const orderData = cartItems.map(item => ({
-  //         itemId: item._id,
-  //         itemName:item.itemName,
-  //         itemQuantity: item.quantity,
-  //       }));
-
-  //       const payload = {
-  //         userId,
-  //         canteenName,
-  //         totalAmount,
-  //         items: orderData,
-  //         payment:1,
-  //         status:"Pending"
-  //       };
-  //       const token = await AsyncStorage.getItem("userToken");
-  //       const response = await fetch(`${BASE_URL}/user/order/add`, {
-  //         method: 'POST',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //            Authorization: `Bearer ${token}`
-  //         },
-  //         body: JSON.stringify(payload),
-  //       });
-
-  //       if (response.ok) {
-  //         // Navigate to payment service
-  //         navigation.navigate('PaymentService');
-
-  //         // Clear the cart
-  //         dispatch(clearCart()); // Clear Redux cart state
-  //         saveCartToStorage([]); // Clear cart from AsyncStorage
-
-  //         Alert.alert("Order Placed", `Your total is ₹${totalAmount}`);
-  //       } else {
-  //         throw new Error('Failed to place order. Please try again.');
-  //       }
-  //     } catch (error) {
-  //       console.error("Error placing order:", error);
-  //       Alert.alert("Order Failed", error.message || "Something went wrong. Please try again.");
-  //     }
-  //   };
-
-  //dummy redirect
-  const handlePlaceOrder = () => {
-    navigation.navigate('PaymentService');
-  }
   // PanResponder to handle slider movement
   const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
@@ -179,7 +190,7 @@ const CartPage = () => {
           toValue: 0,
           useNativeDriver: false,
           friction: 5,
-        }).start();
+        }).start(); 
       }
     },
   });
@@ -249,7 +260,7 @@ const CartPage = () => {
       className="flex-1 bg-white"
       style={{
         flex: 1,
-        paddingTop: Platform.OS === "ios" ? top : StatusBar.currentHeight, // Apply paddingTop only for iOS
+        paddingTop: Platform.OS === "ios" ? top : 0, // Apply paddingTop only for iOS
         paddingBottom: Platform.OS === "ios" ? 0 : bottom, // Apply paddingBottom for Android
       }}
     >
@@ -257,12 +268,12 @@ const CartPage = () => {
       <StatusBar
         barStyle="dark-content"
         backgroundColor="white"
-        translucent
+        translucent={false}
       />
 
       {/* Header */}
       <View className="bg-white px-4 py-3">
-        <GlobalHeader title="Food Cart" />
+      <GlobalHeader title="Food Cart" />
       </View>
 
       {cartItems.length === 0 ? (
@@ -338,7 +349,7 @@ const CartPage = () => {
               </View>
               <View className="flex-row justify-between mt-1">
                 <Text className="font-semibold">Grand Total</Text>
-                <Text className="font-semibold">₹{(totalBill + deliveryCharge + taxes + donation - offerDiscount).toFixed(2)}</Text>
+                <Text className="font-semibold"> ₹{finalTotal.toFixed(2)}</Text>
               </View>
             </View>
 

@@ -16,7 +16,9 @@ import {
 import * as Icon from "react-native-feather";
 import { useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-
+import { BASE_URL } from "../../../../constants/constant";
+import io from "socket.io-client";
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 const AdminHome = () => {
   const navigation = useNavigation();
@@ -66,77 +68,171 @@ const AdminHome = () => {
   }, []);
 
   // Simulate order arrival
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setPendingOrders([
+  //       {
+  //         id: "5079",
+  //         time: "8:03PM",
+  //         customerName: "Vishal Gupta",
+  //         items: [
+  //           {
+  //             name: "Aloo Paneer Samosa",
+  //             quantity: 6,
+  //             price: 120,
+  //           },
+  //         ],
+  //         total: 120,
+  //       },
+  //       {
+  //         id: "5179",
+  //         time: "8:03PM",
+  //         customerName: "Vishal Gupta",
+  //         items: [
+  //           {
+  //             name: "Aloo Paneer Samosa",
+  //             quantity: 6,
+  //             price: 120,
+  //           },
+  //         ],
+  //         total: 120,
+  //       },
+  //       {
+  //         id: "5049",
+  //         time: "8:03PM",
+  //         customerName: "Vishal Gupta",
+  //         items: [
+  //           {
+  //             name: "Aloo Paneer Samosa",
+  //             quantity: 6,
+  //             price: 120,
+  //           },
+  //         ],
+  //         total: 120,
+  //       },
+  //       {
+  //         id: "379",
+  //         time: "8:03PM",
+  //         customerName: "Vishal Gupta",
+  //         items: [
+  //           {
+  //             name: "Aloo Paneer Samosa",
+  //             quantity: 6,
+  //             price: 120,
+  //           },
+  //         ],
+  //         total: 120,
+  //       },
+  //       {
+  //         id: "2000",
+  //         time: "8:03PM",
+  //         customerName: "Vishal Gupta",
+  //         items: [
+  //           {
+  //             name: "Aloo Paneer Samosa",
+  //             quantity: 6,
+  //             price: 120,
+  //           },
+  //         ],
+  //         total: 120,
+  //       },
+  //     ]);
+  //   }, 5000); // New pending order after 5 seconds
+  // }, []);
+
+
+//fetchpending
   useEffect(() => {
-    setTimeout(() => {
-      setPendingOrders([
-        {
-          id: "5079",
-          time: "8:03PM",
-          customerName: "Vishal Gupta",
-          items: [
-            {
-              name: "Aloo Paneer Samosa",
-              quantity: 6,
-              price: 120,
-            },
-          ],
-          total: 120,
-        },
-        {
-          id: "5179",
-          time: "8:03PM",
-          customerName: "Vishal Gupta",
-          items: [
-            {
-              name: "Aloo Paneer Samosa",
-              quantity: 6,
-              price: 120,
-            },
-          ],
-          total: 120,
-        },
-        {
-          id: "5049",
-          time: "8:03PM",
-          customerName: "Vishal Gupta",
-          items: [
-            {
-              name: "Aloo Paneer Samosa",
-              quantity: 6,
-              price: 120,
-            },
-          ],
-          total: 120,
-        },
-        {
-          id: "379",
-          time: "8:03PM",
-          customerName: "Vishal Gupta",
-          items: [
-            {
-              name: "Aloo Paneer Samosa",
-              quantity: 6,
-              price: 120,
-            },
-          ],
-          total: 120,
-        },
-        {
-          id: "2000",
-          time: "8:03PM",
-          customerName: "Vishal Gupta",
-          items: [
-            {
-              name: "Aloo Paneer Samosa",
-              quantity: 6,
-              price: 120,
-            },
-          ],
-          total: 120,
-        },
-      ]);
-    }, 5000); // New pending order after 5 seconds
+    const socket = io(BASE_URL);
+
+    const fetchPendingOrders = async () => {
+      try {
+        const adminToken = await AsyncStorage.getItem("adminToken");
+        if (!adminToken) {
+          Alert.alert("Error", "Admin is not authenticated");
+          return;
+        }
+
+        const response = await fetch(`${BASE_URL}/admin/order/pending`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${adminToken}`,
+          },
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to fetch pending orders");
+        }
+
+        const sortedOrders = data.orders.sort(
+          (a, b) => new Date(b.orderPlacedAt) - new Date(a.orderPlacedAt)
+        );
+
+        setPendingOrders(sortedOrders);
+      } catch (error) {
+        console.error("Error fetching pending orders:", error);
+        Alert.alert("Error", error.message || "Something went wrong. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    // Fetch pending orders when the component mounts
+    fetchPendingOrders();
+
+    // Listen for new order events
+    socket.on("newOrder", (order) => {
+      console.log("New order received:");
+      setPendingOrders((prevOrders) => [order, ...prevOrders]); // Update the state with the new order
+    });
+
+    return () => {
+      socket.off("newOrder");
+      socket.disconnect();
+    };
   }, []);
+
+//update order 
+const updateOrderStatus = async (id, status) => {
+  try {
+    const adminToken = await AsyncStorage.getItem("adminToken");
+    if (!adminToken) {
+      Alert.alert("Error", "Admin is not authenticated");
+      return;
+    }
+
+    const response = await fetch(`${BASE_URL}/admin/order/status/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${adminToken}`,
+      },
+      body: JSON.stringify({ status }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || "Failed to update order status");
+    }
+
+    Alert.alert("Success", `Order status updated to ${status}`);
+
+    // Remove the order from the pending orders state if status is Rejected or Delivered
+    if (status === "Rejected" || status === "Delivered") {
+      setPendingOrders((prevOrders) => prevOrders.filter(order => order._id !== id));
+    } else {
+      setPendingOrders((prevOrders) =>
+        prevOrders.map((order) =>
+          order._id === id ? { ...order, status } : order
+        )
+      );
+    }
+  } catch (error) {
+    console.error("Error updating order status:", error);
+    Alert.alert("Error", error.message || "Something went wrong. Please try again.");
+  }
+};
 
   const handleAcceptOrder = (orderId) => {
     // Move order to active/preparing orders
@@ -331,13 +427,13 @@ const AdminHome = () => {
                   {/* Accept & Reject Buttons (Keep original styling) */}
                   <View className="flex-row justify-between mt-4">
                     <TouchableOpacity
-                      onPress={() => handleRejectOrder(order.id)}
+                      onPress={() => updateOrderStatus()}
                       className="flex-1 bg-red-100 rounded-lg py-2 mr-2"
                     >
                       <Text className="text-red-500 text-center">Reject</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                      onPress={() => handleAcceptOrder(order.id)}
+                      onPress={() => updateOrderStatus()}
                       className="flex-1 bg-yellow-400 rounded-lg py-2"
                     >
                       <Text className="text-center text-white">
@@ -348,31 +444,31 @@ const AdminHome = () => {
                 </View>
               ))}
             </View>
-          ) : activeTab === "Preparing" && orders.length > 0 ? (
+          ) : activeTab === "Preparing" && pendingOrders.length > 0 ? (
             <View>
-              {orders.map((order) => (
+              {pendingOrders.map((order) => (
                 <View
-                  key={order.id}
+                  key={order._id}
                   className="p-4 bg-gray-50 rounded-lg shadow-sm my-2"
                 >
                   <View className="flex-row justify-between">
-                    <Text className="text-xl font-bold">ID: {order.id}</Text>
-                    <Text className="text-gray-500">{order.time}</Text>
+                    <Text className="text-xl font-bold">ID: {pendingOrders._id}</Text>
+                    {/* <Text className="text-gray-500">{order.time}</Text> */}
                   </View>
                   <Text className="text-sm text-blue-500">
-                    1st order by {order.customerName}
+                    1st order by {order.userId}
                   </Text>
-                  {order.items.map((item, idx) => (
+                  {pendingOrders.items.map((item, idx) => (
                     <View key={idx} className="flex-row justify-between mt-2">
                       <Text className="text-base">
-                        {item.quantity} x {item.name}
+                        {item.itemQuantity} x {item.itemName}
                       </Text>
-                      <Text className="text-base">₹{item.price}</Text>
+                      {/* <Text className="text-base">₹{item.itemPrice}</Text> */}
                     </View>
                   ))}
                   <View className="flex-row justify-between mt-2">
                     <Text className="text-base font-bold">Total Bill</Text>
-                    <Text className="text-base font-bold">₹{order.total}</Text>
+                    <Text className="text-base font-bold">₹{order.totalAmount}</Text>
                   </View>
 
                   {/* Set Preparation Time */}
