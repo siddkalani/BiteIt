@@ -67,10 +67,11 @@ function AppNavigator() {
         {/* <Stack.Screen name="Keyboard" component={KeyboardTestComponent} /> */}
          {/* <Stack.Screen name="SignIn" component={SignIn} /> 
          <Stack.Screen name="LogIn" component={LogIn} /> */}
-         <Stack.Screen name="FacultyLogin" component={FacultyLogin} />
+         {/* <Stack.Screen name="FacultyLogin" component={FacultyLogin} /> */}
         {/* <Stack.Screen name="Otp" component={OTP} />  */}
-        <Stack.Screen name="AdminHome" component={AdminHome} />
-        <Stack.Screen name="NewUser" component={NewUser} /> 
+        {/* <Stack.Screen name="AdminHome" component={AdminHome} />
+        <Stack.Screen name="NewUser" component={NewUser} />  */}
+        <Stack.Screen name="ClientTabs" component={ClientTabs} />
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="HomeCategory" component={HomeCategory} />
@@ -83,7 +84,7 @@ function AppNavigator() {
         <Stack.Screen name="PaymentOption" component={PaymentOption} />
         {/* admin side */}
         <Stack.Screen name="AdminTabs" component={AdminTabs} />
-        <Stack.Screen name="AdminHome" component={AdminHome} />
+
         <Stack.Screen name="Inventory" component={Inventory} />
         <Stack.Screen name="Bills" component={Bills} />
         <Stack.Screen name="AdminAccount" component={AdminAccount} />

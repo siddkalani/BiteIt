@@ -71,7 +71,7 @@ const FacultyLogin = () => {
 
         await AsyncStorage.removeItem("@user");
         
-        navigation.navigate("Home");
+        navigation.navigate("ClientTabs");
       } else if (data && data.message) {
         Alert.alert("Error", data.message);
       } else {
