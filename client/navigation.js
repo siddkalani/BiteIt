@@ -65,13 +65,12 @@ function AppNavigator() {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {/* <Stack.Screen name="Intro" component={Intro1} /> */}
         {/* <Stack.Screen name="Keyboard" component={KeyboardTestComponent} /> */}
-        {/* <Stack.Screen name="SignIn" component={SignIn} /> 
+         {/* <Stack.Screen name="SignIn" component={SignIn} /> 
          <Stack.Screen name="LogIn" component={LogIn} /> */}
-        {/* <Stack.Screen name="FacultyLogin" component={FacultyLogin} /> */}
-        {/* <Stack.Screen name="Otp" component={OTP} /> */}
-        {/* <Stack.Screen name="NewUser" component={NewUser} /> */}
-        {/* client side */}
-        <Stack.Screen name="ClientTabs" component={ClientTabs} />
+         <Stack.Screen name="FacultyLogin" component={FacultyLogin} />
+        {/* <Stack.Screen name="Otp" component={OTP} />  */}
+        <Stack.Screen name="AdminHome" component={AdminHome} />
+        <Stack.Screen name="NewUser" component={NewUser} /> 
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="HomeCategory" component={HomeCategory} />

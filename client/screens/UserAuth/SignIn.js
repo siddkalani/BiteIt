@@ -15,7 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontFamily, FontSize } from "../../GlobalStyles";
 import { useDispatch, useSelector } from "react-redux";
-// import { loginUser } from "../../../store/Slices/userDetailSlice";
+import { loginUser } from "../../store/Slices/userDetailSlice";
 
 const SignIn = () => {
   const [phone, setPhone] = useState("");
@@ -25,20 +25,20 @@ const SignIn = () => {
   const loading = useSelector((state) => state.users.loading);
   const error = useSelector((state) => state.users.error);
 
-  // const handleLogin = async () => {
-  //   try {
-  //     await dispatch(loginUser({ phone: phone })).unwrap();
-  //     navigation.navigate("Otp", { phone: phone });
-  //   } catch (error) {
-  //     console.error("Login Error:", error);
-  //     Alert.alert("Error", `Failed to log in: ${error.message}`);
-  //   }
-  // };
+  const handleLogin = async () => {
+    try {
+      await dispatch(loginUser({ phone: phone })).unwrap();
+      navigation.navigate("Otp", { phone: phone });
+    } catch (error) {
+      console.error("Login Error:", error);
+      Alert.alert("Error", `Failed to log in: ${error.message}`);
+    }
+  };
   
   //dummy navigation
-  const handleLogin = () => {
-    navigation.navigate("Otp");
-  }
+  // const handleLogin = () => {
+  //   navigation.navigate("Otp");
+  // }
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"} // Avoid scrolling when keyboard appears

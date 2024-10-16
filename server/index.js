@@ -26,6 +26,12 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use((req, res, next) => {
+  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+  res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
+  next();
+});
+
 // Static files
 app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
 app.use(
@@ -40,6 +46,7 @@ app.use("/canteen", require("./routes/canteenRoutes"));
 app.use("/category", require("./routes/categoryRoutes"));
 app.use("/food-item", require("./routes/foodItemRoutes"));
 app.use("/user/order", require("./routes/orderRoutes"));
+app.use('/faculty', require('./routes/facultyRoutes'))
 
 app.use(errorHandler);
 

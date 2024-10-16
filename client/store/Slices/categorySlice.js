@@ -1,5 +1,3 @@
-
-
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { BASE_URL } from "../../constants/constant";
 import AsyncStorage from "@react-native-async-storage/async-storage";
