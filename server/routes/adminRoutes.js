@@ -12,7 +12,7 @@ const {
   updateOrderStatus,
 } = require("../controllers/admin/adminOrder/getPendingOrder");
 
-router.use(validateToken);
+// router.use(validateToken);
 
 router.route("/all").get(getAllAdmins);
 router.route("/:phone").get(getSingleAdmin);
