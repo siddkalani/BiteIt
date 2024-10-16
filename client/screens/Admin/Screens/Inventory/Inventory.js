@@ -41,117 +41,124 @@ const Category = ({ categoryName, items }) => {
 
 const Inventory = () => {
   const [activeTab, setActiveTab] = useState('All items');
-  const slideAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(0)).current;  // Animation value for tab indicator
   const { top } = useSafeAreaInsets();
 
+  // Function to switch tabs and animate the indicator
   const switchTab = (tab) => {
     setActiveTab(tab);
+    // Animate sliding to the appropriate tab
+    Animated.timing(slideAnim, {
+      toValue: tab === 'All items' ? 0 : 1,
+      duration: 300,
+      useNativeDriver: false,
+    }).start();
   };
 
   // Example Data for Inventory
-const categories = [
-  {
-    name: "COLD DRINK",
-    items: [
-      { name: "2 ltr. Coca cola", available: true },
-      { name: "Frooti", available: true },
-      { name: "Sprite", available: false, outOfStock: true },
-      { name: "Pepsi", available: true },
-      { name: "Thums Up", available: true },
-      { name: "7 Up", available: false, outOfStock: true },
-    ],
-  },
-  {
-    name: "SAMOSA",
-    items: [
-      { name: "Aloo Matar Paneer samosa", available: true },
-      { name: "Chowmein Samosa", available: false, outOfStock: true },
-      { name: "Cheese Samosa", available: true },
-      { name: "Veggie Delight Samosa", available: true },
-      { name: "Chicken Samosa", available: false, outOfStock: true },
-    ],
-  },
-  {
-    name: "BURGERS",
-    items: [
-      { name: "Chicken Burger", available: true },
-      { name: "Veggie Burger", available: true },
-      { name: "Cheese Burger", available: true },
-      { name: "Double Patty Burger", available: false, outOfStock: true },
-      { name: "Grilled Chicken Burger", available: true },
-    ],
-  },
-  {
-    name: "PIZZAS",
-    items: [
-      { name: "Margherita", available: true },
-      { name: "Pepperoni Pizza", available: false, outOfStock: true },
-      { name: "BBQ Chicken Pizza", available: true },
-      { name: "Veggie Supreme Pizza", available: true },
-      { name: "Cheese Burst Pizza", available: false, outOfStock: true },
-    ],
-  },
-  {
-    name: "FRIES",
-    items: [
-      { name: "Regular Fries", available: true },
-      { name: "Cheesy Fries", available: true },
-      { name: "Spicy Fries", available: false, outOfStock: true },
-      { name: "Curly Fries", available: true },
-      { name: "Sweet Potato Fries", available: true },
-    ],
-  },
-  {
-    name: "ICE CREAM",
-    items: [
-      { name: "Vanilla", available: true },
-      { name: "Chocolate", available: true },
-      { name: "Strawberry", available: false, outOfStock: true },
-      { name: "Butterscotch", available: true },
-      { name: "Mango", available: true },
-    ],
-  },
-  {
-    name: "PASTRIES",
-    items: [
-      { name: "Black Forest Cake", available: true },
-      { name: "Red Velvet Cake", available: true },
-      { name: "Blueberry Muffin", available: false, outOfStock: true },
-      { name: "Chocolate Brownie", available: true },
-      { name: "Cheese Cake", available: true },
-    ],
-  },
-  {
-    name: "COFFEE",
-    items: [
-      { name: "Espresso", available: true },
-      { name: "Cappuccino", available: true },
-      { name: "Latte", available: false, outOfStock: true },
-      { name: "Americano", available: true },
-      { name: "Mocha", available: true },
-    ],
-  },
-  {
-    name: "SANDWICHES",
-    items: [
-      { name: "Grilled Cheese Sandwich", available: true },
-      { name: "Club Sandwich", available: false, outOfStock: true },
-      { name: "Chicken Panini", available: true },
-      { name: "Veggie Delight Sandwich", available: true },
-      { name: "Tuna Sandwich", available: true },
-    ],
-  },
-  {
-    name: "SOUPS",
-    items: [
-      { name: "Tomato Soup", available: true },
-      { name: "Chicken Noodle Soup", available: true },
-      { name: "Minestrone Soup", available: false, outOfStock: true },
-      { name: "French Onion Soup", available: true },
-      { name: "Broccoli Cheddar Soup", available: true },
-    ],
-  },
-]
+  const categories = [
+    {
+      name: "COLD DRINK",
+      items: [
+        { name: "2 ltr. Coca cola", available: true },
+        { name: "Frooti", available: true },
+        { name: "Sprite", available: false, outOfStock: true },
+        { name: "Pepsi", available: true },
+        { name: "Thums Up", available: true },
+        { name: "7 Up", available: false, outOfStock: true },
+      ],
+    },
+    {
+      name: "SAMOSA",
+      items: [
+        { name: "Aloo Matar Paneer samosa", available: true },
+        { name: "Chowmein Samosa", available: false, outOfStock: true },
+        { name: "Cheese Samosa", available: true },
+        { name: "Veggie Delight Samosa", available: true },
+        { name: "Chicken Samosa", available: false, outOfStock: true },
+      ],
+    },
+    {
+      name: "BURGERS",
+      items: [
+        { name: "Chicken Burger", available: true },
+        { name: "Veggie Burger", available: true },
+        { name: "Cheese Burger", available: true },
+        { name: "Double Patty Burger", available: false, outOfStock: true },
+        { name: "Grilled Chicken Burger", available: true },
+      ],
+    },
+    {
+      name: "PIZZAS",
+      items: [
+        { name: "Margherita", available: true },
+        { name: "Pepperoni Pizza", available: false, outOfStock: true },
+        { name: "BBQ Chicken Pizza", available: true },
+        { name: "Veggie Supreme Pizza", available: true },
+        { name: "Cheese Burst Pizza", available: false, outOfStock: true },
+      ],
+    },
+    {
+      name: "FRIES",
+      items: [
+        { name: "Regular Fries", available: true },
+        { name: "Cheesy Fries", available: true },
+        { name: "Spicy Fries", available: false, outOfStock: true },
+        { name: "Curly Fries", available: true },
+        { name: "Sweet Potato Fries", available: true },
+      ],
+    },
+    {
+      name: "ICE CREAM",
+      items: [
+        { name: "Vanilla", available: true },
+        { name: "Chocolate", available: true },
+        { name: "Strawberry", available: false, outOfStock: true },
+        { name: "Butterscotch", available: true },
+        { name: "Mango", available: true },
+      ],
+    },
+    {
+      name: "PASTRIES",
+      items: [
+        { name: "Black Forest Cake", available: true },
+        { name: "Red Velvet Cake", available: true },
+        { name: "Blueberry Muffin", available: false, outOfStock: true },
+        { name: "Chocolate Brownie", available: true },
+        { name: "Cheese Cake", available: true },
+      ],
+    },
+    {
+      name: "COFFEE",
+      items: [
+        { name: "Espresso", available: true },
+        { name: "Cappuccino", available: true },
+        { name: "Latte", available: false, outOfStock: true },
+        { name: "Americano", available: true },
+        { name: "Mocha", available: true },
+      ],
+    },
+    {
+      name: "SANDWICHES",
+      items: [
+        { name: "Grilled Cheese Sandwich", available: true },
+        { name: "Club Sandwich", available: false, outOfStock: true },
+        { name: "Chicken Panini", available: true },
+        { name: "Veggie Delight Sandwich", available: true },
+        { name: "Tuna Sandwich", available: true },
+      ],
+    },
+    {
+      name: "SOUPS",
+      items: [
+        { name: "Tomato Soup", available: true },
+        { name: "Chicken Noodle Soup", available: true },
+        { name: "Minestrone Soup", available: false, outOfStock: true },
+        { name: "French Onion Soup", available: true },
+        { name: "Broccoli Cheddar Soup", available: true },
+      ],
+    },
+  ]
 
   return (
     <View style={{
@@ -160,7 +167,7 @@ const categories = [
     }} className="flex-1 bg-yellow-50">
 
       <StatusBar barStyle="dark-content" backgroundColor={"transparent"} translucent />
-      <View className='flex-1 py-3 px-4 space-y-2'>
+      <View className='flex-1 pt-3 px-4 space-y-2'>
         {/* Header */}
         <View className="flex-row items-center justify-between h-8">
           <View className="flex-row items-center space-x-2">
@@ -184,6 +191,7 @@ const categories = [
 
         {/* Tabs */}
         <View className="bg-yellow-100 relative rounded-lg overflow-hidden">
+          {/* Animated sliding indicator */}
           <Animated.View
             className="absolute top-0 bottom-0 bg-white"
             style={{
@@ -215,8 +223,8 @@ const categories = [
           <View className="flex-row justify-between items-center mb-4">
             <Text className="font-semibold text-lg">Items</Text>
             <TouchableOpacity className="flex-row items-center">
-              <Icon name="pencil" size={16} color="#F59E0B" />
-              <Text className="text-yellow-500 ml-1">Edit menu</Text>
+              <Icon name="pencil" size={16} color="black"/>
+              <Text className="text-black ml-1">Edit menu</Text>
             </TouchableOpacity>
           </View>
 
@@ -225,13 +233,6 @@ const categories = [
             <Category key={index} categoryName={category.name} items={category.items} />
           ))}
         </ScrollView>
-
-        {/* Menu Button */}
-        {/* <View className="items-center py-4">
-          <TouchableOpacity className="bg-yellow-400 px-8 py-2 rounded-full">
-            <Text className="font-semibold">MENU</Text>
-          </TouchableOpacity>
-        </View> */}
       </View>
     </View>
   );

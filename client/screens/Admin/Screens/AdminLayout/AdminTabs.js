@@ -23,8 +23,8 @@ const AdminTabs = () => {
             case 'Inventory':
               iconName = focused ? 'storefront' : 'storefront-outline';
               break;
-            case 'Bills':
-              iconName = focused ? 'document-text' : 'document-text-outline';
+            case 'Offers':
+              iconName = focused ? 'pricetags' : 'pricetags-outline';
               break;
             case 'Account':
               iconName = focused ? 'person-circle' : 'person-circle-outline';
@@ -42,7 +42,7 @@ const AdminTabs = () => {
     >
       <Tab.Screen name="Orders" component={AdminHome} />
       <Tab.Screen name="Inventory" component={Inventory} />
-      <Tab.Screen name="Bills" component={Bills} />
+      <Tab.Screen name="Offers" component={Bills} />
       <Tab.Screen name="Account" component={AdminAccount} />
       {/* <Tab.Screen name="Debug" component={() => <Text>Footer is showing</Text>} /> */}
     </Tab.Navigator>
