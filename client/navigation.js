@@ -68,8 +68,8 @@ function AppNavigator() {
         {/* <Stack.Screen name="SignIn" component={SignIn} /> 
          <Stack.Screen name="LogIn" component={LogIn} /> */}
         {/* <Stack.Screen name="FacultyLogin" component={FacultyLogin} /> */}
-        <Stack.Screen name="Otp" component={OTP} />
-        <Stack.Screen name="NewUser" component={NewUser} />
+        {/* <Stack.Screen name="Otp" component={OTP} /> */}
+        {/* <Stack.Screen name="NewUser" component={NewUser} /> */}
         {/* client side */}
         <Stack.Screen name="ClientTabs" component={ClientTabs} />
         <Stack.Screen name="Home" component={Home} />

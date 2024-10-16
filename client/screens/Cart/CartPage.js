@@ -266,7 +266,7 @@ const CartPage = () => {
       className="flex-1 bg-white"
       style={{
         flex: 1,
-        paddingTop: Platform.OS === "ios" ? top : 0, // Apply paddingTop only for iOS
+        paddingTop: Platform.OS === "ios" ? top : StatusBar.currentHeight, // Apply paddingTop only for iOS
         paddingBottom: Platform.OS === "ios" ? 0 : bottom, // Apply paddingBottom for Android
       }}
     >
@@ -274,7 +274,7 @@ const CartPage = () => {
       <StatusBar
         barStyle="dark-content"
         backgroundColor="white"
-        translucent={false}
+        translucent
       />
 
       {/* Header */}

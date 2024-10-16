@@ -118,13 +118,15 @@ const Home = ({ setTabBarVisible }) => {
               </TouchableOpacity>
 
               {/* Bell Icon */}
-              <TouchableOpacity
-                style={{
-                  opacity: deliverTextOpacity,
-                  transform: [{ translateY: deliverTextTranslateY }],
-                }}
-              >
+              <TouchableOpacity>
+              <Animated.View
+                  style={{
+                    opacity: deliverTextOpacity,
+                    transform: [{ translateY: deliverTextTranslateY }],
+                  }}
+                >
                 <Icon.Bell height="24" width="24" stroke="white" />
+                </Animated.View>
               </TouchableOpacity>
             </View>
 
