@@ -28,6 +28,8 @@ import Bills from "./screens/Admin/Screens/Bills/Bills";
 import AdminFooter from "./screens/Admin/Screens/AdminLayout/AdminTabs";
 import AdminLayout from "./screens/Admin/Screens/AdminLayout/AdminLayout";
 import AdminTabs from "./screens/Admin/Screens/AdminLayout/AdminTabs";
+import Footer from "./screens/Main/Home/ClientTabs";
+import ClientTabs from "./screens/Main/Home/ClientTabs";
 
 const Stack = createNativeStackNavigator();
 
@@ -63,12 +65,13 @@ function AppNavigator() {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {/* <Stack.Screen name="Intro" component={Intro1} /> */}
         {/* <Stack.Screen name="Keyboard" component={KeyboardTestComponent} /> */}
-         {/* <Stack.Screen name="SignIn" component={SignIn} /> 
+        {/* <Stack.Screen name="SignIn" component={SignIn} /> 
          <Stack.Screen name="LogIn" component={LogIn} /> */}
-         {/* <Stack.Screen name="FacultyLogin" component={FacultyLogin} /> */}
-        <Stack.Screen name="Otp" component={OTP} /> 
+        {/* <Stack.Screen name="FacultyLogin" component={FacultyLogin} /> */}
+        <Stack.Screen name="Otp" component={OTP} />
+        <Stack.Screen name="NewUser" component={NewUser} />
         {/* client side */}
-        <Stack.Screen name="NewUser" component={NewUser} /> 
+        <Stack.Screen name="ClientTabs" component={ClientTabs} />
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="HomeCategory" component={HomeCategory} />
@@ -85,7 +88,7 @@ function AppNavigator() {
         <Stack.Screen name="Inventory" component={Inventory} />
         <Stack.Screen name="Bills" component={Bills} />
         <Stack.Screen name="AdminAccount" component={AdminAccount} />
-        
+
         {/* <Stack.Screen name="AdminLayout" component={AdminLayout} /> */}
       </Stack.Navigator>
     </NavigationContainer>

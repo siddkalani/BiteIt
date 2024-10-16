@@ -65,7 +65,7 @@ const AdminAccount = () => {
             <View className="flex-row justify-between">
               <Text className="font-bold text-gray-800 text-lg">Business report</Text>
               <TouchableOpacity>
-                <Text className="text-yellow-500 font-semibold">Details</Text>
+                <Text className="text-blue-700 font-semibold">Details</Text>
               </TouchableOpacity>
             </View>
             <View>
@@ -87,7 +87,7 @@ const AdminAccount = () => {
               <View className="bg-gray-100 rounded-lg p-3">
                 <Icon name="person-outline" size={28} color="black" />
               </View>
-              <Text className="mt-1 text-xs">Zomato Manager</Text>
+              <Text className="mt-1 text-xs">Profile</Text>
             </TouchableOpacity>
 
             <TouchableOpacity className="flex-1 items-center">
