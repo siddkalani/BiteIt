@@ -10,7 +10,7 @@ import Home from "./screens/Main/Home/Home";
 import OTP from "./screens/UserAuth/Otp";
 import NewUser from "./screens/UserAuth/NewUser";
 import FoodItem from "./screens/Main/FoodItem/FoodItem";
-import AdminHome from "./screens/Admin/Main/Home/AdminHome";
+import AdminHome from "./screens/Admin/Screens/AdminHome/AdminHome";
 import SearchResults from "./screens/Main/SearchBar/SearchResults";
 import HomeCategory from "./screens/Categories/HomeCategory";
 import CartPage from "./screens/Cart/CartPage";
@@ -22,6 +22,14 @@ import Intro1 from "./screens/Intro/Intro1";
 import KeyboardTestComponent from "./components/KeyboardTest";
 import PaymentOption from "./screens/payment/PaymentOption";
 import FacultyLogin from "./screens/UserAuth/FacultyLogin";
+import Inventory from "./screens/Admin/Screens/Inventory/Inventory";
+import AdminAccount from "./screens/Admin/Screens/AdminAccount/AdminAccount";
+import Bills from "./screens/Admin/Screens/Bills/Bills";
+import AdminFooter from "./screens/Admin/Screens/AdminLayout/AdminTabs";
+import AdminLayout from "./screens/Admin/Screens/AdminLayout/AdminLayout";
+import AdminTabs from "./screens/Admin/Screens/AdminLayout/AdminTabs";
+import Footer from "./screens/Main/Home/ClientTabs";
+import ClientTabs from "./screens/Main/Home/ClientTabs";
 
 const Stack = createNativeStackNavigator();
 
@@ -73,6 +81,14 @@ function AppNavigator() {
         <Stack.Screen name="PendingOrder" component={PendingOrders} />
         <Stack.Screen name="PaymentService" component={PaymentService} />
         <Stack.Screen name="PaymentOption" component={PaymentOption} />
+        {/* admin side */}
+        <Stack.Screen name="AdminTabs" component={AdminTabs} />
+        <Stack.Screen name="AdminHome" component={AdminHome} />
+        <Stack.Screen name="Inventory" component={Inventory} />
+        <Stack.Screen name="Bills" component={Bills} />
+        <Stack.Screen name="AdminAccount" component={AdminAccount} />
+
+        {/* <Stack.Screen name="AdminLayout" component={AdminLayout} /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );

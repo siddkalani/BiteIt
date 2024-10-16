@@ -1,0 +1,157 @@
+import React, { useState, useRef, useEffect } from 'react';
+import { 
+  View, 
+  Animated, 
+  TouchableOpacity, 
+  Dimensions, 
+  StatusBar, 
+  Platform 
+} from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Icon from 'react-native-vector-icons/Ionicons';
+import Home from './Home';
+import CartPage from '../../Cart/CartPage';
+import OrderHistoryPage from '../../Cart/OrderHistoryPage';
+import ProfilePage from '../../profile/Profile';
+
+const Tab = createBottomTabNavigator();
+const { height: screenHeight } = Dimensions.get('window');
+
+const CustomTabBar = ({ state, descriptors, navigation, translateY }) => (
+  <Animated.View
+    style={{
+      flexDirection: 'row',
+      backgroundColor: 'white',
+      borderTopWidth: 1,
+      borderTopColor: '#ccc',
+      height: 50,
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      transform: [{ translateY }],
+    }}
+  >
+    {state.routes.map((route, index) => {
+      const { options } = descriptors[route.key];
+      const isFocused = state.index === index;
+
+      const onPress = () => {
+        const event = navigation.emit({
+          type: 'tabPress',
+          target: route.key,
+          canPreventDefault: true,
+        });
+
+        if (!isFocused && !event.defaultPrevented) {
+          navigation.navigate(route.name);
+        }
+      };
+
+      const iconName = getIconName(route.name, isFocused);
+
+      return (
+        <TouchableOpacity
+          key={index}
+          onPress={onPress}
+          style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+        >
+          <Icon name={iconName} size={24} color={isFocused ? 'green' : 'gray'} />
+        </TouchableOpacity>
+      );
+    })}
+  </Animated.View>
+);
+
+const getIconName = (routeName, focused) => {
+  switch (routeName) {
+    case 'Home':
+      return focused ? 'home' : 'home-outline';
+    case 'CartPage':
+      return focused ? 'cart' : 'cart-outline';
+    case 'OrderHistoryPage':
+      return focused ? 'time' : 'time-outline';
+    case 'Profile':
+      return focused ? 'person-circle' : 'person-circle-outline';
+    default:
+      return 'help-circle';
+  }
+};
+
+const ClientTabs = () => {
+  const [isTabBarVisible, setIsTabBarVisible] = useState(true);
+  const translateY = useRef(new Animated.Value(0)).current;
+
+  const animateTabBar = (toValue) => {
+    Animated.spring(translateY, {
+      toValue: toValue ? 0 : 50,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const updateStatusBar = (routeName) => {
+    switch (routeName) {
+      case 'Home':
+        StatusBar.setBarStyle('light-content');
+        if (Platform.OS === 'android') {
+          StatusBar.setBackgroundColor('#309624');
+        }
+        break;
+      case 'CartPage':
+        StatusBar.setBarStyle('dark-content');
+        if (Platform.OS === 'android') {
+          StatusBar.setBackgroundColor('white');
+        }
+        break;
+      case 'OrderHistoryPage':
+      case 'Profile':
+        StatusBar.setBarStyle('dark-content');
+        if (Platform.OS === 'android') {
+        StatusBar.setTranslucent(true);
+        }
+        break;
+      default:
+        StatusBar.setBarStyle('default');
+    }
+  };
+
+  useEffect(() => {
+    animateTabBar(isTabBarVisible);
+  }, [isTabBarVisible]);
+
+  return (
+    <View style={{ flex: 1 }}>
+      <Tab.Navigator
+        tabBar={(props) => <CustomTabBar {...props} translateY={translateY} />}
+        screenOptions={{ headerShown: false }}
+        screenListeners={{
+          state: (e) => {
+            const routeName = e.data.state.routes[e.data.state.index].name;
+            updateStatusBar(routeName);
+          },
+        }}
+      >
+        <Tab.Screen name="Home">
+          {(props) => <Home {...props} setTabBarVisible={setIsTabBarVisible} />}
+        </Tab.Screen>
+        <Tab.Screen 
+          name="CartPage" 
+          component={CartPage} 
+          options={{ title: 'Cart' }} 
+        />
+        <Tab.Screen 
+          name="OrderHistoryPage" 
+          component={OrderHistoryPage} 
+          options={{ title: 'Orders' }} 
+        />
+        <Tab.Screen 
+          name="Profile" 
+          component={ProfilePage} 
+          options={{ title: 'Account' }} 
+        />
+      </Tab.Navigator>
+    </View>
+  );
+};
+
+export default ClientTabs;
