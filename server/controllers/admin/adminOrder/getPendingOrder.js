@@ -76,9 +76,10 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
       try {
         const newOrderHistory = new OrderHistory({
           userId: order.userId,
-          canteenId: order.canteenId,
           canteenName: order.canteenName,
-          items: order.items, // Store the array of ordered items
+          itemName: order.itemName,
+          itemQuantity: order.itemQuantity,
+          itemImage: order.itemImage,
           totalAmount: order.totalAmount,
           status: "Delivered",
           orderPlacedAt: order.orderPlacedAt,

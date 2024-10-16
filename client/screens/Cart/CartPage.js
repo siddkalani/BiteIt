@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -32,7 +32,6 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import GlobalHeader from "../../components/Layout/GlobalHeader";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width } = Dimensions.get("window");
 
@@ -50,21 +49,6 @@ const CartPage = () => {
   const taxes = 25.25; // Example taxes
   const donation = 5; // Example donation
 
-  const totalItems = useMemo(
-    () => cartItems.reduce((total, item) => total + item.quantity, 0),
-    [cartItems]
-  );
-
-  const totalBill = useMemo(
-    () => cartItems.reduce((total, item) => total + item.itemPrice * item.quantity, 0),
-    [cartItems]
-  );
-
-  const finalTotal = useMemo(
-    () => totalBill + deliveryCharge + taxes + donation - offerDiscount,
-    [totalBill]
-  );
-
   const handlePayment = () => {
     navigation.navigate('PaymentOption');
   };
@@ -73,7 +57,6 @@ const CartPage = () => {
     // Load cart data when the component mounts
     const loadCart = async () => {
       const savedCart = await loadCartFromStorage();
-
       // Ensure items are only added to the cart if they are not already present
       savedCart.forEach((item) => {
         const itemInCart = cartItems.find(cartItem => cartItem._id === item._id);
@@ -87,13 +70,13 @@ const CartPage = () => {
   }, [dispatch]); // Remove cartIt
 
   // Total number of items in the cart
-  // const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
+  const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
 
-  // // Calculate the total bill without taxes and discounts
-  // const totalBill = cartItems.reduce(
-  //   (total, item) => total + item.itemPrice * item.quantity,
-  //   0
-  // );
+  // Calculate the total bill without taxes and discounts
+  const totalBill = cartItems.reduce(
+    (total, item) => total + item.itemPrice * item.quantity,
+    0
+  );
 
   // const handlePlaceOrder = async () => {
   //   try {
@@ -355,7 +338,7 @@ const CartPage = () => {
               </View>
               <View className="flex-row justify-between mt-1">
                 <Text className="font-semibold">Grand Total</Text>
-                <Text className="font-semibold"> ₹{finalTotal.toFixed(2)}</Text>
+                <Text className="font-semibold">₹{(totalBill + deliveryCharge + taxes + donation - offerDiscount).toFixed(2)}</Text>
               </View>
             </View>
 
