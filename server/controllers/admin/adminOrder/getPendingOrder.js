@@ -5,15 +5,22 @@ const {sendNotification}  = require('../../../utils/notification')
 
 const getPendingOrders = asyncHandler(async (req, res) => {
   try {
-    // Find orders with status "Pending"
-    const orders = await Order.find({ status: { $in: ['Pending', 'Accepted', 'Preparing', 'Ready'] } }).select(
-      "userId itemId itemName itemQuantity totalAmount payment status canteenId canteenName orderPlacedAt updatedAt"
+    // Find orders with status "Pending", "Accepted", "Preparing", or "Ready"
+    const orders = await Order.find({
+      status: { $in: ['Pending', 'Accepted', 'Preparing', 'Ready'] }
+    }).select(
+      "userId items totalAmount payment status canteenId canteenName orderPlacedAt updatedAt"
     );
 
-    // Log orders for debugging
-    console.log("Pending Orders:", orders);
+    // Iterate over each order and log the items for debugging
+    orders.forEach(order => {
+      console.log(`Order ID: ${order._id}, Items:`);
+      order.items.forEach(item => {
+        console.log(`Item ID: ${item.itemId}, Item Name: ${item.itemName}, Quantity: ${item.itemQuantity}`);
+      });
+    });
 
-    // Send response with orders
+    // Send response with orders and their items
     res.status(200).json({ orders });
   } catch (error) {
     // Log error and send error response
