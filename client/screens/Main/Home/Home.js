@@ -18,6 +18,8 @@ import Categories from "./Categories";
 import Featured from "./Featured";
 import SearchModal from "./SearchModal";
 import GlobalHeader from "../../../components/Layout/GlobalHeader";
+import FloatingCart from "../../Cart/FloatingCart";
+import FloatingCartBar from "../../Cart/FloatingCart";
 
 const HEADER_HEIGHT = 100; // Adjust this value based on your header's actual height
 const STICKY_SEARCH_THRESHOLD = HEADER_HEIGHT / 1.5;
@@ -119,13 +121,13 @@ const Home = ({ setTabBarVisible }) => {
 
               {/* Bell Icon */}
               <TouchableOpacity>
-              <Animated.View
+                <Animated.View
                   style={{
                     opacity: deliverTextOpacity,
                     transform: [{ translateY: deliverTextTranslateY }],
                   }}
                 >
-                <Icon.Bell height="24" width="24" stroke="white" />
+                  <Icon.Bell height="24" width="24" stroke="white" />
                 </Animated.View>
               </TouchableOpacity>
             </View>
@@ -178,7 +180,7 @@ const Home = ({ setTabBarVisible }) => {
         {/* Featured Section */}
         <Featured />
       </Animated.ScrollView>
-
+    
       {/* Location Selection Modal */}
       <Modal
         isVisible={isLocationModalVisible}

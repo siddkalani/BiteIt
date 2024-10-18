@@ -1,14 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { 
-  View, 
-  Animated, 
-  TouchableOpacity, 
-  Dimensions, 
-  StatusBar, 
-  Platform 
-} from 'react-native';
+import { View, Animated, Dimensions, StatusBar, Platform, TouchableOpacity } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
+import FloatingCartBar from '../../Cart/FloatingCart';
 import Home from './Home';
 import CartPage from '../../Cart/CartPage';
 import OrderHistoryPage from '../../Cart/OrderHistoryPage';
@@ -17,51 +11,70 @@ import ProfilePage from '../../profile/Profile';
 const Tab = createBottomTabNavigator();
 const { height: screenHeight } = Dimensions.get('window');
 
-const CustomTabBar = ({ state, descriptors, navigation, translateY }) => (
-  <Animated.View
-    style={{
-      flexDirection: 'row',
-      backgroundColor: 'white',
-      borderTopWidth: 1,
-      borderTopColor: '#ccc',
-      height: 50,
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      right: 0,
-      transform: [{ translateY }],
-    }}
-  >
-    {state.routes.map((route, index) => {
-      const { options } = descriptors[route.key];
-      const isFocused = state.index === index;
+const CustomTabBarWithCart = ({ state, descriptors, navigation, translateY }) => {
+  const currentRouteName = state.routes[state.index].name; // Get the current route
 
-      const onPress = () => {
-        const event = navigation.emit({
-          type: 'tabPress',
-          target: route.key,
-          canPreventDefault: true,
-        });
+  return (
+    <Animated.View
+      style={{
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        transform: [{ translateY }],
+        paddingBottom: 0, // Extra padding to accommodate the FloatingCartBar height
+      }}
+    >
+      {/* Show FloatingCartBar only on Home page */}
+      {currentRouteName === 'Home' && (
+        <FloatingCartBar
+          itemCount={2}
+          totalPrice={199.99}
+          restaurantName={'Pizza Place'}
+        />
+      )}
 
-        if (!isFocused && !event.defaultPrevented) {
-          navigation.navigate(route.name);
-        }
-      };
+      <View
+        style={{
+          flexDirection: 'row',
+          backgroundColor: 'white',
+          borderTopWidth: 1,
+          borderTopColor: '#ccc',
+          height: 50,
+        }}
+      >
+        {state.routes.map((route, index) => {
+          const { options } = descriptors[route.key];
+          const isFocused = state.index === index;
 
-      const iconName = getIconName(route.name, isFocused);
+          const onPress = () => {
+            const event = navigation.emit({
+              type: 'tabPress',
+              target: route.key,
+              canPreventDefault: true,
+            });
 
-      return (
-        <TouchableOpacity
-          key={index}
-          onPress={onPress}
-          style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
-        >
-          <Icon name={iconName} size={24} color={isFocused ? 'green' : 'gray'} />
-        </TouchableOpacity>
-      );
-    })}
-  </Animated.View>
-);
+            if (!isFocused && !event.defaultPrevented) {
+              navigation.navigate(route.name);
+            }
+          };
+
+          const iconName = getIconName(route.name, isFocused);
+
+          return (
+            <TouchableOpacity
+              key={index}
+              onPress={onPress}
+              style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+            >
+              <Icon name={iconName} size={24} color={isFocused ? 'green' : 'gray'} />
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+    </Animated.View>
+  );
+};
 
 const getIconName = (routeName, focused) => {
   switch (routeName) {
@@ -84,7 +97,7 @@ const ClientTabs = () => {
 
   const animateTabBar = (toValue) => {
     Animated.spring(translateY, {
-      toValue: toValue ? 0 : 50,
+      toValue: toValue ? 0 : 130, // Adjust this value to hide the bar completely
       useNativeDriver: true,
     }).start();
   };
@@ -107,7 +120,7 @@ const ClientTabs = () => {
       case 'Profile':
         StatusBar.setBarStyle('dark-content');
         if (Platform.OS === 'android') {
-        StatusBar.setTranslucent(true);
+          StatusBar.setTranslucent(true);
         }
         break;
       default:
@@ -122,7 +135,9 @@ const ClientTabs = () => {
   return (
     <View style={{ flex: 1 }}>
       <Tab.Navigator
-        tabBar={(props) => <CustomTabBar {...props} translateY={translateY} />}
+        tabBar={(props) => (
+          <CustomTabBarWithCart {...props} translateY={translateY} />
+        )}
         screenOptions={{ headerShown: false }}
         screenListeners={{
           state: (e) => {
@@ -134,11 +149,6 @@ const ClientTabs = () => {
         <Tab.Screen name="Home">
           {(props) => <Home {...props} setTabBarVisible={setIsTabBarVisible} />}
         </Tab.Screen>
-        <Tab.Screen 
-          name="CartPage" 
-          component={CartPage} 
-          options={{ title: 'Cart' }} 
-        />
         <Tab.Screen 
           name="OrderHistoryPage" 
           component={OrderHistoryPage} 

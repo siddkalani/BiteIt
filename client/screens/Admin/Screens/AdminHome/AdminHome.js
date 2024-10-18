@@ -322,7 +322,7 @@ const handleAcceptOrder = (orderId) => {
               onValueChange={toggleOnlineStatus}
               trackColor={{ false: "#767577", true: "green" }}
               thumbColor={isOnline ? "white" : "white"}
-              
+
             />
           </View>
           <View className="flex-row items-center space-x-4">
@@ -470,7 +470,6 @@ const handleAcceptOrder = (orderId) => {
             ))}
           </View>
         </View>
-
         {/* Pending/Preparing/Ready/PickedUp Orders List */}
         <ScrollView>
           {
@@ -686,10 +685,6 @@ const handleAcceptOrder = (orderId) => {
           )}
         </ScrollView>
       </View>
-
-
-      {/* Footer */}
-      {/* <AdminFooter /> */}
     </View>
 
   );

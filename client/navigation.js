@@ -71,8 +71,8 @@ function AppNavigator() {
          {/* <Stack.Screen name="FacultyLogin" component={FacultyLogin} /> */}
         {/* <Stack.Screen name="Otp" component={OTP} />  */}
         {/* <Stack.Screen name="AdminHome" component={OldAdmin} /> */}
-        <Stack.Screen name="AdminHome" component={AdminHome} />
-        <Stack.Screen name="NewUser" component={NewUser} /> 
+        {/* <Stack.Screen name="AdminHome" component={AdminHome} /> */}
+        {/* <Stack.Screen name="NewUser" component={NewUser} />  */}
         <Stack.Screen name="ClientTabs" component={ClientTabs} />
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Profile" component={Profile} />
@@ -85,11 +85,10 @@ function AppNavigator() {
         <Stack.Screen name="PaymentService" component={PaymentService} />
         <Stack.Screen name="PaymentOption" component={PaymentOption} />
         {/* admin side */}
-        <Stack.Screen name="AdminTabs" component={AdminTabs} />
-
+        {/* <Stack.Screen name="AdminTabs" component={AdminTabs} />
         <Stack.Screen name="Inventory" component={Inventory} />
         <Stack.Screen name="Bills" component={Bills} />
-        <Stack.Screen name="AdminAccount" component={AdminAccount} />
+        <Stack.Screen name="AdminAccount" component={AdminAccount} /> */}
 
         {/* <Stack.Screen name="AdminLayout" component={AdminLayout} /> */}
       </Stack.Navigator>
