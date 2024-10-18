@@ -108,25 +108,32 @@ const ClientTabs = () => {
       case 'Home':
         StatusBar.setBarStyle('light-content');
         if (Platform.OS === 'android') {
+          // StatusBar.setTranslucent(true);
           StatusBar.setBackgroundColor('#309624');
         }
         break;
-      case 'CartPage':
+      // case 'CartPage':
+      //   StatusBar.setBarStyle('dark-content');
+      //   if (Platform.OS === 'android') {
+      //     StatusBar.setBackgroundColor('white');
+      //   }
+      //   break;
+      case 'OrderHistoryPage':
         StatusBar.setBarStyle('dark-content');
         if (Platform.OS === 'android') {
+          // StatusBar.setTranslucent(true);
           StatusBar.setBackgroundColor('white');
         }
         break;
-      case 'OrderHistoryPage':
       case 'Account':
         StatusBar.setBarStyle('dark-content');
         if (Platform.OS === 'android') {
           StatusBar.setTranslucent(true);
-          StatusBar.setBackgroundColor('white');
+          // StatusBar.setBackgroundColor('white');
         }
         break;
       default:
-        // StatusBar.setBarStyle('default');
+        StatusBar.setBarStyle('light-content');
     }
   };
 

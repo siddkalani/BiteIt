@@ -58,7 +58,7 @@ const ProfilePage = () => {
             paddingTop: Platform.OS === "ios" ? 0 : StatusBar.currentHeight,
             paddingBottom: Platform.OS === "ios" ? 0 : bottom,
           }}>
-            <StatusBar barStyle="dark-content" translucent />
+            <StatusBar barStyle="dark-content" backgroundColor={'white'} />
             {/* <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}> */}
                 <View className="flex-1 bg-gray-100">
                     {/* Back Button with white background */}

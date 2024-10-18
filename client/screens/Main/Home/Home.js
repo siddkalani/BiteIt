@@ -12,7 +12,7 @@ import {
 import { SafeAreaView } from "react-native";
 import * as Icon from "react-native-feather";
 import Modal from "react-native-modal";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Categories from "./Categories";
 import Featured from "./Featured";
@@ -86,7 +86,7 @@ const Home = ({ setTabBarVisible }) => {
 
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
-      <StatusBar barStyle="light-content" translucent />
+      <StatusBar barStyle="light-content" backgroundColor={'#309624'} translucent/>
 
       {/* Header Section */}
       <Animated.View
@@ -96,12 +96,12 @@ const Home = ({ setTabBarVisible }) => {
           left: 0,
           right: 0,
           zIndex: 1000,
-          height: HEADER_HEIGHT + safeAreaTop, // Include safe area inset in the header height
+          // height: HEADER_HEIGHT + safeAreaTop, // Include safe area inset in the header height
           transform: [{ translateY: searchBarPosition }],
         }}
       >
-        <SafeAreaView style={{ backgroundColor: "#309624" }}>
-          <View style={{ backgroundColor: "#309624", paddingTop: Platform.OS === "ios" ? 0 : StatusBar.currentHeight, }}>
+        <SafeAreaView style={{ backgroundColor: "#309624" ,paddingTop: Platform.OS === "ios" ? 0 : StatusBar.currentHeight}}>
+          <View style={{ backgroundColor: "#309624"}}>
             <View className="flex-row items-center justify-between px-4 mt-2">
               {/* "DELIVER TO" Section */}
               <TouchableOpacity onPress={openLocationModal}>
@@ -180,7 +180,7 @@ const Home = ({ setTabBarVisible }) => {
         {/* Featured Section */}
         <Featured />
       </Animated.ScrollView>
-    
+
       {/* Location Selection Modal */}
       <Modal
         isVisible={isLocationModalVisible}
