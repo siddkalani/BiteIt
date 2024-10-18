@@ -13,9 +13,10 @@ const createOrder = asyncHandler(async (req, res) => {
     totalAmount,
     payment,
     status,
+    deliverTo
   } = req.body;
 
-  if (!userId || !canteenName || !items || items.length === 0 || !totalAmount) {
+  if (!userId || !canteenName || !items || items.length === 0 || !totalAmount || deliverTo) {
     return res.status(400).json({ message: "All fields are required" });
   }
 
@@ -54,6 +55,7 @@ const createOrder = asyncHandler(async (req, res) => {
       payment,
       status,
       canteenName: canteen.canteenName,
+      deliverTo
     });
 
     const savedOrder = await newOrder.save();

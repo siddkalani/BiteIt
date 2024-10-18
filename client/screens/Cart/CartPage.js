@@ -269,7 +269,7 @@ const [selectedCanteen, setSelectedCanteen] = useState("Canteen 1"); // Default 
         </View>
 
         <TouchableOpacity
-          onPress={() => handleDelete(item._id)}
+          onPress={() => handleRemoveFromCart(item._id)}
           className="bg-red-200 p-2 rounded-md justify-center items-center"
         >
           <Icon.Trash2 color={'red'} height={16} width={16} />
