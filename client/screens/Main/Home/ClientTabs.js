@@ -7,6 +7,7 @@ import Home from './Home';
 import CartPage from '../../Cart/CartPage';
 import OrderHistoryPage from '../../Cart/OrderHistoryPage';
 import ProfilePage from '../../profile/Profile';
+import Account from '../../account/Account';
 
 const Tab = createBottomTabNavigator();
 const { height: screenHeight } = Dimensions.get('window');
@@ -117,14 +118,15 @@ const ClientTabs = () => {
         }
         break;
       case 'OrderHistoryPage':
-      case 'Profile':
+      case 'Account':
         StatusBar.setBarStyle('dark-content');
         if (Platform.OS === 'android') {
           StatusBar.setTranslucent(true);
+          StatusBar.setBackgroundColor('white');
         }
         break;
       default:
-        StatusBar.setBarStyle('default');
+        // StatusBar.setBarStyle('default');
     }
   };
 
@@ -156,7 +158,7 @@ const ClientTabs = () => {
         />
         <Tab.Screen 
           name="Profile" 
-          component={ProfilePage} 
+          component={Account} 
           options={{ title: 'Account' }} 
         />
       </Tab.Navigator>

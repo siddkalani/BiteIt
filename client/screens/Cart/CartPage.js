@@ -45,6 +45,8 @@ const CartPage = () => {
   const [modalVisible, setModalVisible] = useState(false); // For offers modal
   const [sliderValue] = useState(new Animated.Value(0)); // Animation value for the slider
   const [sliderActive, setSliderActive] = useState(false); // To track if slider is active
+  const [deliveryType, setDeliveryType] = useState(null);
+
   const [deliveryModalVisible, setDeliveryModalVisible] = useState(false);
 const [selectedRoom, setSelectedRoom] = useState(""); // For room number
 const [selectedCanteen, setSelectedCanteen] = useState("Canteen 1"); // Default to "Canteen 1"
@@ -506,49 +508,76 @@ const [selectedCanteen, setSelectedCanteen] = useState("Canteen 1"); // Default 
           </View>
 
           {/* Change Delivery Details Modal */}
-          <Modal
-            visible={deliveryModalVisible} // Separate state for delivery modal
-            animationType="slide"
-            transparent={true}
-            onRequestClose={() => setDeliveryModalVisible(false)} // Separate close logic
+<Modal
+  visible={deliveryModalVisible} // Separate state for delivery modal
+  animationType="slide"
+  transparent={true}
+  onRequestClose={() => setDeliveryModalVisible(false)} // Separate close logic
+>
+  <View className="flex-1 justify-end bg-black bg-opacity-50">
+    <View className="bg-white p-4 rounded-t-2xl">
+      <Text className="text-xl font-bold mb-4">Choose Service Type</Text>
+
+      {/* Service Type Selection */}
+      <View>
+        <Text className="text-lg mb-2">Select Service Type:</Text>
+        <TouchableOpacity
+          onPress={() => {
+            setDeliveryType("Pickup");
+            setDeliveryModalVisible(false); // Close modal if "Pickup" is selected
+          }}
+          className="p-2 mb-2 rounded-lg border border-gray-300"
+        >
+          <Text className="text-lg">Pickup</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => setDeliveryType("Table Service")}
+          className="p-2 mb-2 rounded-lg border border-gray-300"
+        >
+          <Text className="text-lg">Table Service</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Conditional Room Number Input if Table Service is selected */}
+      {deliveryType === "Table Service" && (
+        <>
+          {/* Room Number Input */}
+          <Text className="text-lg mb-2 mt-4">Enter Room Number:</Text>
+          <TextInput
+            value={selectedRoom}
+            onChangeText={setSelectedRoom}
+            className="border p-2 mb-4 rounded-lg"
+            placeholder="Enter Room Number"
+            keyboardType="numeric"
+          />
+
+          {/* Canteen Selection */}
+          <Text className="text-lg mb-2">Select Canteen:</Text>
+          {["Canteen 1", "Canteen 2", "Canteen 3"].map((canteen) => (
+            <TouchableOpacity
+              key={canteen}
+              onPress={() => setSelectedCanteen(canteen)}
+              className={`p-2 mb-2 rounded-lg border ${
+                selectedCanteen === canteen ? "bg-green-100 border-green-600" : "border-gray-300"
+              }`}
+            >
+              <Text className="text-lg">{canteen}</Text>
+            </TouchableOpacity>
+          ))}
+
+          {/* Confirm Button */}
+          <TouchableOpacity
+            onPress={handleConfirmDelivery}
+            className="bg-green-500 p-3 rounded-lg mt-4"
           >
-            <View className="flex-1 justify-end bg-black bg-opacity-50">
-              <View className="bg-white p-4 rounded-t-2xl">
-                <Text className="text-xl font-bold mb-4">Change Delivery Details</Text>
+            <Text className="text-white text-center text-lg font-bold">Confirm</Text>
+          </TouchableOpacity>
+        </>
+      )}
+    </View>
+  </View>
+</Modal>
 
-                {/* Room Number Input */}
-                <Text className="text-lg mb-2">Enter Room Number:</Text>
-                <TextInput
-                  value={selectedRoom}
-                  onChangeText={setSelectedRoom}
-                  className="border p-2 mb-4 rounded-lg"
-                  placeholder="Enter Room Number"
-                  keyboardType="numeric"
-                />
-
-                {/* Canteen Selection */}
-                <Text className="text-lg mb-2">Select Canteen:</Text>
-                {["Canteen 1", "Canteen 2", "Canteen 3"].map((canteen) => (
-                  <TouchableOpacity
-                    key={canteen}
-                    onPress={() => setSelectedCanteen(canteen)}
-                    className={`p-2 mb-2 rounded-lg border ${selectedCanteen === canteen ? "bg-green-100 border-green-600" : "border-gray-300"
-                      }`}
-                  >
-                    <Text className="text-lg">{canteen}</Text>
-                  </TouchableOpacity>
-                ))}
-
-                {/* Confirm Button */}
-                <TouchableOpacity
-                  onPress={handleConfirmDelivery}
-                  className="bg-green-500 p-3 rounded-lg mt-4"
-                >
-                  <Text className="text-white text-center text-lg font-bold">Confirm</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
 
 
           {/* Modal for Offers */}

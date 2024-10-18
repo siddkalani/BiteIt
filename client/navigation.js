@@ -31,6 +31,7 @@ import AdminLayout from "./screens/Admin/Screens/AdminLayout/AdminLayout";
 import AdminTabs from "./screens/Admin/Screens/AdminLayout/AdminTabs";
 import Footer from "./screens/Main/Home/ClientTabs";
 import ClientTabs from "./screens/Main/Home/ClientTabs";
+import Account from "./screens/account/Account";
 
 const Stack = createNativeStackNavigator();
 
@@ -75,6 +76,7 @@ function AppNavigator() {
         {/* <Stack.Screen name="NewUser" component={NewUser} />  */}
         <Stack.Screen name="ClientTabs" component={ClientTabs} />
         <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="Account" component={Account} />
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="HomeCategory" component={HomeCategory} />
         <Stack.Screen name="SearchResults" component={SearchResults} />

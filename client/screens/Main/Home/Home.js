@@ -86,7 +86,7 @@ const Home = ({ setTabBarVisible }) => {
 
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
-      <StatusBar barStyle="light-content" backgroundColor="#309624" translucent />
+      <StatusBar barStyle="light-content" translucent />
 
       {/* Header Section */}
       <Animated.View
