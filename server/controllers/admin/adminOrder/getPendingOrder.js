@@ -3,11 +3,11 @@ const Order = require("../../../models/orderModel");
 const OrderHistory = require("../../../models/orderHistory");
 const {sendNotification}  = require('../../../utils/notification')
 
-const getPendingOrders = asyncHandler(async (req, res) => {
+const getAllOrders = asyncHandler(async (req, res) => {
   try {
     // Find orders with status "Pending", "Accepted", "Preparing", or "Ready"
     const orders = await Order.find({
-      status: { $in: ['Pending', 'Accepted', 'Preparing', 'Ready'] }
+      status: { $in: ['Pending', 'Accepted', 'Preparing', 'Ready', 'Delivered'] }
     }).select(
       "userId items totalAmount payment status canteenId canteenName orderPlacedAt updatedAt"
     );
@@ -63,7 +63,7 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
   switch (status) {
     case "Accepted":
       io.emit("orderAccepted", order);
-      await sendNotification(order.userId, "Order Accepted", `Your order has been accepted.`);
+      await sendNotification(order.userId, "Order Accepted", `Your order is confirmed and will be prepared shortly.`);
       break;
     case "Preparing":
       io.emit("orderPreparing", order);
@@ -113,4 +113,4 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
   res.status(200).json({ message: `Order ${status} successfully`, order });
 });
 
-module.exports = { getPendingOrders, updateOrderStatus };
+module.exports = {  updateOrderStatus, getAllOrders };

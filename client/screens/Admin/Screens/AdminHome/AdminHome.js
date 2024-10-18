@@ -33,6 +33,7 @@ const AdminHome = () => {
 
   const [orders, setOrders] = useState([]); // Active/Preparing Orders
   const [pendingOrders, setPendingOrders] = useState([]); // Pending Orders
+  const [preparingOrders, setPreparingOrders] = useState([]);
   const [readyOrders, setReadyOrders] = useState([]); // Ready Orders
   const [pickedUpOrders, setPickedUpOrders] = useState([]); // Picked Up Orders
   const [activeTab, setActiveTab] = useState("Pending"); // Tabs State
@@ -69,149 +70,184 @@ const AdminHome = () => {
     setCurrentSlide(index);
   }, []);
 
-  // Simulate order arrival
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     setPendingOrders([
-  //       {
-  //         id: "5079",
-  //         time: "8:03PM",
-  //         customerName: "Vishal Gupta",
-  //         items: [
-  //           {
-  //             name: "Aloo Paneer Samosa",
-  //             quantity: 6,
-  //             price: 120,
-  //           },
-  //         ],
-  //         total: 120,
-  //       },
-  //       {
-  //         id: "5179",
-  //         time: "8:03PM",
-  //         customerName: "Vishal Gupta",
-  //         items: [
-  //           {
-  //             name: "Aloo Paneer Samosa",
-  //             quantity: 6,
-  //             price: 120,
-  //           },
-  //         ],
-  //         total: 120,
-  //       },
-  //       {
-  //         id: "5049",
-  //         time: "8:03PM",
-  //         customerName: "Vishal Gupta",
-  //         items: [
-  //           {
-  //             name: "Aloo Paneer Samosa",
-  //             quantity: 6,
-  //             price: 120,
-  //           },
-  //         ],
-  //         total: 120,
-  //       },
-  //       {
-  //         id: "379",
-  //         time: "8:03PM",
-  //         customerName: "Vishal Gupta",
-  //         items: [
-  //           {
-  //             name: "Aloo Paneer Samosa",
-  //             quantity: 6,
-  //             price: 120,
-  //           },
-  //         ],
-  //         total: 120,
-  //       },
-  //       {
-  //         id: "2000",
-  //         time: "8:03PM",
-  //         customerName: "Vishal Gupta",
-  //         items: [
-  //           {
-  //             name: "Aloo Paneer Samosa",
-  //             quantity: 6,
-  //             price: 120,
-  //           },
-  //         ],
-  //         total: 120,
-  //       },
-  //     ]);
-  //   }, 5000); // New pending order after 5 seconds
-  // }, []);
+ 
+// useEffect(() => {
+//     const socket = io(BASE_URL);
+
+//     const fetchPendingOrders = async () => {
+//       try {
+//         const adminToken = await AsyncStorage.getItem("adminToken");
+//         if (!adminToken) {
+//           Alert.alert("Error", "Admin is not authenticated");
+//           return;
+//         }
+
+//         const response = await fetch(`${BASE_URL}/admin/order/pending`, {
+//           method: "GET",
+//           headers: {
+//             Authorization: `Bearer ${adminToken}`,
+//           },
+//         });
+
+//         const data = await response.json();
+//         if (!response.ok) {
+//           throw new Error(data.message || "Failed to fetch pending orders");
+//         }
+
+//         const sortedOrders = data.orders.sort(
+//           (a, b) => new Date(b.orderPlacedAt) - new Date(a.orderPlacedAt)
+//         );
+
+//         setPendingOrders(sortedOrders);
+//       } catch (error) {
+//         console.error("Error fetching pending orders:", error);
+//         Alert.alert("Error", error.message || "Something went wrong. Please try again.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     // Fetch pending orders when the component mounts
+//     fetchPendingOrders();
+
+//     // Listen for new order events
+//     socket.on("newOrder", (order) => {
+//       console.log("New order received:");
+//       setPendingOrders((prevOrders) => [order, ...prevOrders]); 
+//     });
+
+//     return () => {
+//       socket.off("newOrder");
+//       socket.disconnect();
+//     };
+//   }, []);
 
 
-//fetchpending
-  
-useEffect(() => {
-    const socket = io(BASE_URL);
-
-    const fetchPendingOrders = async () => {
-      try {
-        const adminToken = await AsyncStorage.getItem("adminToken");
-        if (!adminToken) {
-          Alert.alert("Error", "Admin is not authenticated");
-          return;
-        }
-
-        const response = await fetch(`${BASE_URL}/admin/order/pending`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${adminToken}`,
-          },
-        });
-
-        const data = await response.json();
-        if (!response.ok) {
-          throw new Error(data.message || "Failed to fetch pending orders");
-        }
-
-        const sortedOrders = data.orders.sort(
-          (a, b) => new Date(b.orderPlacedAt) - new Date(a.orderPlacedAt)
-        );
-
-        setPendingOrders(sortedOrders);
-      } catch (error) {
-        console.error("Error fetching pending orders:", error);
-        Alert.alert("Error", error.message || "Something went wrong. Please try again.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    // Fetch pending orders when the component mounts
-    fetchPendingOrders();
-
-    // Listen for new order events
-    socket.on("newOrder", (order) => {
-      console.log("New order received:");
-      setPendingOrders((prevOrders) => [order, ...prevOrders]); // Update the state with the new order
-    });
-
-    return () => {
-      socket.off("newOrder");
-      socket.disconnect();
-    };
-  }, []);
 
 //update order 
-const updateOrderStatus = async (id, status) => {
+
+useEffect(() => {
+  const fetchOrders = async () => {
+    try {
+      const adminToken = await AsyncStorage.getItem("adminToken");
+      const response = await fetch(`${BASE_URL}/admin/order/all`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${adminToken}`,
+        },
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to fetch orders");
+      }
+
+      // Categorize orders based on status
+      const pending = [];
+      const preparing = [];
+      const ready = [];
+      const delivered = [];
+
+      data.orders.forEach(order => {
+        switch (order.status) {
+          case 'Pending':
+            pending.push(order);
+            break;
+          case 'Accepted':
+          case 'Preparing':
+            preparing.push(order);
+            break;
+          case 'Ready':
+            ready.push(order);
+            break;
+          case 'Delivered':
+            delivered.push(order);
+            break;
+          default:
+            break;
+        }
+      });
+  
+      setPendingOrders(pending);
+      setPreparingOrders(preparing);
+      setReadyOrders(ready);
+      setPickedUpOrders(delivered);
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+    }
+  };
+
+  fetchOrders();
+}, []);
+
+useEffect(() => {
+  const socket = io(BASE_URL);
+
+  socket.on("orderStatusUpdated", (updatedOrder) => {
+    // Update the appropriate tab when an order status is changed
+    updateOrderStatus(updatedOrder._id, updatedOrder.status);
+  });
+
+  return () => {
+    socket.disconnect();
+  };
+}, []);
+
+
+
+// const updateOrderStatus = async (id, status) => {
+//   try {
+//     const adminToken = await AsyncStorage.getItem("adminToken");
+//     if (!adminToken) {
+//       Alert.alert("Error", "Admin is not authenticated");
+//       return;
+//     }
+
+//     const response = await fetch(`${BASE_URL}/admin/order/status/${id}`, {
+//       method: "PATCH",
+//       headers: {
+//         "Content-Type": "application/json",
+//         Authorization: `Bearer ${adminToken}`,
+//       },
+//       body: JSON.stringify({ status }),
+//     });
+
+//     const data = await response.json();
+//     if (!response.ok) {
+//       throw new Error(data.message || "Failed to update order status");
+//     }
+
+//     // Remove the order from the pending orders state if status is Rejected or Delivered
+//     if (status === "Rejected" || status === "Delivered") {
+//       setPendingOrders((prevOrders) => prevOrders.filter(order => order._id !== id));
+//     } else {
+//       setPendingOrders((prevOrders) =>
+//         prevOrders.map((order) =>
+//           order._id === id ? { ...order, status } : order
+//         )
+//       );
+//     }
+//     if (status === "Accepted") {
+//       handleAcceptOrder(id);
+//     } else if (status === "Rejected") {
+//       handleRejectOrder(id);
+//     }
+//   } catch (error) {
+//     console.error("Error updating order status:", error);
+//     Alert.alert("Error", error.message || "Something went wrong. Please try again.");
+//   }
+// };
+
+const updateOrderStatus = async (orderId, newStatus) => {
   try {
     const adminToken = await AsyncStorage.getItem("adminToken");
-    if (!adminToken) {
-      Alert.alert("Error", "Admin is not authenticated");
-      return;
-    }
-
-    const response = await fetch(`${BASE_URL}/admin/order/status/${id}`, {
+    const response = await fetch(`${BASE_URL}/admin/order/status/${orderId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${adminToken}`,
       },
-      body: JSON.stringify({ status }),
+      body: JSON.stringify({ status: newStatus }),
     });
 
     const data = await response.json();
@@ -219,34 +255,36 @@ const updateOrderStatus = async (id, status) => {
       throw new Error(data.message || "Failed to update order status");
     }
 
-    Alert.alert("Success", `Order status updated to ${status}`);
-
-    // Remove the order from the pending orders state if status is Rejected or Delivered
-    if (status === "Rejected" || status === "Delivered") {
-      setPendingOrders((prevOrders) => prevOrders.filter(order => order._id !== id));
-    } else {
-      setPendingOrders((prevOrders) =>
-        prevOrders.map((order) =>
-          order._id === id ? { ...order, status } : order
-        )
-      );
+    // Remove the order from its current state and move it to the appropriate state
+    if (newStatus === "Accepted" || newStatus === "Preparing") {
+      setPendingOrders((prevOrders) => prevOrders.filter((order) => order._id !== orderId));
+      setPreparingOrders((prevOrders) => [...prevOrders, data.order]);
+    } else if (newStatus === "Ready") {
+      setPreparingOrders((prevOrders) => prevOrders.filter((order) => order._id !== orderId));
+      setReadyOrders((prevOrders) => [...prevOrders, data.order]);
+    } else if (newStatus === "Delivered") {
+      setReadyOrders((prevOrders) => prevOrders.filter((order) => order._id !== orderId));
+      setDeliveredOrders((prevOrders) => [...prevOrders, data.order]);
     }
   } catch (error) {
     console.error("Error updating order status:", error);
-    Alert.alert("Error", error.message || "Something went wrong. Please try again.");
   }
 };
 
-  const handleAcceptOrder = (orderId) => {
-    // Move order to active/preparing orders
-    const order = pendingOrders.find((order) => order.id === orderId);
-    setOrders([...orders, order]);
-    setPendingOrders(pendingOrders.filter((order) => order.id !== orderId));
-  };
 
+const handleAcceptOrder = (orderId) => {
+  const order = pendingOrders.find((order) => order._id === orderId);
+  if (order) {
+    setOrders((prev) => [...prev, order]);
+    setPendingOrders((prev) => prev.filter((order) => order._id !== orderId));
+  }
+};
   const handleRejectOrder = (orderId) => {
-    // Remove order from pending orders
-    setPendingOrders(pendingOrders.filter((order) => order.id !== orderId));
+    const order = pendingOrders.find((order) => order._id === orderId);
+    if (order) {
+      setOrders((prev) => [...prev, order]);
+      setPendingOrders((prev) => prev.filter((order) => order._id !== orderId));
+    }
   };
 
   const handleOrderReady = (orderId) => {
@@ -304,7 +342,7 @@ const updateOrderStatus = async (id, status) => {
         </View>
 
         {/* Tab Section */}
-        <View className="flex-row justify-between space-x-2">
+        {/* <View className="flex-row justify-between space-x-2">
           <TouchableOpacity
             onPress={() => setActiveTab("Pending")}
             className={`flex-1 items-center px-1 py-2 ${activeTab === "Pending" ? "bg-yellow-200" : "bg-gray-100"
@@ -333,7 +371,58 @@ const updateOrderStatus = async (id, status) => {
           >
             <Text numberOfLines={1} className="text-gray-400">Picked Up ({pickedUpOrders.length})</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
+
+<View className="flex-row justify-between space-x-2">
+  {/** Pending Tab **/}
+  <TouchableOpacity
+    onPress={() => setActiveTab("Pending")}
+    className={`flex-1 items-center px-1 py-2 ${
+      activeTab === "Pending" ? "bg-yellow-200" : "bg-gray-100"
+    } rounded-lg`}
+  >
+    <Text numberOfLines={1} className={`${
+      activeTab === "Pending" ? "text-black" : "text-gray-400"
+    }`}>Pending ({pendingOrders.length})</Text>
+  </TouchableOpacity>
+
+  {/** Preparing Tab **/}
+  <TouchableOpacity
+    onPress={() => setActiveTab("Preparing")}
+    className={`flex-1 items-center px-1 py-2 ${
+      activeTab === "Preparing" ? "bg-yellow-200" : "bg-gray-100"
+    } rounded-lg`}
+  >
+    <Text numberOfLines={1} className={`${
+      activeTab === "Preparing" ? "text-black" : "text-gray-400"
+    }`}>Preparing ({preparingOrders.length})</Text>
+  </TouchableOpacity>
+
+  {/** Ready Tab **/}
+  <TouchableOpacity
+    onPress={() => setActiveTab("Ready")}
+    className={`flex-1 items-center px-1 py-2 ${
+      activeTab === "Ready" ? "bg-yellow-200" : "bg-gray-100"
+    } rounded-lg`}
+  >
+    <Text numberOfLines={1} className={`${
+      activeTab === "Ready" ? "text-black" : "text-gray-400"
+    }`}>Ready ({readyOrders.length})</Text>
+  </TouchableOpacity>
+
+  {/** Picked Up Tab **/}
+  <TouchableOpacity
+    onPress={() => setActiveTab("PickedUp")}
+    className={`flex-1 items-center px-1 py-2 ${
+      activeTab === "PickedUp" ? "bg-yellow-200" : "bg-gray-100"
+    } rounded-lg`}
+  >
+    <Text numberOfLines={1} className={`${
+      activeTab === "PickedUp" ? "text-black" : "text-gray-400"
+    }`}>Picked Up ({pickedUpOrders.length})</Text>
+  </TouchableOpacity>
+</View>
+
 
         {/* Promo Banner with Pagination */}
         <View className="">
@@ -385,9 +474,76 @@ const updateOrderStatus = async (id, status) => {
         {/* Pending/Preparing/Ready/PickedUp Orders List */}
         <ScrollView>
           {
-          activeTab === "Preparing" && preparingOrders.length > 0 ? (
+         
+           activeTab === "Pending" && pendingOrders.length > 0 ? (
             <View>
-              {pendingOrders.map((order) => (
+              {pendingOrders?.map((order) => (
+                <View
+                  key={order._id}
+                  className="p-4 bg-gray-50 rounded-lg shadow-sm my-2"
+                >
+                  <View className="flex-row justify-between">
+                    <Text className="text-xl font-bold">ID: {order._id}</Text>
+                    {/* <Text className="text-gray-500">{order.time}</Text> */}
+                  </View>
+                  <Text className="text-sm text-blue-500">
+                    1st order by {order.userId}
+                  </Text>
+                  {order.items.map((item, idx) => (
+                    <View key={idx} className="flex-row justify-between mt-2">
+                      <Text className="text-base">
+                        {item.itemQuantity} x {item.itemName}
+                      </Text>
+                      {/* <Text className="text-base">₹{item.itemPrice}</Text> */}
+                    </View>
+                  ))}
+                  <View className="flex-row justify-between mt-2">
+                    <Text className="text-base font-bold">Total Bill</Text>
+                    <Text className="text-base font-bold">₹{order.totalAmount}</Text>
+                  </View>
+
+                  {/* Set Preparation Time */}
+                  <View className="flex-row items-center justify-between mt-2">
+                    <Text className="text-sm text-gray-500">
+                      set food preparation time
+                    </Text>
+                    <View className="flex-row items-center">
+                      <TouchableOpacity className="p-2">
+                        <Text>-</Text>
+                      </TouchableOpacity>
+                      <Text className="px-2">15 mins</Text>
+                      <TouchableOpacity className="p-2">
+                        <Text>+</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+
+                  {/* Ready Button (Keep original styling) */}
+                  <View className="flex-row justify-between mt-4">
+                    <TouchableOpacity
+                      onPress={() => updateOrderStatus(order._id, 'Rejected')}
+                      className="flex-1 bg-red-100 rounded-lg py-2 mr-2"
+                    >
+                      <Text className="text-red-500 text-center">Reject</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => updateOrderStatus(order._id, 'Accepted')}
+                      className="flex-1 bg-yellow-400 rounded-lg py-2"
+                    >
+                      <Text className="text-center text-white">
+                        Accept (4:57)
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                 
+                </View>
+              ))}
+            </View>
+          ) : 
+          
+          activeTab === "Preparing" && orders.length > 0 ? (
+            <View>
+              {orders.map((order) => (
                 <View
                   key={order.id}
                   className="p-4 bg-gray-50 rounded-lg shadow-sm my-2"
@@ -431,72 +587,6 @@ const updateOrderStatus = async (id, status) => {
                   {/* Accept & Reject Buttons (Keep original styling) */}
                   <View className="flex-row justify-between mt-4">
                     <TouchableOpacity
-                      onPress={() => updateOrderStatus()}
-                      className="flex-1 bg-red-100 rounded-lg py-2 mr-2"
-                    >
-                      <Text className="text-red-500 text-center">Reject</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => updateOrderStatus()}
-                      className="flex-1 bg-yellow-400 rounded-lg py-2"
-                    >
-                      <Text className="text-center text-white">
-                        Accept (4:57)
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              ))}
-            </View>
-
-
-          ) :
-           activeTab === "Pending" && pendingOrders.length > 0 ? (
-            <View>
-              {pendingOrders?.map((order) => (
-                <View
-                  key={order.id}
-                  className="p-4 bg-gray-50 rounded-lg shadow-sm my-2"
-                >
-                  <View className="flex-row justify-between">
-                    <Text className="text-xl font-bold">ID: {order.id}</Text>
-                    {/* <Text className="text-gray-500">{order.time}</Text> */}
-                  </View>
-                  <Text className="text-sm text-blue-500">
-                    1st order by {order.userId}
-                  </Text>
-                  {order.items.map((item, idx) => (
-                    <View key={idx} className="flex-row justify-between mt-2">
-                      <Text className="text-base">
-                        {item.itemQuantity} x {item.itemName}
-                      </Text>
-                      {/* <Text className="text-base">₹{item.itemPrice}</Text> */}
-                    </View>
-                  ))}
-                  <View className="flex-row justify-between mt-2">
-                    <Text className="text-base font-bold">Total Bill</Text>
-                    <Text className="text-base font-bold">₹{order.totalAmount}</Text>
-                  </View>
-
-                  {/* Set Preparation Time */}
-                  <View className="flex-row items-center justify-between mt-2">
-                    <Text className="text-sm text-gray-500">
-                      set food preparation time
-                    </Text>
-                    <View className="flex-row items-center">
-                      <TouchableOpacity className="p-2">
-                        <Text>-</Text>
-                      </TouchableOpacity>
-                      <Text className="px-2">15 mins</Text>
-                      <TouchableOpacity className="p-2">
-                        <Text>+</Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-
-                  {/* Ready Button (Keep original styling) */}
-                  <View className="flex-row justify-between mt-4">
-                    <TouchableOpacity
                       onPress={() => handleOrderReady(order.id)}
                       className="bg-yellow-500 p-2 rounded-lg"
                     >
@@ -506,7 +596,10 @@ const updateOrderStatus = async (id, status) => {
                 </View>
               ))}
             </View>
-          ) : activeTab === "Ready" && readyOrders.length > 0 ? (
+
+
+          ) :
+          activeTab === "Ready" && readyOrders.length > 0 ? (
             <View>
               {readyOrders.map((order) => (
                 <View
