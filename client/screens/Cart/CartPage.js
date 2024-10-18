@@ -14,6 +14,7 @@ import {
   Dimensions,
   ScrollView,
   Platform,
+  TextInput,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -33,6 +34,7 @@ import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import GlobalHeader from "../../components/Layout/GlobalHeader";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Ionicons } from "@expo/vector-icons";
 
 const { width } = Dimensions.get("window");
 
@@ -43,7 +45,18 @@ const CartPage = () => {
   const [modalVisible, setModalVisible] = useState(false); // For offers modal
   const [sliderValue] = useState(new Animated.Value(0)); // Animation value for the slider
   const [sliderActive, setSliderActive] = useState(false); // To track if slider is active
+  const [deliveryModalVisible, setDeliveryModalVisible] = useState(false);
+const [selectedRoom, setSelectedRoom] = useState(""); // For room number
+const [selectedCanteen, setSelectedCanteen] = useState("Canteen 1"); // Default to "Canteen 1"
 
+  const handleChangeDelivery = () => {
+    setDeliveryModalVisible(true); 
+  };
+
+  const handleConfirmDelivery = () => {
+    // Implement any logic needed to save room and canteen changes
+    setDeliveryModalVisible(false); // Close the modal after confirmation
+  };
   // Example values for taxes, delivery charges, offers, and tips
   const deliveryCharge = 50; // Example delivery charge
   const offerDiscount = 63; // Example discount (Cashback)
@@ -67,25 +80,25 @@ const CartPage = () => {
 
   const handlePayment = () => {
     navigation.navigate('PaymentOption');
-};
-
-useEffect(() => {
-  // Load cart data when the component mounts
-  const loadCart = async () => {
-    const savedCart = await loadCartFromStorage();
-
-    // Ensure items are only added to the cart if they are not already present
-    savedCart.forEach((item) => {
-      const itemInCart = cartItems.find(cartItem => cartItem._id === item._id);
-      if (!itemInCart) {
-        dispatch(addToCart(item));
-      }
-    });
   };
 
-  loadCart(); // Call the loadCart function
-}, [dispatch]); // Remove cartIt
-  
+  useEffect(() => {
+    // Load cart data when the component mounts
+    const loadCart = async () => {
+      const savedCart = await loadCartFromStorage();
+
+      // Ensure items are only added to the cart if they are not already present
+      savedCart.forEach((item) => {
+        const itemInCart = cartItems.find(cartItem => cartItem._id === item._id);
+        if (!itemInCart) {
+          dispatch(addToCart(item));
+        }
+      });
+    };
+
+    loadCart(); // Call the loadCart function
+  }, [dispatch]); // Remove cartIt
+
   // Total number of items in the cart
   // const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
 
@@ -120,41 +133,41 @@ useEffect(() => {
       const canteenName = "Engineering Canteen"
       const totalBill = cartItems.reduce((sum, item) => sum + item.itemPrice * item.quantity, 0); // Calculate total bill
 
-// const finalTotal = totalBill + deliveryCharge + taxes + donation - offerDiscount;
-const totalAmount = finalTotal.toFixed(2);
+      // const finalTotal = totalBill + deliveryCharge + taxes + donation - offerDiscount;
+      const totalAmount = finalTotal.toFixed(2);
       // Prepare data for each cart item
       const orderData = cartItems.map(item => ({
         itemId: item._id,
-        itemName:item.itemName,
+        itemName: item.itemName,
         itemQuantity: item.quantity,
       }));
-  
+
       const payload = {
         userId,
         canteenName,
         totalAmount,
         items: orderData,
-        payment:1,
-        status:"Pending"
+        payment: 1,
+        status: "Pending"
       };
       const token = await AsyncStorage.getItem("userToken");
       const response = await fetch(`${BASE_URL}/user/order/add`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-           Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify(payload),
       });
-  
+
       if (response.ok) {
         // Navigate to payment service
         navigation.navigate('PaymentService');
-  
+
         // Clear the cart
         dispatch(clearCart()); // Clear Redux cart state
         saveCartToStorage([]); // Clear cart from AsyncStorage
-  
+
         Alert.alert("Order Placed", `Your total is ₹${totalAmount}`);
       } else {
         throw new Error('Failed to place order. Please try again.');
@@ -190,7 +203,7 @@ const totalAmount = finalTotal.toFixed(2);
           toValue: 0,
           useNativeDriver: false,
           friction: 5,
-        }).start(); 
+        }).start();
       }
     },
   });
@@ -234,26 +247,35 @@ const totalAmount = finalTotal.toFixed(2);
         <Text className="font-semibold text-lg">{item.itemName}</Text>
         <Text className="text-gray-500">₹{item.itemPrice}</Text>
       </View>
-
-      <View className="flex-row items-center space-x-2 mt-2 bg-gray-200 rounded-md">
-        <TouchableOpacity
-          onPress={() => handleDecrement(item._id)}
-          className="p-2"
-        >
-          <Icon.Minus width={16} height={16} stroke="green" strokeWidth='3' />
-        </TouchableOpacity>
-        <View className='w-3.5 items-center justify-center'>
-          <Text adjustsFontSizeToFit numberOfLines={1} className='font-bold'>{item.quantity}</Text>
+      <View className='flex-row items-center space-x-2 h-8'>
+        <View className="flex-row items-center space-x-2 bg-gray-200 rounded-md">
+          <TouchableOpacity
+            onPress={() => handleDecrement(item._id)}
+            className="p-2"
+          >
+            <Icon.Minus width={16} height={16} stroke="green" strokeWidth="3" />
+          </TouchableOpacity>
+          <View className='w-3.5 items-center justify-center'>
+            <Text adjustsFontSizeToFit numberOfLines={1} className='font-bold'>{item.quantity}</Text>
+          </View>
+          <TouchableOpacity
+            onPress={() => handleIncrement(item._id)}
+            className="p-2"
+          >
+            <Icon.Plus width={16} height={16} stroke="green" strokeWidth="3" />
+          </TouchableOpacity>
         </View>
+
         <TouchableOpacity
-          onPress={() => handleIncrement(item._id)}
-          className="p-2"
+          onPress={() => handleDelete(item._id)}
+          className="bg-red-200 p-2 rounded-md justify-center items-center"
         >
-          <Icon.Plus width={16} height={16} stroke="green" strokeWidth='3' />
+          <Icon.Trash2 color={'red'} height={16} width={16} />
         </TouchableOpacity>
       </View>
     </View>
   );
+
 
   return (
     <View
@@ -273,7 +295,7 @@ const totalAmount = finalTotal.toFixed(2);
 
       {/* Header */}
       <View className="bg-white px-4 py-3">
-      <GlobalHeader title="Food Cart" />
+        <GlobalHeader title="Food Cart" />
       </View>
 
       {cartItems.length === 0 ? (
@@ -284,7 +306,7 @@ const totalAmount = finalTotal.toFixed(2);
         <View className="flex-1 bg-gray-100">
           <ScrollView
             className="flex-1 px-4"
-            contentContainerStyle={{ paddingBottom: 100 }}
+            contentContainerStyle={{ paddingBottom: 170 }}
             showsVerticalScrollIndicator={false} // Hide ScrollView scroll indicator
           >
             <FlatList
@@ -367,7 +389,7 @@ const totalAmount = finalTotal.toFixed(2);
             </TouchableOpacity>
           </ScrollView>
 
-          {/* Slide to Pay Section */}
+          {/* Slide to Pay Section
           <View style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: 16 }}>
             <View style={{ alignItems: "center" }}>
               <LinearGradient
@@ -407,7 +429,127 @@ const totalAmount = finalTotal.toFixed(2);
                 </Animated.View>
               </LinearGradient>
             </View>
+          </View> */}
+
+          {/* Bottom Bar */}
+          <View className="absolute bottom-0 left-0 right-0 bg-white p-4 border-t border-gray-200">
+            {/* Delivery Information Section */}
+            <View className="flex-row justify-between items-center mb-4">
+              <View className="flex-1">
+                {/* Deliver To Section */}
+                <View className="flex-row items-center space-x-2 mb-2">
+                  <View className="flex-row items-center">
+                    <Ionicons name="location-outline" size={20} color="#4CAF50" />
+                    <Text className="ml-2 text-base font-semibold text-black">Delivering to</Text>
+                  </View>
+                  <Text className="text-sm font-medium text-gray-500">B-203</Text>
+                </View>
+
+                {/* From Section */}
+                <View className="flex-row items-center space-x-2">
+                  <View className="flex-row items-center">
+                    <Ionicons name="restaurant-outline" size={20} color="#4CAF50" />
+                    <Text className="ml-2 text-base font-semibold text-black">From</Text>
+                  </View>
+                  <Text className="text-sm font-medium text-gray-500">Canteen1</Text>
+                </View>
+              </View>
+
+              {/* Change Button */}
+              <TouchableOpacity onPress={handleChangeDelivery} className="flex-row items-center">
+                <Icon.ChevronDown width={16} height={16} stroke="green" strokeWidth="3" />
+                <Text className="text-green-600 font-semibold ml-1">Change</Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Slide to Pay */}
+            <View>
+              <View style={{ alignItems: "center" }}>
+                <LinearGradient
+                  colors={["green", "green"]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={{
+                    width: width - 32,
+                    height: 60,
+                    borderRadius: 99,
+                    justifyContent: "center",
+                  }}
+                >
+                  <Text style={{ textAlign: "center", color: "white", fontSize: 16 }}>
+                    Slide to Pay
+                  </Text>
+                  <Animated.View
+                    {...panResponder.panHandlers}
+                    style={{
+                      position: "absolute",
+                      left: sliderValue,
+                      marginLeft: 7,
+                      width: 50,
+                      height: 50,
+                      borderRadius: 99,
+                      backgroundColor: "white",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      shadowColor: "#000",
+                      shadowOffset: { width: 0, height: 2 },
+                      shadowOpacity: 0.3,
+                      shadowRadius: 2,
+                      elevation: 5,
+                    }}
+                  >
+                    <Icon.ArrowRight width={24} height={24} stroke="green" />
+                  </Animated.View>
+                </LinearGradient>
+              </View>
+            </View>
           </View>
+
+          {/* Change Delivery Details Modal */}
+          <Modal
+            visible={deliveryModalVisible} // Separate state for delivery modal
+            animationType="slide"
+            transparent={true}
+            onRequestClose={() => setDeliveryModalVisible(false)} // Separate close logic
+          >
+            <View className="flex-1 justify-end bg-black bg-opacity-50">
+              <View className="bg-white p-4 rounded-t-2xl">
+                <Text className="text-xl font-bold mb-4">Change Delivery Details</Text>
+
+                {/* Room Number Input */}
+                <Text className="text-lg mb-2">Enter Room Number:</Text>
+                <TextInput
+                  value={selectedRoom}
+                  onChangeText={setSelectedRoom}
+                  className="border p-2 mb-4 rounded-lg"
+                  placeholder="Enter Room Number"
+                  keyboardType="numeric"
+                />
+
+                {/* Canteen Selection */}
+                <Text className="text-lg mb-2">Select Canteen:</Text>
+                {["Canteen 1", "Canteen 2", "Canteen 3"].map((canteen) => (
+                  <TouchableOpacity
+                    key={canteen}
+                    onPress={() => setSelectedCanteen(canteen)}
+                    className={`p-2 mb-2 rounded-lg border ${selectedCanteen === canteen ? "bg-green-100 border-green-600" : "border-gray-300"
+                      }`}
+                  >
+                    <Text className="text-lg">{canteen}</Text>
+                  </TouchableOpacity>
+                ))}
+
+                {/* Confirm Button */}
+                <TouchableOpacity
+                  onPress={handleConfirmDelivery}
+                  className="bg-green-500 p-3 rounded-lg mt-4"
+                >
+                  <Text className="text-white text-center text-lg font-bold">Confirm</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+
 
           {/* Modal for Offers */}
           <Modal

@@ -141,7 +141,7 @@ const AdminHome = () => {
   // }, []);
 
 
-//fetchpending
+  //fetchpending
   useEffect(() => {
     const socket = io(BASE_URL);
 
@@ -193,46 +193,46 @@ const AdminHome = () => {
     };
   }, []);
 
-//update order 
-const updateOrderStatus = async (id, status) => {
-  try {
-    const adminToken = await AsyncStorage.getItem("adminToken");
-    if (!adminToken) {
-      Alert.alert("Error", "Admin is not authenticated");
-      return;
+  //update order 
+  const updateOrderStatus = async (id, status) => {
+    try {
+      const adminToken = await AsyncStorage.getItem("adminToken");
+      if (!adminToken) {
+        Alert.alert("Error", "Admin is not authenticated");
+        return;
+      }
+
+      const response = await fetch(`${BASE_URL}/admin/order/status/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${adminToken}`,
+        },
+        body: JSON.stringify({ status }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to update order status");
+      }
+
+      Alert.alert("Success", `Order status updated to ${status}`);
+
+      // Remove the order from the pending orders state if status is Rejected or Delivered
+      if (status === "Rejected" || status === "Delivered") {
+        setPendingOrders((prevOrders) => prevOrders.filter(order => order._id !== id));
+      } else {
+        setPendingOrders((prevOrders) =>
+          prevOrders.map((order) =>
+            order._id === id ? { ...order, status } : order
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Error updating order status:", error);
+      Alert.alert("Error", error.message || "Something went wrong. Please try again.");
     }
-
-    const response = await fetch(`${BASE_URL}/admin/order/status/${id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${adminToken}`,
-      },
-      body: JSON.stringify({ status }),
-    });
-
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || "Failed to update order status");
-    }
-
-    Alert.alert("Success", `Order status updated to ${status}`);
-
-    // Remove the order from the pending orders state if status is Rejected or Delivered
-    if (status === "Rejected" || status === "Delivered") {
-      setPendingOrders((prevOrders) => prevOrders.filter(order => order._id !== id));
-    } else {
-      setPendingOrders((prevOrders) =>
-        prevOrders.map((order) =>
-          order._id === id ? { ...order, status } : order
-        )
-      );
-    }
-  } catch (error) {
-    console.error("Error updating order status:", error);
-    Alert.alert("Error", error.message || "Something went wrong. Please try again.");
-  }
-};
+  };
 
   const handleAcceptOrder = (orderId) => {
     // Move order to active/preparing orders
@@ -281,7 +281,7 @@ const updateOrderStatus = async (id, status) => {
               onValueChange={toggleOnlineStatus}
               trackColor={{ false: "#767577", true: "green" }}
               thumbColor={isOnline ? "white" : "white"}
-              
+
             />
           </View>
           <View className="flex-row items-center space-x-4">
@@ -378,7 +378,6 @@ const updateOrderStatus = async (id, status) => {
             ))}
           </View>
         </View>
-
         {/* Pending/Preparing/Ready/PickedUp Orders List */}
         <ScrollView>
           {activeTab === "Pending" && pendingOrders.length > 0 ? (
@@ -586,10 +585,6 @@ const updateOrderStatus = async (id, status) => {
           )}
         </ScrollView>
       </View>
-
-
-      {/* Footer */}
-      {/* <AdminFooter /> */}
     </View>
 
   );
