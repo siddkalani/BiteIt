@@ -1,3 +1,5 @@
+
+
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
   View,
@@ -380,7 +382,8 @@ const AdminHome = () => {
         </View>
         {/* Pending/Preparing/Ready/PickedUp Orders List */}
         <ScrollView>
-          {activeTab === "Pending" && pendingOrders.length > 0 ? (
+          {
+          activeTab === "Preparing" && preparingOrders.length > 0 ? (
             <View>
               {pendingOrders.map((order) => (
                 <View
@@ -443,21 +446,24 @@ const AdminHome = () => {
                 </View>
               ))}
             </View>
-          ) : activeTab === "Preparing" && pendingOrders.length > 0 ? (
+
+
+          ) :
+           activeTab === "Pending" && pendingOrders.length > 0 ? (
             <View>
-              {pendingOrders.map((order) => (
+              {pendingOrders?.map((order) => (
                 <View
-                  key={order._id}
+                  key={order.id}
                   className="p-4 bg-gray-50 rounded-lg shadow-sm my-2"
                 >
                   <View className="flex-row justify-between">
-                    <Text className="text-xl font-bold">ID: {pendingOrders._id}</Text>
+                    <Text className="text-xl font-bold">ID: {order.id}</Text>
                     {/* <Text className="text-gray-500">{order.time}</Text> */}
                   </View>
                   <Text className="text-sm text-blue-500">
                     1st order by {order.userId}
                   </Text>
-                  {pendingOrders.items.map((item, idx) => (
+                  {order.items.map((item, idx) => (
                     <View key={idx} className="flex-row justify-between mt-2">
                       <Text className="text-base">
                         {item.itemQuantity} x {item.itemName}
@@ -591,3 +597,4 @@ const AdminHome = () => {
 };
 
 export default AdminHome;
+

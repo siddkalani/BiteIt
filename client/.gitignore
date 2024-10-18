@@ -37,3 +37,5 @@ yarn-error.*
 # lock files
 package-lock.json
 yarn.lock
+
+constants/constant.js

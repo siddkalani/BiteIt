@@ -140,6 +140,7 @@ const PendingOrders = () => {
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
   const windowWidth = Dimensions.get('window').width;
+
   useEffect(() => {
     const socket = io(BASE_URL);
 
@@ -230,6 +231,21 @@ const PendingOrders = () => {
       Alert.alert("Error", error.message || "Something went wrong. Please try again.");
     }
   };
+
+  // Render individual item details
+  const renderOrderItems = (items) => {
+    return items.map((item) => (
+      <View key={item.itemId} style={styles.itemContainer}>
+        <Image
+          source={{ uri: `${BASE_URL}/items_uploads/${item.itemId}.jpg` }}
+          style={styles.itemImage}
+        />
+        <Text style={styles.itemName}>{item.itemName}</Text>
+        <Text style={styles.itemText}>Quantity: {item.itemQuantity}</Text>
+      </View>
+    ));
+  };
+
   const renderOrderItem = ({ item }) => {
     const orderDate = new Date(item.orderPlacedAt);
     const formattedDate = orderDate.toLocaleDateString();
@@ -240,18 +256,16 @@ const PendingOrders = () => {
 
     return (
       <View style={styles.orderContainer}>
-        <Image
-          source={{ uri: `${BASE_URL}/items_uploads/${item.itemId}.jpg` }}
-          style={styles.itemImage}
-        />
         <View style={styles.orderDetails}>
-          <Text style={styles.itemName}>{item.itemName}</Text>
-          <Text style={styles.itemText}>Quantity: {item.itemQuantity}</Text>
-          <Text style={styles.itemText}>Total: ${item.totalAmount}</Text>
           <Text style={styles.itemText}>Canteen: {item.canteenName}</Text>
+          <Text style={styles.itemText}>Total: ${item.totalAmount}</Text>
           <Text style={styles.itemText}>
             Ordered On: {formattedDate} at {formattedTime}
           </Text>
+
+          {/* Render all items in the order */}
+          {renderOrderItems(item.items)}
+
           <View style={styles.buttonContainer}>
             {["Accepted", "Rejected", "Preparing", "Ready", "Delivered"].map(
               (status) => (
@@ -300,6 +314,9 @@ const PendingOrders = () => {
   );
 };
 
+
+
+ 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
