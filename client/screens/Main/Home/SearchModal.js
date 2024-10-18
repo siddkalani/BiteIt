@@ -161,6 +161,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   ActivityIndicator,
+  StatusBar,
 } from "react-native";
 import { SafeAreaView } from "react-native";
 import * as Icon from "react-native-feather";
@@ -276,6 +277,7 @@ const SearchModal = ({ isModalVisible, closeSearchModal }) => {
                 overflow: "hidden",
               }}
             >
+              <StatusBar barStyle={'dark-content'} backgroundColor={'white'} translucent/>
               <View className="bg-white px-4 py-2 flex-1 rounded-none">
                 {/* Use the separated SearchHeader component */}
                 <GlobalHeader title="Search For dishes" onBackPress={closeSearchModal}/>
