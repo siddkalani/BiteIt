@@ -70,12 +70,12 @@ function AppNavigator() {
         {/* <Stack.Screen name="Keyboard" component={KeyboardTestComponent} /> */}
          {/* <Stack.Screen name="SignIn" component={SignIn} />  */}
          {/* <Stack.Screen name="LogIn" component={LogIn} /> */}
-         <Stack.Screen name="FacultyLogin" component={FacultyLogin} />
+         {/* <Stack.Screen name="FacultyLogin" component={FacultyLogin} /> */}
         {/* <Stack.Screen name="Otp" component={OTP} />  */}
         {/* <Stack.Screen name="AdminHome" component={OldAdmin} /> */}
         {/* <Stack.Screen name="AdminHome" component={AdminHome} /> */}
         {/* <Stack.Screen name="NewUser" component={NewUser} />  */}
-        <Stack.Screen name="AdminTabs" component={AdminTabs} />
+        {/* <Stack.Screen name="AdminTabs" component={AdminTabs} /> */}
         <Stack.Screen name="ClientTabs" component={ClientTabs} />
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Account" component={Account} />

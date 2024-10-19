@@ -9,7 +9,7 @@ const createOrder = asyncHandler(async (req, res) => {
   const {
     userId,
     canteenName,
-    items, // Expecting an array of items [{ itemId, itemQuantity }]
+    items,
     totalAmount,
     payment,
     status,
@@ -30,6 +30,11 @@ const createOrder = asyncHandler(async (req, res) => {
     if (!canteen) {
       return res.status(404).json({ message: "Canteen not found" });
     }
+
+    if (!canteen.isOnline) {
+      return res.status(400).json({ message: "Canteen is currently offline. Cannot place order." });
+    }
+
 
     // Process each item in the order
     const orderedItems = await Promise.all(

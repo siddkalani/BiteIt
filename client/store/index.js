@@ -6,6 +6,7 @@ import SagaData from "./saga";
 import categorySlice from "./Slices/categorySlice";
 import foodItemSlice from "./Slices/foodItemSlice";
 import cartSlice from "./Slices/cartSlice";
+import serviceSlice from "./Slices/orderServiceSlice";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -15,6 +16,7 @@ const store = configureStore({
     category: categorySlice.reducer,
     foodItem: foodItemSlice.reducer,
     cart: cartSlice.reducer,
+    service: serviceSlice.reducer
   },
   // middleware: (getDefaultMiddleware) =>
   //   getDefaultMiddleware().concat(sagaMiddleware),
