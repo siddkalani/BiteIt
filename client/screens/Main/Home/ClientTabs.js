@@ -8,12 +8,15 @@ import CartPage from '../../Cart/CartPage';
 import OrderHistoryPage from '../../Cart/OrderHistoryPage';
 import ProfilePage from '../../profile/Profile';
 import Account from '../../account/Account';
+import { selectItemCount } from '../../../store/Slices/cartSlice';
+import { useSelector } from 'react-redux';
 
 const Tab = createBottomTabNavigator();
 const { height: screenHeight } = Dimensions.get('window');
 
 const CustomTabBarWithCart = ({ state, descriptors, navigation, translateY }) => {
   const currentRouteName = state.routes[state.index].name; // Get the current route
+  const itemCount = useSelector(selectItemCount);
 
   return (
     <Animated.View
@@ -27,11 +30,11 @@ const CustomTabBarWithCart = ({ state, descriptors, navigation, translateY }) =>
       }}
     >
       {/* Show FloatingCartBar only on Home page */}
-      {currentRouteName === 'Home' && (
+      {currentRouteName === 'Home' &&  itemCount > 0 &&(
         <FloatingCartBar
-          itemCount={2}
-          totalPrice={199.99}
-          restaurantName={'Pizza Place'}
+          // itemCount={2}
+          // totalPrice={199.99}
+          // restaurantName={'Pizza Place'}
         />
       )}
 

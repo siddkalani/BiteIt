@@ -16,7 +16,7 @@ const createOrder = asyncHandler(async (req, res) => {
     deliverTo
   } = req.body;
 
-  if (!userId || !canteenName || !items || items.length === 0 || !totalAmount || deliverTo) {
+  if (!userId || !canteenName || !items || items.length === 0 || !totalAmount || !deliverTo) {
     return res.status(400).json({ message: "All fields are required" });
   }
 

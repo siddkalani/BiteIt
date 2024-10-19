@@ -2,8 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 // Initial state for service-related data
 const initialState = {
-  canteenName: "Canteen 1", // Default canteen name
-  deliveryType: null, // Default delivery type
+  canteenName: "Engineering Canteen", // Default canteen name
+  deliveryType: "Pickup", // Default delivery type
 };
 
 // Create service slice

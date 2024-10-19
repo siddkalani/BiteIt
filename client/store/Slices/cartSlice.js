@@ -26,24 +26,35 @@ const cartSlice = createSlice({
       }
     },
     removeFromCart: (state, action) => {
-      const { itemId } = action.payload;
-      return state.filter((item) => item._id !== itemId);
-    },
+      const { itemId } = action.payload; 
+      return state.filter(item => item._id !== itemId); // Filter out the item
+    }
+    ,
     setCart: (state, action) => {
       return action.payload;
     },
     clearCart: (state) => {
-      return [];
+    return []
+    },
+    setTotalAmount: (state, action) => {
+      state.totalAmount = action.payload; 
     },
   },
 });
+
+// Selector to get total item count
+export const selectItemCount = (state) => {
+  return state.cart.reduce((total, item) => total + item.quantity, 0);
+};
+
+
 
 export const {
   addToCart,
   updateCartQuantity,
   removeFromCart,
   setCart,
-  clearCart,
+  clearCart, setTotalAmount
 } = cartSlice.actions;
 
-export default cartSlice;
+export default cartSlice; 
