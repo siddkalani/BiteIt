@@ -9,6 +9,7 @@ import {
 import { FontFamily, FontSize } from "../../../GlobalStyles";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Icon from "react-native-feather";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import { BASE_URL } from "../../../constants/constant";
 import { saveCartToStorage } from "../../../utils/storageUtils"; // Adjust the path as needed
@@ -63,7 +64,7 @@ const FoodCard = ({ foodItem }) => {
       />
 
       {/* Food Name and Price */}
-      <View className="w-full items-center flex-row justify-between">
+      <View className="w-full items-center flex-col justify-between">
         <Text
           style={{
             fontFamily: FontFamily.poppinsMedium,
@@ -73,19 +74,22 @@ const FoodCard = ({ foodItem }) => {
           {foodItem.itemName}
         </Text>
 
-        {/* Info Icon and Time Text */}
-        <View className="flex-row items-center justify-center space-x-1">
-          <View>
-            <Icon.Clock width={12} height={12} stroke="gray" />
-          </View>
-          <View className="justify-center items-center">
-            <Text
-              style={{ color: "gray" }}
-              className="text-xs text-center"
-            >
+        {/* Star Rating and Info */}
+        <View className="flex-row items-center space-x-1">
+          {/* Star Rating */}
+          <Ionicons name="star" size={13} color="#FFD700" />
+          <Text className="text-xs text-gray-600">3.7</Text>
+
+          {/* Separator */}
+          <Text className="text-xs text-gray-500 ml-1">|</Text>
+
+          {/* Info */}
+          <TouchableOpacity className='flex-row items-center ml-1'>
+            <Ionicons name="time" size={13} color="#FFD700" />
+            <Text className="text-xs text-gray-600" style={{ fontFamily: FontFamily.poppinsMedium, marginLeft: 2 }}>
               15 mins
             </Text>
-          </View>
+          </TouchableOpacity>
         </View>
       </View>
 

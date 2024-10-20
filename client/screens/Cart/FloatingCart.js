@@ -34,7 +34,7 @@ const FloatingCartBar = ({ imageUrl, restaurantName }) => {
         </View>
         <View className="flex-row items-center space-x-2">
           <TouchableOpacity
-            className="bg-green-500 flex-row space-x-1 items-center rounded-lg px-4 py-2"
+            className="bg-green-500 flex-row space-x-1 items-center rounded-lg p-2"
             onPress={handleCheckout}
           >
             <View>
@@ -45,7 +45,7 @@ const FloatingCartBar = ({ imageUrl, restaurantName }) => {
 
           {/* Clear Cart Button */}
           <TouchableOpacity 
-            className="bg-red-100 px-1 py-3 items-center justify-center rounded-lg" 
+            className="bg-red-100 p-2 items-center justify-center rounded-lg" 
             onPress={handleClearCart}  // Clear the entire cart
           >
             <Icon name="trash" size={24} color="#FF3B30" />
