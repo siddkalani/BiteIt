@@ -61,11 +61,11 @@ const FoodItem = () => {
 
       <View className="flex-1">
         <View className="w-full h-full">
-          <Image
+          {/* <Image
             source={{ uri: `${BASE_URL}/items_uploads/${foodItem.image}` }}
             className="w-full h-full"
             resizeMode="cover"
-          />
+          /> */}
           <BlurView
             intensity={40}
             tint="dark"
@@ -185,3 +185,6 @@ const FoodItem = () => {
 };
 
 export default FoodItem;
+
+
+
