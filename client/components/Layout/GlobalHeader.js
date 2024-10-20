@@ -22,7 +22,7 @@ const GlobalHeader = ({ title = "Service Type", onBackPress , backgroundColor = 
         // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
       }}
     >
-      <View className="flex-row items-center space-x-3">
+      <View className="flex-row items-center space-x-3 h-7">
         <TouchableOpacity
           onPress={handlePress}
           className="w-10 h-10 justify-center absolute"

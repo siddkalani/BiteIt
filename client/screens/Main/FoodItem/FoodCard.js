@@ -117,10 +117,10 @@ const FoodCard = ({ foodItem }) => {
 
       <Text
         style={{
-          color: foodItem.isOnline === 'true' ? "green" : "red",
+          color: foodItem.isOnline === 'true' ? "green" : "green",
           fontSize: 16,
         }}
-        className="font-bold"
+        className={`font-bold ${foodItem.isOnline === 'true'? '':''}`}
       >
         ${foodItem.itemPrice}
       </Text>
