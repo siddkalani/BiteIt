@@ -21,21 +21,21 @@ const FoodCard = ({ foodItem }) => {
   const itemInCart = cartItems.find((item) => item._id === foodItem._id);
 
   const handleAddToCart = () => {
-    if (foodItem.stock > 0) {
+    if (foodItem.isOnline === 'true') {
       dispatch(addToCart(foodItem));
-      saveCartToStorage(cartItems); // Save cart to AsyncStorage
+      saveCartToStorage(cartItems); 
     }
   };
 
   const handleIncrement = () => {
-    if (itemInCart && foodItem.stock > itemInCart.quantity) {
+    if (itemInCart && foodItem.isOnline === 'true' > itemInCart.quantity) {
       dispatch(
         updateCartQuantity({
           itemId: foodItem._id,
           quantity: itemInCart.quantity + 1,
         })
       );
-      saveCartToStorage(cartItems); // Save cart to AsyncStorage
+      saveCartToStorage(cartItems); 
     }
   };
 
@@ -91,7 +91,7 @@ const FoodCard = ({ foodItem }) => {
 
       <Text
         style={{
-          color: foodItem.stock > 0 ? "green" : "red",
+          color: foodItem.isOnline === 'true' ? "green" : "red",
           fontSize: 16,
         }}
         className="font-bold"
@@ -100,7 +100,7 @@ const FoodCard = ({ foodItem }) => {
       </Text>
 
       {/* Add to Cart / Increment Decrement or Not Available shreya part: add stock logic here and cart page fooditems in categories page etc */ }
-      {foodItem.stock > 0 ? (
+      {foodItem.isOnline === "true" ? (
         itemInCart ? (
           <View className="flex-row items-center space-x-2">
             <TouchableOpacity
@@ -161,6 +161,8 @@ const FoodCard = ({ foodItem }) => {
       )}
     </View>
   );
+
+ 
 };
 
 export default FoodCard;
