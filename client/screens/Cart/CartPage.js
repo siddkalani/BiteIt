@@ -21,7 +21,7 @@ import {
   removeFromCart,
   updateCartQuantity,
   clearCart,
-  addToCart, setCart
+  addToCart, setCart, setTotalAmount
 } from "../../store/Slices/cartSlice"; // Adjust the path as needed
 import * as Icon from "react-native-feather";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
@@ -35,24 +35,30 @@ import { LinearGradient } from "expo-linear-gradient";
 import GlobalHeader from "../../components/Layout/GlobalHeader";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
+import { setCanteenName, setDeliveryType } from "../../store/Slices/orderServiceSlice";
 
 const { width } = Dimensions.get("window");
 
 const CartPage = () => {
   const cartItems = useSelector((state) => state.cart);
+  const totalAmount = useSelector((state) => state.cart.totalAmount);
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false); // For offers modal
   const [sliderValue] = useState(new Animated.Value(0)); // Animation value for the slider
   const [sliderActive, setSliderActive] = useState(false); // To track if slider is active
-  const [deliveryType, setDeliveryType] = useState(null);
+  // const [deliveryType, setDeliveryType] = useState(null);
 
   const [deliveryModalVisible, setDeliveryModalVisible] = useState(false);
 const [selectedRoom, setSelectedRoom] = useState(""); // For room number
-const [selectedCanteen, setSelectedCanteen] = useState("Canteen 1"); // Default to "Canteen 1"
+// const [selectedCanteen, setSelectedCanteen] = useState("Canteen 1"); // Default to "Canteen 1"
+
+const selectedCanteen = useSelector((state) => state.service.canteenName);
+const deliveryType = useSelector((state) => state.service.deliveryType);
 
   const handleChangeDelivery = () => {
     setDeliveryModalVisible(true); 
+
   };
 
   const handleConfirmDelivery = () => {
@@ -75,21 +81,19 @@ const [selectedCanteen, setSelectedCanteen] = useState("Canteen 1"); // Default 
     [cartItems]
   );
 
-  const finalTotal = useMemo(
-    () => totalBill + deliveryCharge + taxes + donation - offerDiscount,
-    [totalBill]
-  );
+  const finalTotal = useMemo(() => {
+    const total = totalBill + deliveryCharge + taxes + donation - offerDiscount;
+    return total < 0 ? 0 : total; // Ensure final total does not go below zero
+  }, [totalBill, deliveryCharge, taxes, donation, offerDiscount]);
+  
 
   const handlePayment = () => {
     navigation.navigate('PaymentOption');
   };
 
   useEffect(() => {
-    // Load cart data when the component mounts
     const loadCart = async () => {
       const savedCart = await loadCartFromStorage();
-
-      // Ensure items are only added to the cart if they are not already present
       savedCart.forEach((item) => {
         const itemInCart = cartItems.find(cartItem => cartItem._id === item._id);
         if (!itemInCart) {
@@ -97,60 +101,35 @@ const [selectedCanteen, setSelectedCanteen] = useState("Canteen 1"); // Default 
         }
       });
     };
+    loadCart(); 
+  }, [dispatch]); 
+    
 
-    loadCart(); // Call the loadCart function
-  }, [dispatch]); // Remove cartIt
-
-  // Total number of items in the cart
-  // const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
-
-  // // Calculate the total bill without taxes and discounts
-  // const totalBill = cartItems.reduce(
-  //   (total, item) => total + item.itemPrice * item.quantity,
-  //   0
-  // );
-
-  // const handlePlaceOrder = async () => {
-  //   try {
-  //     navigation.navigate('PaymentService');
-  //     for (const item of cartItems) {
-  //       // Your order placement logic here
-  //     }
-  //     Alert.alert("Order Placed", `Your total is ₹${totalBill.toFixed(2)}`);
-  //     dispatch(clearCart()); // Use clearCart action here
-  //     saveCartToStorage([]); // Clear cart from AsyncStorage
-  //   } catch (error) {
-  //     console.error("Error placing order:", error);
-  //     Alert.alert(
-  //       "Order Failed",
-  //       error.message || "Something went wrong. Please try again."
-  //     );
-  //   }
-  // };
-  // const finalTotal = totalBill + deliveryCharge + taxes + donation - offerDiscount;
   const handlePlaceOrder = async () => {
     try {
       // Retrieve necessary data from AsyncStorage
       const userId = await AsyncStorage.getItem('userId');
-      const canteenName = "Engineering Canteen"
+      const canteenName = selectedCanteen
+      const deliverTo = deliveryType
       const totalBill = cartItems.reduce((sum, item) => sum + item.itemPrice * item.quantity, 0); // Calculate total bill
 
       // const finalTotal = totalBill + deliveryCharge + taxes + donation - offerDiscount;
-      const totalAmount = finalTotal.toFixed(2);
+      const totalAmount = totalBill.toFixed(2);
       // Prepare data for each cart item
       const orderData = cartItems.map(item => ({
         itemId: item._id,
         itemName: item.itemName,
         itemQuantity: item.quantity,
       }));
-
+      console.log(canteenName, deliverTo)
       const payload = {
         userId,
         canteenName,
         totalAmount,
         items: orderData,
         payment: 1,
-        status: "Pending"
+        status: "Pending",
+        deliverTo
       };
       const token = await AsyncStorage.getItem("userToken");
       const response = await fetch(`${BASE_URL}/user/order/add`, {
@@ -219,7 +198,9 @@ const [selectedCanteen, setSelectedCanteen] = useState("Canteen 1"); // Default 
   };
 
   const handleRemoveFromCart = (itemId) => {
-    dispatch(removeFromCart({ itemId }));
+   
+      dispatch(removeFromCart({itemId}));
+    
   };
 
   const handleIncrement = (itemId) => {
@@ -373,7 +354,7 @@ const [selectedCanteen, setSelectedCanteen] = useState("Canteen 1"); // Default 
               </View>
               <View className="flex-row justify-between mt-1">
                 <Text className="font-semibold">Grand Total</Text>
-                <Text className="font-semibold"> ₹{finalTotal.toFixed(2)}</Text>
+                <Text className="font-semibold"> ₹{totalBill.toFixed(2)}</Text>
               </View>
             </View>
 
@@ -391,49 +372,7 @@ const [selectedCanteen, setSelectedCanteen] = useState("Canteen 1"); // Default 
             </TouchableOpacity>
           </ScrollView>
 
-          {/* Slide to Pay Section
-          <View style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: 16 }}>
-            <View style={{ alignItems: "center" }}>
-              <LinearGradient
-                colors={["green", "green"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                style={{
-                  width: width - 32,
-                  height: 60,
-                  borderRadius: 99,
-                  justifyContent: "center",
-                }}
-              >
-                <Text style={{ textAlign: "center", color: "white", fontSize: 16 }}>
-                  Slide to Pay
-                </Text>
-                <Animated.View
-                  {...panResponder.panHandlers}
-                  style={{
-                    position: "absolute",
-                    left: sliderValue,
-                    marginLeft: 7,
-                    width: 50,
-                    height: 50,
-                    borderRadius: 99,
-                    backgroundColor: "white",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    shadowColor: "#000",
-                    shadowOffset: { width: 0, height: 2 },
-                    shadowOpacity: 0.3,
-                    shadowRadius: 2,
-                    elevation: 5,
-                  }}
-                >
-                  <Icon.ArrowRight width={24} height={24} stroke="green" />
-                </Animated.View>
-              </LinearGradient>
-            </View>
-          </View> */}
-
-          {/* Bottom Bar */}
+         
           <View className="absolute bottom-0 left-0 right-0 bg-white p-4 border-t border-gray-200">
             {/* Delivery Information Section */}
             <View className="flex-row justify-between items-center mb-4">
@@ -442,18 +381,18 @@ const [selectedCanteen, setSelectedCanteen] = useState("Canteen 1"); // Default 
                 <View className="flex-row items-center space-x-2 mb-2">
                   <View className="flex-row items-center">
                     <Ionicons name="location-outline" size={20} color="#4CAF50" />
-                    <Text className="ml-2 text-base font-semibold text-black">Delivering to</Text>
+                    <Text className="ml-2 text-base font-semibold text-black">From</Text>
                   </View>
-                  <Text className="text-sm font-medium text-gray-500">B-203</Text>
+                  <Text className="text-sm font-medium text-gray-500">{selectedCanteen}</Text>
                 </View>
 
                 {/* From Section */}
                 <View className="flex-row items-center space-x-2">
                   <View className="flex-row items-center">
                     <Ionicons name="restaurant-outline" size={20} color="#4CAF50" />
-                    <Text className="ml-2 text-base font-semibold text-black">From</Text>
+                    <Text className="ml-2 text-base font-semibold text-black">Delivering to</Text>
                   </View>
-                  <Text className="text-sm font-medium text-gray-500">Canteen1</Text>
+                  <Text className="text-sm font-medium text-gray-500">{deliveryType}</Text>
                 </View>
               </View>
 
@@ -523,7 +462,8 @@ const [selectedCanteen, setSelectedCanteen] = useState("Canteen 1"); // Default 
         <Text className="text-lg mb-2">Select Service Type:</Text>
         <TouchableOpacity
           onPress={() => {
-            setDeliveryType("Pickup");
+            dispatch(setDeliveryType("Pickup"))
+            // setDeliveryType("Pickup");
             setDeliveryModalVisible(false); // Close modal if "Pickup" is selected
           }}
           className="p-2 mb-2 rounded-lg border border-gray-300"
@@ -531,7 +471,10 @@ const [selectedCanteen, setSelectedCanteen] = useState("Canteen 1"); // Default 
           <Text className="text-lg">Pickup</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => setDeliveryType("Table Service")}
+          onPress={() => 
+            // setDeliveryType("Table Service")
+            dispatch(setDeliveryType("Table Service"))
+          }
           className="p-2 mb-2 rounded-lg border border-gray-300"
         >
           <Text className="text-lg">Table Service</Text>
@@ -553,10 +496,13 @@ const [selectedCanteen, setSelectedCanteen] = useState("Canteen 1"); // Default 
 
           {/* Canteen Selection */}
           <Text className="text-lg mb-2">Select Canteen:</Text>
-          {["Canteen 1", "Canteen 2", "Canteen 3"].map((canteen) => (
+          {["Engineering Canteen", "Management Canteen", "Aurobindo Canteen"].map((canteen) => (
             <TouchableOpacity
               key={canteen}
-              onPress={() => setSelectedCanteen(canteen)}
+              onPress={() => 
+                // setSelectedCanteen(canteen)
+                dispatch(setCanteenName(canteen))
+              }
               className={`p-2 mb-2 rounded-lg border ${
                 selectedCanteen === canteen ? "bg-green-100 border-green-600" : "border-gray-300"
               }`}
@@ -566,12 +512,30 @@ const [selectedCanteen, setSelectedCanteen] = useState("Canteen 1"); // Default 
           ))}
 
           {/* Confirm Button */}
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={handleConfirmDelivery}
             className="bg-green-500 p-3 rounded-lg mt-4"
           >
             <Text className="text-white text-center text-lg font-bold">Confirm</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+            <TouchableOpacity
+          onPress={() => {
+            if (deliveryType === "Table Service" && selectedRoom.trim() !== "") {
+              // setDeliveryType(selectedRoom); 
+              dispatch(setDeliveryType(selectedRoom))
+              handleConfirmDelivery(); // Close the modal after confirming
+            } else if (deliveryType === "Pickup") {
+              // setDeliveryType("Pickup"); 
+              dispatch(setDeliveryType("Pickup"))
+              handleConfirmDelivery(); // Close the modal after confirming
+            } else {
+              Alert.alert("Error", "Please enter a room number for Table Service.");
+            }
+          }}
+          className="bg-green-500 p-3 rounded-lg mt-4"
+        >
+          <Text className="text-white text-center text-lg font-bold">Confirm</Text>
+        </TouchableOpacity>
         </>
       )}
     </View>

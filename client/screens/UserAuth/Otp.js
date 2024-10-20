@@ -81,7 +81,7 @@ const OTP = () => {
         }
         await AsyncStorage.setItem("adminId", data.admin?.id || "");
         await postPushToken();
-        navigation.replace("AdminHome");
+        navigation.replace("AdminTabs");
       } else if (
         response.status === 400 &&
         data.error === "Name is required for new users"
