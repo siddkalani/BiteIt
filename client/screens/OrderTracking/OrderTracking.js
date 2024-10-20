@@ -33,7 +33,7 @@ const OrderTrackingScreen = () => {
       <SafeAreaView className="flex-1 bg-white">
         <StatusBar barStyle="dark-content" backgroundColor="white" />
 
-        <View className="flex-1 bg-gray-400">
+        <View className="flex-1 bg-gray-100">
           {/* Back Button and Header */}
           <View className="bg-white px-4 py-3">
             <GlobalHeader title="" />
@@ -93,7 +93,7 @@ const OrderTrackingScreen = () => {
             }}
           >
             <Image
-              source={require('../../assets/images/tracking/Preparing.gif')}
+              source={require('../../assets/images/tracking/Preparing.png')}
               style={{ width: '100%', height: '100%' }}
               resizeMode="cover"
               className=''
