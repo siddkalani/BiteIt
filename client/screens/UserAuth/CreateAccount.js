@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import {
     StatusBar, Pressable, Text, View, Image, KeyboardAvoidingView,
-    Platform, StyleSheet, TextInput, TouchableOpacity
+    Platform, StyleSheet, TextInput, TouchableOpacity,
+    SafeAreaView
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontFamily, FontSize } from "../../GlobalStyles";
 import * as IconF from "react-native-feather";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import GlobalHeader from "../../components/Layout/GlobalHeader";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const CreateAccount = () => {
     const navigation = useNavigation();
@@ -29,10 +32,19 @@ const CreateAccount = () => {
         { icon: "Lock", placeholder: "Password", field: "password", keyboardType: "default", isPassword: true }
     ];
 
+
+    const { top, bottom } = useSafeAreaInsets();
     return (
         <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
-            <View className="flex-1 bg-[#F4F5F9]">
+            <SafeAreaView style={{
+                flex: 1,
+                paddingTop: Platform.OS === "ios" ? 0 : StatusBar.currentHeight,
+                paddingBottom: Platform.OS === "ios" ? 0 : bottom,
+            }} className="flex-1 bg-[#F4F5F9]">
                 <StatusBar translucent backgroundColor="transparent" />
+                <View className="bg-transparent px-4 py-3 z-[100]">
+                    <GlobalHeader title="Create account" backgroundColor={'transparent'} textColor={'text-white'} iconColor={'white'} />
+                </View>
                 <View className="absolute top-0 left-0 right-0 bottom-0">
                     <Image source={require("../../assets/images/signIn/signIn.png")} style={styles.backgroundImage} />
                 </View>
@@ -81,7 +93,7 @@ const CreateAccount = () => {
                         </View>
                     </View>
                 </View>
-            </View>
+            </SafeAreaView>
         </KeyboardAvoidingView>
     );
 };

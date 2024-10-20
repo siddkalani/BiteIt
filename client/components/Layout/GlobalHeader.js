@@ -4,7 +4,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { FontFamily, FontSize } from "../../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
 
-const GlobalHeader = ({ title = "Service Type", onBackPress }) => {
+const GlobalHeader = ({ title = "Service Type", onBackPress , backgroundColor = 'white',textColor = 'text-black',iconColor = 'black' }) => {
   const navigation = useNavigation();
 
   const handlePress = () => {
@@ -18,7 +18,7 @@ const GlobalHeader = ({ title = "Service Type", onBackPress }) => {
   return (
     <SafeAreaView
       style={{
-        backgroundColor: 'white',
+        backgroundColor: backgroundColor,
         // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
       }}
     >
@@ -27,7 +27,7 @@ const GlobalHeader = ({ title = "Service Type", onBackPress }) => {
           onPress={handlePress}
           className="w-10 h-10 justify-center absolute"
         >
-          <Ionicons name="arrow-back" size={24} color="black" />
+          <Ionicons name="arrow-back" size={24} color={`${iconColor}`} />
         </TouchableOpacity>
 
         <View className="flex-1 items-center">
@@ -38,7 +38,7 @@ const GlobalHeader = ({ title = "Service Type", onBackPress }) => {
               lineHeight: 28,
               textAlign: 'center',
             }}
-            className="text-black"
+            className={`${textColor}`}
           >
             {title}
           </Text>
