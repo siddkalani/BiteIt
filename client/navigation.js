@@ -33,6 +33,8 @@ import Footer from "./screens/Main/Home/ClientTabs";
 import ClientTabs from "./screens/Main/Home/ClientTabs";
 import Account from "./screens/account/Account";
 import ProfilePage from "./screens/profile/Profile";
+import OrderTracking from "./screens/OrderTracking/OrderTracking";
+import PaymentConfirmation from "./screens/payment/PaymentConfirmation";
 
 const Stack = createNativeStackNavigator();
 
@@ -68,12 +70,12 @@ function AppNavigator() {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {/* <Stack.Screen name="Intro" component={Intro1} /> */}
         {/* <Stack.Screen name="Keyboard" component={KeyboardTestComponent} /> */}
-         <Stack.Screen name="SignIn" component={SignIn} /> 
-         {/* <Stack.Screen name="LogIn" component={LogIn} /> */}
-         {/* <Stack.Screen name="FacultyLogin" component={FacultyLogin} /> */}
-        <Stack.Screen name="Otp" component={OTP} /> 
+        {/* <Stack.Screen name="SignIn" component={SignIn} /> 
+        <Stack.Screen name="LogIn" component={LogIn} />
+        <Stack.Screen name="FacultyLogin" component={FacultyLogin} />
+        <Stack.Screen name="Otp" component={OTP} />  */}
         {/* <Stack.Screen name="AdminHome" component={OldAdmin} /> */}
-        <Stack.Screen name="AdminHome" component={AdminHome} />
+
         {/* <Stack.Screen name="NewUser" component={NewUser} />  */}
         <Stack.Screen name="ClientTabs" component={ClientTabs} />
         <Stack.Screen name="Home" component={Home} />
@@ -87,11 +89,16 @@ function AppNavigator() {
         <Stack.Screen name="PendingOrder" component={PendingOrders} />
         <Stack.Screen name="PaymentService" component={PaymentService} />
         <Stack.Screen name="PaymentOption" component={PaymentOption} />
+        
+        <Stack.Screen name="PaymentConfirmation" component={PaymentConfirmation} />
+        <Stack.Screen name="OrderTracking" component={OrderTracking} />
+
         {/* admin side */}
-        {/* <Stack.Screen name="AdminTabs" component={AdminTabs} />
+        <Stack.Screen name="AdminTabs" component={AdminTabs} />
+        <Stack.Screen name="AdminHome" component={AdminHome} />
         <Stack.Screen name="Inventory" component={Inventory} />
         <Stack.Screen name="Bills" component={Bills} />
-        <Stack.Screen name="AdminAccount" component={AdminAccount} /> */}
+        <Stack.Screen name="AdminAccount" component={AdminAccount} />
 
         {/* <Stack.Screen name="AdminLayout" component={AdminLayout} /> */}
       </Stack.Navigator>

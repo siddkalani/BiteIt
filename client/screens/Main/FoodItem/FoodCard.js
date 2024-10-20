@@ -21,12 +21,14 @@ const FoodCard = ({ foodItem }) => {
   const itemInCart = cartItems.find((item) => item._id === foodItem._id);
 
   const handleAddToCart = () => {
-    dispatch(addToCart(foodItem));
-    saveCartToStorage(cartItems); // Save cart to AsyncStorage
+    if (foodItem.stock > 0) {
+      dispatch(addToCart(foodItem));
+      saveCartToStorage(cartItems); // Save cart to AsyncStorage
+    }
   };
 
   const handleIncrement = () => {
-    if (itemInCart) {
+    if (itemInCart && foodItem.stock > itemInCart.quantity) {
       dispatch(
         updateCartQuantity({
           itemId: foodItem._id,
@@ -53,56 +55,53 @@ const FoodCard = ({ foodItem }) => {
   };
 
   return (
-      <View className="bg-white rounded-lg w-full items-center space-y-1 flex-1">
-        {/* Food Image */}
-        <Image
-          source={{ uri: `${BASE_URL}/items_uploads/${foodItem.image}` }}
-          style={{ width: "100%", height: 100, borderRadius: 8 }}
-        />
+    <View className="bg-white rounded-lg w-full items-center space-y-1 flex-1">
+      {/* Food Image */}
+      <Image
+        source={{ uri: `${BASE_URL}/items_uploads/${foodItem.image}` }}
+        style={{ width: "100%", height: 100, borderRadius: 8 }}
+      />
 
-        {/* Food Name and Price */}
-        <View className="w-full items-center flex-row justify-between">
-          <Text
-            style={{
-              fontFamily: FontFamily.poppinsMedium,
-              fontSize: FontSize.size_mini,
-            }}
-          >
-            {foodItem.itemName}
-          </Text>
+      {/* Food Name and Price */}
+      <View className="w-full items-center flex-row justify-between">
+        <Text
+          style={{
+            fontFamily: FontFamily.poppinsMedium,
+            fontSize: FontSize.size_mini,
+          }}
+        >
+          {foodItem.itemName}
+        </Text>
 
-          {/* Info Icon and Time Text */}
-          <View className="flex-row items-center justify-center space-x-1">
-            <View className=''>
+        {/* Info Icon and Time Text */}
+        <View className="flex-row items-center justify-center space-x-1">
+          <View>
             <Icon.Clock width={12} height={12} stroke="gray" />
-            </View>
-            <View className='justify-center items-center'>
+          </View>
+          <View className="justify-center items-center">
             <Text
-              style={{
-                // fontFamily: FontFamily.poppinsRegular,
-                // fontSize: FontSize.size_small,
-                color: "gray",
-              }}
-              className='text-xs text-center'
+              style={{ color: "gray" }}
+              className="text-xs text-center"
             >
               15 mins
             </Text>
-            </View>
           </View>
         </View>
+      </View>
 
-        <Text
-          style={{
-            // fontFamily: FontFamily.poppinsMedium,
-            // fontSize: FontSize.size_mini,
-          }}
-          className="text-green-600 font-bold text-lg"
-        >
-          ${foodItem.itemPrice}
-        </Text>
+      <Text
+        style={{
+          color: foodItem.stock > 0 ? "green" : "red",
+          fontSize: 16,
+        }}
+        className="font-bold"
+      >
+        ${foodItem.itemPrice}
+      </Text>
 
-        {/* Add to Cart / Increment Decrement */}
-        {itemInCart ? (
+      {/* Add to Cart / Increment Decrement or Not Available shreya part: add stock logic here and cart page fooditems in categories page etc */ }
+      {foodItem.stock > 0 ? (
+        itemInCart ? (
           <View className="flex-row items-center space-x-2">
             <TouchableOpacity
               onPress={handleDecrement}
@@ -122,6 +121,7 @@ const FoodCard = ({ foodItem }) => {
             <TouchableOpacity
               onPress={handleIncrement}
               className="p-2 bg-gray-200 rounded-full"
+              disabled={itemInCart.quantity >= foodItem.stock}
             >
               <Icon.Plus width={16} height={16} stroke="green" />
             </TouchableOpacity>
@@ -155,8 +155,11 @@ const FoodCard = ({ foodItem }) => {
               </View>
             </TouchableOpacity>
           </LinearGradient>
-        )}
-      </View>
+        )
+      ) : (
+        <Text className="text-red-500 font-semibold">Not Available</Text>
+      )}
+    </View>
   );
 };
 

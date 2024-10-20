@@ -284,8 +284,8 @@ const [selectedCanteen, setSelectedCanteen] = useState("Canteen 1"); // Default 
       className="flex-1 bg-white"
       style={{
         flex: 1,
-        paddingTop: Platform.OS === "ios" ? top : 0, // Apply paddingTop only for iOS
-        paddingBottom: Platform.OS === "ios" ? 0 : bottom, // Apply paddingBottom for Android
+        // paddingTop: Platform.OS === "ios" ? top : 0, // Apply paddingTop only for iOS
+        // paddingBottom: Platform.OS === "ios" ? 0 : bottom, // Apply paddingBottom for Android
       }}
     >
       {/* Status bar with white background */}
