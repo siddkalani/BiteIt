@@ -9,50 +9,32 @@ import {
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
+  TextInput,
+  TouchableOpacity,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontFamily, FontSize } from "../../GlobalStyles";
-import { useDispatch, useSelector } from "react-redux";
-// import { loginUser } from "../../../store/Slices/userDetailSlice";
-import { AntDesign } from '@expo/vector-icons'; // To use arrow icon
-import { TouchableOpacity } from "react-native";
-import * as Google from "expo-auth-session/providers/google";
-import * as WebBrowser from "expo-web-browser";
-
-WebBrowser.maybeCompleteAuthSession();
+import * as IconF from "react-native-feather";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const LogIn = () => {
   const navigation = useNavigation();
-  const loginStatus = useSelector((state) => state.users.loginStatus);
-  const loading = useSelector((state) => state.users.loading);
-  const error = useSelector((state) => state.users.error);
-
-  // Google Auth State
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    clientId: '908599769443-pc2g0ipv4mqbuj5luio3d3ltdvcebnrm.apps.googleusercontent.com',
-    redirectUri: 'https://canteenApp.expoapp.com/__/auth/handler',
-  });
-
-  React.useEffect(() => {
-    if (response?.type === "success") {
-      const { authentication } = response;
-      // Handle authentication (e.g., store token, navigate, etc.)
-      Alert.alert("Success", "Logged in with Google!");
-      navigation.navigate("FacultyHome"); // Navigate to the next page
-    } else if (response?.type === "error") {
-      Alert.alert("Error", "Login failed. Please try again.");
-    }
-  }, [response]);
-
-  // Handle Google Login
-  const handleFacultyLogin = () => {
-    promptAsync(); // Initiate Google Login
-  };
+  const [phone, setPhone] = useState("");
 
   // Dummy navigation for continue button
   const handleLogin = () => {
-    navigation.navigate("Otp");
+    navigation.navigate("CreateAccount");
+  };
+
+  // Navigation to "Forgot Password" screen
+  const handleForgotPassword = () => {
+    navigation.navigate("ForgotPassword");
+  };
+
+  // Navigation to "Sign up" screen
+  const handleSignUp = () => {
+    navigation.navigate("CreateAccount");
   };
 
   return (
@@ -68,13 +50,14 @@ const LogIn = () => {
             style={{ resizeMode: "cover", height: "100%", width: "100%" }}
           />
         </View>
-        <View className="absolute bottom-0 w-full flex-1 bg-[#F4F5F9] rounded-t-2xl px-4 py-6 space-y-5">
+        <View className="absolute bottom-0 w-full flex-1 bg-[#F4F5F9] rounded-t-2xl px-4 py-6 space-y-2">
           <View>
             <Text
               style={{
                 fontFamily: FontFamily.poppinsBold,
                 fontSize: FontSize.textRegularLowercase_size,
               }}
+              className='text-xl'
             >
               Welcome back!
             </Text>
@@ -90,20 +73,68 @@ const LogIn = () => {
           </View>
 
           {/* Faculty Login Option */}
-          <TouchableOpacity
-            onPress={handleFacultyLogin} // Trigger Google Login
-            style={[styles.facultyLoginContainer, styles.inputContainer]}
-          >
+          <View className="space-y-2">
+            <View style={styles.inputContainer} className="space-x-2">
+              <View
+                className="text-green-700"
+                style={{
+                  fontFamily: FontFamily.poppinsRegular,
+                  fontSize: FontSize.size_mini,
+                  fontWeight: 600,
+                }}
+              >
+                <IconF.Mail width={20} height={20} stroke="gray" />
+              </View>
+              <TextInput
+                placeholder="Enter mail"
+                value={phone}
+                onChangeText={setPhone}
+                keyboardType="phone-pad"
+                style={{
+                  fontFamily: FontFamily.poppinsRegular,
+                  fontSize: FontSize.size_mini,
+                }}
+                className="flex-1"
+              />
+            </View>
+
+            <View style={styles.inputContainer} className="space-x-2">
+              <View
+                className="text-green-700"
+                style={{
+                  fontFamily: FontFamily.poppinsRegular,
+                  fontSize: FontSize.size_mini,
+                  fontWeight: 600,
+                }}
+              >
+                <IconF.Lock width={20} height={20} stroke="gray" />
+              </View>
+              <TextInput
+                placeholder="Password"
+                value={phone}
+                onChangeText={setPhone}
+                keyboardType="phone-pad"
+                style={{
+                  fontFamily: FontFamily.poppinsRegular,
+                  fontSize: FontSize.size_mini,
+                }}
+                className="flex-1"
+              />
+            </View>
+          </View>
+
+          {/* Forgot Password */}
+          <TouchableOpacity onPress={handleForgotPassword}>
             <Text
               style={{
                 fontFamily: FontFamily.poppinsRegular,
                 fontSize: FontSize.size_mini,
-                fontWeight: 600,
+                color: '#0070FF', // Blue color
+                textAlign: 'right',
               }}
             >
-              Faculty Login
+              Forgot password?
             </Text>
-            <AntDesign name="right" size={20} color="black" />
           </TouchableOpacity>
 
           {/* Continue Button */}
@@ -128,6 +159,30 @@ const LogIn = () => {
               </Text>
             </Pressable>
           </LinearGradient>
+
+          {/* Sign Up Option */}
+          <View style={styles.signUpContainer}>
+            <Text
+              style={{
+                fontFamily: FontFamily.poppinsRegular,
+                fontSize: FontSize.size_mini,
+                color: '#868889',
+              }}
+            >
+              Don’t have an account?{" "}
+            </Text>
+            <TouchableOpacity onPress={handleSignUp}>
+              <Text
+                style={{
+                  fontFamily: FontFamily.poppinsSemiBold,
+                  fontSize: FontSize.size_mini,
+                  color: '#0070FF', // Blue color
+                }}
+              >
+                Sign up
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </KeyboardAvoidingView>
@@ -138,14 +193,14 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: 'center',
     backgroundColor: "#FFFFFF",
     padding: 10,
     borderRadius: 8,
   },
-  facultyLoginContainer: {
-    justifyContent: "space-between",
-    paddingHorizontal: 15,
-    marginVertical: 10,
+  signUpContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
   },
 });
 

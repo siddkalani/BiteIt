@@ -49,7 +49,7 @@ const OTP = () => {
   };
 
   const handleBackPress = () => {
-    navigation.navigate("SignIn");
+    navigation.navigate("LogIn");
   };
 
   const handleVerify = async () => {
