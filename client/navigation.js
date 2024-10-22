@@ -33,6 +33,7 @@ import ProfilePage from "./screens/Profile/Profile";
 import OrderTracking from "./screens/OrderTracking/OrderTracking";
 import PaymentConfirmation from "./screens/Payment/PaymentConfirmation";
 import CreateAccount from "./screens/UserAuth/CreateAccount";
+import ForgotPw from "./screens/UserAuth/ForgotPw";
 
 const Stack = createNativeStackNavigator();
 
@@ -72,6 +73,7 @@ function AppNavigator() {
         <Stack.Screen name="LogIn" component={LogIn} />
         <Stack.Screen name="FacultyLogin" component={FacultyLogin} />
         <Stack.Screen name="Otp" component={OTP} />   */}
+        <Stack.Screen name="ForgotPw" component={ForgotPw} />
         {/* {/* <Stack.Screen name="NewUser" component={NewUser} />  */}
         <Stack.Screen name="ClientTabs" component={ClientTabs} />
         <Stack.Screen name="Home" component={Home} />

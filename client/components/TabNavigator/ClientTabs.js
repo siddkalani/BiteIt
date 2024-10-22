@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { View, Animated, Dimensions, StatusBar, Platform, TouchableOpacity } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
-import FloatingCartBar from '../../screens/Cart/FloatingCart';
+import FloatingCartBar from '../Cart/FloatingCart';
 import Home from '../../screens/Home/Home';
 import CartPage from '../../screens/Cart/CartPage';
 import OrderHistoryPage from '../../screens/OrderHistory/OrderHistoryPage';
