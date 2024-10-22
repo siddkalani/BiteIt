@@ -1,14 +1,14 @@
 import React from "react";
 import { View, Text, FlatList, Image, TouchableOpacity } from "react-native";
-import { FontFamily, FontSize } from "../../../GlobalStyles";
-import { BASE_URL } from "../../../constants/constant";
+import { FontFamily, FontSize } from "../../GlobalStyles";
+import { BASE_URL } from "../../constants/constant";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addToCart,
   updateCartQuantity,
   removeFromCart,
-} from "../../../store/Slices/cartSlice";
+} from "../../store/Slices/cartSlice";
 import * as Icon from "react-native-feather";
 import { LinearGradient } from "expo-linear-gradient";
 

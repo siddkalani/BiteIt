@@ -166,15 +166,15 @@ import {
 import { SafeAreaView } from "react-native";
 import * as Icon from "react-native-feather";
 import { useDispatch, useSelector } from "react-redux";
-import { BASE_URL } from "../../../constants/constant";
+import { BASE_URL } from "../../constants/constant";
 import axios from "axios";
-import { fetchcategory } from "../../../store/Slices/categorySlice";
-import SearchResults from "./../SearchBar/SearchResults";
-import SearchCategories from "./../SearchBar/SearchCategories";
-import SearchHistory from "./../SearchBar/SearchHistory";
+import { fetchcategory } from "../../store/Slices/categorySlice";
+import SearchResults from "../SearchBar/SearchResults";
+import SearchCategories from "../SearchBar/SearchCategories";
+import SearchHistory from "../SearchBar/SearchHistory";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import GlobalHeader from "../../../components/Layout/GlobalHeader";
+import GlobalHeader from "../Layout/GlobalHeader";
 
 const SearchModal = ({ isModalVisible, closeSearchModal }) => {
   const dispatch = useDispatch();

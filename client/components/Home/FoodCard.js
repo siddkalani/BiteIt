@@ -5,14 +5,14 @@ import {
   addToCart,
   updateCartQuantity,
   removeFromCart,
-} from "../../../store/Slices/cartSlice"; // Adjust the path as needed
-import { FontFamily, FontSize } from "../../../GlobalStyles";
+} from "../../store/Slices/cartSlice"; // Adjust the path as needed
+import { FontFamily, FontSize } from "../../GlobalStyles";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Icon from "react-native-feather";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { BASE_URL } from "../../../constants/constant";
-import { saveCartToStorage } from "../../../utils/storageUtils"; // Adjust the path as needed
-import FoodItemModal from "./FoodItemModal"; // Import the modal here
+import { BASE_URL } from "../../constants/constant";
+import { saveCartToStorage } from "../../utils/storageUtils"; // Adjust the path as needed
+import FoodItemModal from "./FoodItemModal";
 
 const FoodCard = ({ foodItem }) => {
   const dispatch = useDispatch();

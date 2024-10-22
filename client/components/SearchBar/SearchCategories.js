@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { View, Text, ScrollView } from "react-native";
-import { FontFamily, FontSize } from "../../../GlobalStyles";
+import { FontFamily, FontSize } from "../../GlobalStyles";
 import { useDispatch, useSelector } from "react-redux";
 import CategoryCard from "./CategoryCard";
-import { fetchcategory } from "../../../store/Slices/categorySlice";
+import { fetchcategory } from "../../store/Slices/categorySlice";
 
 const SearchCategories = () => {
   const dispatch = useDispatch();

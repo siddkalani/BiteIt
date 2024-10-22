@@ -1,8 +1,8 @@
 import React from "react";
 import { View, Text, FlatList, Image, TouchableOpacity } from "react-native";
 import * as Icon from "react-native-feather";
-import { FontFamily, FontSize } from "../../../GlobalStyles";
-import { BASE_URL } from "../../../constants/constant";
+import { FontFamily, FontSize } from "../../GlobalStyles";
+import { BASE_URL } from "../../constants/constant";
 
 const SearchHistory = ({ searchHistory, removeSearchItem }) => {
   return (

@@ -8,9 +8,9 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { FontFamily, FontSize } from "../../../GlobalStyles";
-import { BASE_URL } from "../../../constants/constant";
-import { fetchcategory } from "../../../store/Slices/categorySlice";
+import { FontFamily, FontSize } from "../../GlobalStyles";
+import { BASE_URL } from "../../constants/constant";
+import { fetchcategory } from "../../store/Slices/categorySlice";
 import { useNavigation } from "@react-navigation/native";
 
 const Categories = () => {

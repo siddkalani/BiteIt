@@ -1,8 +1,8 @@
 import React from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
-import { FontFamily, FontSize } from "../../../GlobalStyles";
+import { FontFamily, FontSize } from "../../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
-import { BASE_URL } from "../../../constants/constant";
+import { BASE_URL } from "../../constants/constant";
 
 const CategoryCard = ({ category }) => {
   const navigation = useNavigation();
