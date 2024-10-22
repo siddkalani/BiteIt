@@ -6,22 +6,20 @@ import { useDispatch } from "react-redux";
 // import { logoutUser } from "./store/Slices/userDetailSlice";
 import SignIn from "./screens/UserAuth/SignIn";
 import LogIn from "./screens/UserAuth/LogIn";
-import Home from "./screens/Main/Home/Home";
+import Home from "./screens/Home/Home";
 import OTP from "./screens/UserAuth/Otp";
 import NewUser from "./screens/UserAuth/NewUser";
-import FoodItem from "./screens/Main/FoodItem/FoodItem";
 import AdminHome from "./screens/Admin/Screens/AdminHome/AdminHome";
 import OldAdmin from "./screens/Admin/AdminHome";
-import SearchResults from "./screens/Main/SearchBar/SearchResults";
+import SearchResults from "./components/SearchBar/SearchResults";
 import HomeCategory from "./screens/Categories/HomeCategory";
 import CartPage from "./screens/Cart/CartPage";
-import OrderHistoryPage from "./screens/Cart/OrderHistoryPage";
+import OrderHistoryPage from "./screens/OrderHistory/OrderHistoryPage";
 import PendingOrders from "./screens/Admin/PendingOrder";
-import Profile from "./screens/profile/Profile";
-import PaymentService from "./screens/payment/PaymentService";
+import Profile from "./screens/Profile/Profile";
+import PaymentService from "./screens/Payment/PaymentService";
 import Intro1 from "./screens/Intro/Intro1";
-import KeyboardTestComponent from "./components/KeyboardTest";
-import PaymentOption from "./screens/payment/PaymentOption";
+import PaymentOption from "./screens/Payment/PaymentOption";
 import FacultyLogin from "./screens/UserAuth/FacultyLogin";
 import Inventory from "./screens/Admin/Screens/Inventory/Inventory";
 import AdminAccount from "./screens/Admin/Screens/AdminAccount/AdminAccount";
@@ -29,12 +27,11 @@ import Bills from "./screens/Admin/Screens/Bills/Bills";
 import AdminFooter from "./screens/Admin/Screens/AdminLayout/AdminTabs";
 import AdminLayout from "./screens/Admin/Screens/AdminLayout/AdminLayout";
 import AdminTabs from "./screens/Admin/Screens/AdminLayout/AdminTabs";
-import Footer from "./screens/Main/Home/ClientTabs";
-import ClientTabs from "./screens/Main/Home/ClientTabs";
-import Account from "./screens/account/Account";
-import ProfilePage from "./screens/profile/Profile";
+import ClientTabs from "./components/TabNavigator/ClientTabs";
+import Account from "./screens/Account/Account";
+import ProfilePage from "./screens/Profile/Profile";
 import OrderTracking from "./screens/OrderTracking/OrderTracking";
-import PaymentConfirmation from "./screens/payment/PaymentConfirmation";
+import PaymentConfirmation from "./screens/Payment/PaymentConfirmation";
 import CreateAccount from "./screens/UserAuth/CreateAccount";
 
 const Stack = createNativeStackNavigator();
@@ -70,25 +67,24 @@ function AppNavigator() {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {/* <Stack.Screen name="Intro" component={Intro1} /> */}
-        {/* {/* <Stack.Screen name="SignIn" component={SignIn} />  */}
-        {/* <Stack.Screen name="CreateAccount" component={CreateAccount} />
+        {/* <Stack.Screen name="SignIn" component={SignIn} /> 
+        <Stack.Screen name="CreateAccount" component={CreateAccount} />
         <Stack.Screen name="LogIn" component={LogIn} />
         <Stack.Screen name="FacultyLogin" component={FacultyLogin} />
         <Stack.Screen name="Otp" component={OTP} />   */}
-        {/* <Stack.Screen name="NewUser" component={NewUser} />  */}
-        {/* <Stack.Screen name="ClientTabs" component={ClientTabs} />
+        {/* {/* <Stack.Screen name="NewUser" component={NewUser} />  */}
+        <Stack.Screen name="ClientTabs" component={ClientTabs} />
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Account" component={Account} />
         <Stack.Screen name="ProfilePage" component={ProfilePage} />
         <Stack.Screen name="HomeCategory" component={HomeCategory} />
         <Stack.Screen name="SearchResults" component={SearchResults} />
-        <Stack.Screen name="FoodItem" component={FoodItem} />
         <Stack.Screen name="CartPage" component={CartPage} />
         <Stack.Screen name="OrderHistory" component={OrderHistoryPage} />
         <Stack.Screen name="PendingOrder" component={PendingOrders} />
         <Stack.Screen name="PaymentService" component={PaymentService} />
         <Stack.Screen name="PaymentOption" component={PaymentOption} />
-         */}
+        
         {/* <Stack.Screen name="PaymentConfirmation" component={PaymentConfirmation} /> */}
         {/* <Stack.Screen name="OrderTracking" component={OrderTracking} /> */}
 
