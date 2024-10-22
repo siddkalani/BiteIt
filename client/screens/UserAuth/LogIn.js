@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import {
   StatusBar,
   Pressable,
@@ -29,6 +29,8 @@ const LogIn = () => {
   const handleLogin = () => {
     navigation.navigate("CreateAccount");
   };
+  
+
 
   // Navigation to "Forgot Password" screen
   const handleForgotPassword = () => {
@@ -157,7 +159,7 @@ const LogIn = () => {
           >
             <Pressable
               className="p-3 justify-center items-center"
-              onPress={handleLogin}
+              onPress={() => promptAsync()}
             >
               <Text
                 className="text-white"
@@ -166,7 +168,7 @@ const LogIn = () => {
                   fontSize: FontSize.size_lg,
                 }}
               >
-                Continue
+               FacultyLogin
               </Text>
             </Pressable>
           </LinearGradient>

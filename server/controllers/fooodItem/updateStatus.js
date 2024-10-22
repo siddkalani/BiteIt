@@ -1,7 +1,6 @@
 // controllers/foodItemController.js
 const FoodItem = require('../../models/foodItemModel');
 
-// Function to update the 'isOnline' status of a food item
 const updateFoodItemStatus = async (req, res) => {
   try {
     const { itemId, isOnline } = req.body; // Extract itemId and new status from request body
