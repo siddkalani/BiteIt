@@ -11,13 +11,17 @@ import * as IconF from "react-native-feather";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import GlobalHeader from "../../components/Layout/GlobalHeader";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import axios from "axios";
+import { BASE_URL } from "../../constants/constant";
 
 const CreateAccount = () => {
     const navigation = useNavigation();
     const [formData, setFormData] = useState({ name: "", phone: "", email: "", password: "" });
     const [isPasswordHidden, setIsPasswordHidden] = useState(true);
 
-    const handleInputChange = (field, value) => setFormData({ ...formData, [field]: value });
+    const handleInputChange = (field, value) => {
+        const updatedValue = field === "email" ? value.toLowerCase() : value;
+        setFormData({ ...formData, [field]: value })};
     const togglePasswordVisibility = () => setIsPasswordHidden(!isPasswordHidden);
 
     const renderIcon = (iconName) => {
@@ -34,6 +38,20 @@ const CreateAccount = () => {
 
 
     const { top, bottom } = useSafeAreaInsets();
+
+    const handleSubmit = async () => {
+        try {
+          const response = await axios.post(`${BASE_URL}/faculty/register`, formData);
+          // Handle success, e.g., navigate to the OTP screen
+          console.log(response.data);
+          navigation.navigate("Otp", { email: formData.email });
+
+        } catch (error) {
+          // Handle error
+          console.error(error.response ? error.response.data : error.message);
+        }
+      };
+
     return (
         <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
             <SafeAreaView style={{
@@ -52,7 +70,7 @@ const CreateAccount = () => {
                     <View className='space-y-2'>
                         <View>
                             <Text style={styles.headerText} className='text-xl'>Create Account</Text>
-                            <Text style={styles.subHeaderText} className="text-[#868889] mt-[-4]">Quickly create </Text>
+                            {/* <Text style={styles.subHeaderText} className="text-[#868889] mt-[-4]">Quickly create </Text> */}
                         </View>
 
                         <View className="space-y-2">
@@ -80,7 +98,7 @@ const CreateAccount = () => {
 
                     <View className='mt-4 space-y-1'>
                         <LinearGradient colors={["#007022", "#54d17a", "#bcffd0"]} start={{ x: 0, y: 1 }} end={{ x: 1.9, y: 0 }} className="rounded-xl">
-                            <Pressable className="p-3 justify-center items-center" onPress={() => navigation.navigate("Otp")}>
+                            <Pressable className="p-3 justify-center items-center" onPress={handleSubmit}>
                                 <Text style={styles.buttonText}>Continue</Text>
                             </Pressable>
                         </LinearGradient>

@@ -20,27 +20,87 @@ import * as IconF from "react-native-feather";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import GlobalHeader from "../../components/Layout/GlobalHeader";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import axios from "axios";
+import { BASE_URL } from "../../constants/constant";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Notifications from "expo-notifications";
 
 const LogIn = () => {
   const navigation = useNavigation();
-  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   // Dummy navigation for continue button
-  const handleLogin = () => {
-    navigation.navigate("CreateAccount");
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post(`${BASE_URL}/faculty/login`, {
+        email,
+        password,
+      });
+      const data = response.data;
+      // Handle success, e.g., navigate to the dashboard or home screen
+      if (response.status === 200) {
+           await AsyncStorage.setItem("userToken", data.token);
+        await AsyncStorage.setItem("userName", data.user.name);
+        await AsyncStorage.setItem("userId", data.user.id);
+        console.log(response.data); 
+         await postPushToken();
+navigation.navigate("ClientTabs")
+      }
+    } catch (error) {
+      console.error("Login Error:", error);
+      if (error.response) {
+        Alert.alert("Error", error.response.data.message || "Login failed.");
+      } else {
+        Alert.alert("Error", "Network error. Please try again.");
+      }
+    }
   };
   
 
-
-  // Navigation to "Forgot Password" screen
   const handleForgotPassword = () => {
     navigation.navigate("ForgotPassword");
   };
 
-  // Navigation to "Sign up" screen
   const handleSignUp = () => {
     navigation.navigate("CreateAccount");
   };
+
+  const postPushToken = async () => {
+    try {
+      const userId = await AsyncStorage.getItem("userId");
+      const pushToken = await getPushTokenFromDevice();
+
+      const response = await axios.post(`${BASE_URL}/user/pushToken`, {
+        userId,
+        token: pushToken,
+      });
+
+      console.log("Push token posted successfully:", response.data);
+    } catch (error) {
+      console.error("Error posting push token to backend:", error);
+    }
+  };
+
+  const getPushTokenFromDevice = async () => {
+    const { status: existingStatus } =
+      await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+
+    if (existingStatus !== "granted") {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+
+    if (finalStatus !== "granted") {
+      Alert.alert("Failed to get push token for push notification!");
+      return;
+    }
+
+    const tokenData = await Notifications.getExpoPushTokenAsync();
+    return tokenData.data;
+  };
+
 
   const { top, bottom } = useSafeAreaInsets();
   return (
@@ -100,9 +160,9 @@ const LogIn = () => {
               </View>
               <TextInput
                 placeholder="Enter mail"
-                value={phone}
-                onChangeText={setPhone}
-                keyboardType="phone-pad"
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="default"
                 style={{
                   fontFamily: FontFamily.poppinsRegular,
                   fontSize: FontSize.size_mini,
@@ -124,9 +184,9 @@ const LogIn = () => {
               </View>
               <TextInput
                 placeholder="Password"
-                value={phone}
-                onChangeText={setPhone}
-                keyboardType="phone-pad"
+                value={password}
+                onChangeText={setPassword}
+                keyboardType="default"
                 style={{
                   fontFamily: FontFamily.poppinsRegular,
                   fontSize: FontSize.size_mini,
@@ -159,7 +219,7 @@ const LogIn = () => {
           >
             <Pressable
               className="p-3 justify-center items-center"
-              onPress={() => promptAsync()}
+              onPress={handleLogin}
             >
               <Text
                 className="text-white"

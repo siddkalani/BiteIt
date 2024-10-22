@@ -28,7 +28,8 @@ const OTP = () => {
   const navigation = useNavigation();
   const route = useRoute();
 
-  const phone = route.params?.phone;
+  const email = route.params?.email;
+  // const phone = route.params?.phone;
 
   const handleChangeText = (text, index) => {
     let newOtp = [...otp];
@@ -54,66 +55,93 @@ const OTP = () => {
     navigation.navigate("LogIn");
   };
 
+  // const handleVerify = async () => {
+  //   try {
+  //     const response = await axios.post(`${BASE_URL}/user/verify/phone/otp`, {
+  //       phone: phone,
+  //       otp: otp.join(""),
+  //     });
+  //     const data = response.data;
+
+  //     if (
+  //       response.status === 200 &&
+  //       data.message === "User phone verified successfully!"
+  //     ) {
+  //       await AsyncStorage.setItem("userToken", data.token);
+  //       await AsyncStorage.setItem("userName", data.user.name);
+  //       await AsyncStorage.setItem("userId", data.user.id);
+  //       console.log(data.token);
+  //       await postPushToken();
+  //       navigation.replace("ClientTabs");
+  //     } else if (
+  //       response.status === 200 &&
+  //       data.message === "Admin phone verified successfully!"
+  //     ) {
+  //       await AsyncStorage.setItem("adminToken", data.token);
+
+  //       if (data.admin?.name) {
+  //         await AsyncStorage.setItem("adminName", data.admin.name);
+  //       }
+  //       await AsyncStorage.setItem("adminId", data.admin?.id || "");
+  //       await postPushToken();
+  //       navigation.replace("AdminTabs");
+  //     } else if (
+  //       response.status === 400 &&
+  //       data.error === "Name is required for new users"
+  //     ) {
+  //       navigation.replace("NewUser", { phone: phone, otp: otp.join("") });
+  //     } else {
+  //       Alert.alert("Error", "Invalid OTP");
+  //     }
+  //   } catch (error) {
+  //     console.error("Verification Error:", error);
+  //     if (error.response) {
+  //       const errorData = error.response.data;
+  //       const errorStatus = error.response.status;
+  //       if (
+  //         errorStatus === 400 &&
+  //         errorData.error === "Name is required for new users"
+  //       ) {
+  //         navigation.replace("NewUser", { phone: phone, otp: otp.join("") });
+  //       } else {
+  //         Alert.alert("Error", "Failed to verify OTP");
+  //       }
+  //     } else {
+  //       Alert.alert("Error", "Network Error. Please try again.");
+  //     }
+  //   }
+  // };
+
   const handleVerify = async () => {
     try {
-      const response = await axios.post(`${BASE_URL}/user/verify/phone/otp`, {
-        phone: phone,
+      const response = await axios.post(`${BASE_URL}/faculty/verify/otp`, {
+        email: email,
         otp: otp.join(""),
       });
       const data = response.data;
 
       if (
         response.status === 200 &&
-        data.message === "User phone verified successfully!"
+        data.message === "Email verified successfully."
       ) {
-        await AsyncStorage.setItem("userToken", data.token);
-        await AsyncStorage.setItem("userName", data.user.name);
-        await AsyncStorage.setItem("userId", data.user.id);
-        console.log(data.token);
-        await postPushToken();
-        navigation.replace("ClientTabs");
-      } else if (
-        response.status === 200 &&
-        data.message === "Admin phone verified successfully!"
-      ) {
-        await AsyncStorage.setItem("adminToken", data.token);
-
-        if (data.admin?.name) {
-          await AsyncStorage.setItem("adminName", data.admin.name);
-        }
-        await AsyncStorage.setItem("adminId", data.admin?.id || "");
-        await postPushToken();
-        navigation.replace("AdminTabs");
-      } else if (
-        response.status === 400 &&
-        data.error === "Name is required for new users"
-      ) {
-        navigation.replace("NewUser", { phone: phone, otp: otp.join("") });
+     
+        // console.log(data.token);
+       
+        navigation.replace("Login");
       } else {
-        Alert.alert("Error", "Invalid OTP");
+        Alert.alert("Verification Failed", data.message || "An unknown error occurred.");
       }
     } catch (error) {
       console.error("Verification Error:", error);
       if (error.response) {
         const errorData = error.response.data;
-        const errorStatus = error.response.status;
-        if (
-          errorStatus === 400 &&
-          errorData.error === "Name is required for new users"
-        ) {
-          navigation.replace("NewUser", { phone: phone, otp: otp.join("") });
-        } else {
-          Alert.alert("Error", "Failed to verify OTP");
-        }
+        Alert.alert("Verification Error", errorData.message || "An error occurred during verification.");
       } else {
         Alert.alert("Error", "Network Error. Please try again.");
       }
     }
   };
 
-  // const handleVerify = () => {
-  //   navigation.navigate("ClientTabs");
-  // }
   const postPushToken = async () => {
     try {
       const userId = await AsyncStorage.getItem("userId");
@@ -168,7 +196,7 @@ const OTP = () => {
         <View className="items-center">
           <Text className="text-2xl font-bold">OTP Verification</Text>
           <Text className="text-base text-gray-500">
-            Verification code sent to +91{phone}
+            Verification code sent to {email}
           </Text>
         </View>
 

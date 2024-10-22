@@ -101,20 +101,20 @@ const loginFaculty = asyncHandler(async (req, res) => {
     }
 
     // Create JWT token
-    const accessToken = jwt.sign(
-      {
-        user: {
-          name: faculty.name,
-          email: faculty.email,
-          user_id: faculty._id, 
-        },
+    const token = jwt.sign({ id: faculty._id }, process.env.ACCESSTOKEN_SECRET, {
+      expiresIn: "3h",
+    });
+
+    return res.status(200).json({
+      message: "Login Successfull!",
+      token,
+      user: {
+        id: faculty._id,
+        name: faculty.name,
       },
-      process.env.ACCESSTOKEN_SECRET,
-      { expiresIn: "30m" }
-    );
+    });
 
     // Respond with success and token
-    return res.status(200).json({ message: "Logged In", accessToken });
   } catch (error) {
     console.error("Error logging in faculty:", error);
     return res.status(500).json({ message: "Internal server error." });
