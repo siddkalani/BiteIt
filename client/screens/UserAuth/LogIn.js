@@ -9,119 +9,68 @@ import {
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  SafeAreaView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { FontFamily, FontSize } from "../../GlobalStyles";
-import { useDispatch, useSelector } from "react-redux";
-// import { loginUser } from "../../../store/Slices/userDetailSlice";
-import { AntDesign } from '@expo/vector-icons'; // To use arrow icon
-import { TouchableOpacity } from "react-native";
-import * as Google from "expo-auth-session/providers/google";
-import * as WebBrowser from "expo-web-browser";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { BASE_URL } from "../../constants/constant";
-
-
-WebBrowser.maybeCompleteAuthSession();
+import * as IconF from "react-native-feather";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import GlobalHeader from "../../components/Layout/GlobalHeader";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const LogIn = () => {
   const navigation = useNavigation();
- 
-  const [userInfo, setUserInfo] = useState(null);
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    androidClientId: "719859135966-8gls5oiqt6hkavhqr7jugf6tl33osbgr.apps.googleusercontent.com",
-    iosClientId: "719859135966-5sitmd20k7rl8e453b3l9p8s7fop58le.apps.googleusercontent.com",
-    webClientId: "719859135966-1mhgra987t2htp3g7brnuatu65q45gnh.apps.googleusercontent.com",
-  });
+  const [phone, setPhone] = useState("");
 
-  useEffect(() => {
-    handleGoogleLogin();
-  }, [response]);
-
-  async function handleGoogleLogin() {
-    const user = await AsyncStorage.getItem("@user");
-    if (!user) {
-      if (response?.type === "success") {
-        await getUserInfo(response.authentication.accessToken);
-      }
-    } else {
-      setUserInfo(JSON.parse(user));
-    }
-  }
-
-  const getUserInfo = async (token) => {
-    if (!token) return;
-    try {
-      const response = await fetch("https://www.googleapis.com/userinfo/v2/me", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      
-      const user = await response.json();
-      await AsyncStorage.setItem("@user", JSON.stringify(user));
-      setUserInfo(user);
-
-      // Send email to backend for validation
-      await validateUser(user.email);
-      
-    } catch (error) {
-      console.error("Error fetching user info: ", error);
-    }
-  };
-
-  const validateUser = async (email) => {
-    try {
-      const response = await fetch(`${BASE_URL}/faculty/login`, { // Replace with your backend URL
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
-      
-      const data = await response.json();
-
-  
-      if (data && data.message === "Login successful") {
-        await AsyncStorage.setItem("userId", data.facultyId);
-        await AsyncStorage.setItem("userToken", data.token);
-
-        await AsyncStorage.removeItem("@user");
-        
-        navigation.navigate("ClientTabs");
-      } else if (data && data.message) {
-        Alert.alert("Error", data.message);
-      } else {
-        Alert.alert("Error", "An unexpected error occurred.");
-      }
-    } catch (error) {
-      console.error("Error validating user: ", error);
-      Alert.alert("Error", "There was a problem logging in. Please try again.");
-    }
+  // Dummy navigation for continue button
+  const handleLogin = () => {
+    navigation.navigate("CreateAccount");
   };
   
 
 
+  // Navigation to "Forgot Password" screen
+  const handleForgotPassword = () => {
+    navigation.navigate("ForgotPassword");
+  };
+
+  // Navigation to "Sign up" screen
+  const handleSignUp = () => {
+    navigation.navigate("CreateAccount");
+  };
+
+  const { top, bottom } = useSafeAreaInsets();
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"} // Avoid scrolling when keyboard appears
       style={{ flex: 1 }}
     >
-      <View className="flex-1 bg-[#F4F5F9]">
+      <SafeAreaView  style={{
+            flex: 1,
+            paddingTop: Platform.OS === "ios" ? 0 : StatusBar.currentHeight,
+            paddingBottom: Platform.OS === "ios" ? 0 : bottom,
+          }} className="flex-1 bg-[#F4F5F9]">
         <StatusBar translucent backgroundColor="transparent" />
+        <View className="bg-transparent px-4 py-3 z-[100]">
+          <GlobalHeader title="Welcome" backgroundColor={'transparent'} textColor={'text-white'} iconColor={'white'} />
+        </View>
         <View className="absolute top-0 left-0 right-0 bottom-0">
           <Image
             source={require("../../assets/images/signIn/signIn.png")}
             style={{ resizeMode: "cover", height: "100%", width: "100%" }}
           />
         </View>
-        <View className="absolute bottom-0 w-full flex-1 bg-[#F4F5F9] rounded-t-2xl px-4 py-6 space-y-5">
+        <View className="absolute bottom-0 w-full flex-1 bg-[#F4F5F9] rounded-t-2xl px-4 py-6 space-y-2">
           <View>
             <Text
               style={{
                 fontFamily: FontFamily.poppinsBold,
                 fontSize: FontSize.textRegularLowercase_size,
               }}
+              className={`text-xl`}
             >
               Welcome back!
             </Text>
@@ -137,20 +86,68 @@ const LogIn = () => {
           </View>
 
           {/* Faculty Login Option */}
-          <TouchableOpacity
-           onPress={() => promptAsync()}
-            style={[styles.facultyLoginContainer, styles.inputContainer]}
-          >
+          <View className="space-y-2">
+            <View style={styles.inputContainer} className="space-x-2">
+              <View
+                className="text-green-700"
+                style={{
+                  fontFamily: FontFamily.poppinsRegular,
+                  fontSize: FontSize.size_mini,
+                  fontWeight: 600,
+                }}
+              >
+                <IconF.Mail width={20} height={20} stroke="gray" />
+              </View>
+              <TextInput
+                placeholder="Enter mail"
+                value={phone}
+                onChangeText={setPhone}
+                keyboardType="phone-pad"
+                style={{
+                  fontFamily: FontFamily.poppinsRegular,
+                  fontSize: FontSize.size_mini,
+                }}
+                className="flex-1"
+              />
+            </View>
+
+            <View style={styles.inputContainer} className="space-x-2">
+              <View
+                className="text-green-700"
+                style={{
+                  fontFamily: FontFamily.poppinsRegular,
+                  fontSize: FontSize.size_mini,
+                  fontWeight: 600,
+                }}
+              >
+                <IconF.Lock width={20} height={20} stroke="gray" />
+              </View>
+              <TextInput
+                placeholder="Password"
+                value={phone}
+                onChangeText={setPhone}
+                keyboardType="phone-pad"
+                style={{
+                  fontFamily: FontFamily.poppinsRegular,
+                  fontSize: FontSize.size_mini,
+                }}
+                className="flex-1"
+              />
+            </View>
+          </View>
+
+          {/* Forgot Password */}
+          <TouchableOpacity onPress={handleForgotPassword}>
             <Text
               style={{
                 fontFamily: FontFamily.poppinsRegular,
                 fontSize: FontSize.size_mini,
-                fontWeight: 600,
+                color: '#0070FF', // Blue color
+                textAlign: 'right',
               }}
             >
-              Faculty Login
+              Forgot password?
             </Text>
-            <AntDesign name="right" size={20} color="black" />
           </TouchableOpacity>
 
           {/* Continue Button */}
@@ -175,8 +172,32 @@ const LogIn = () => {
               </Text>
             </Pressable>
           </LinearGradient>
+
+          {/* Sign Up Option */}
+          <View style={styles.signUpContainer}>
+            <Text
+              style={{
+                fontFamily: FontFamily.poppinsRegular,
+                fontSize: FontSize.size_mini,
+                color: '#868889',
+              }}
+            >
+              Don’t have an account?{" "}
+            </Text>
+            <TouchableOpacity onPress={handleSignUp}>
+              <Text
+                style={{
+                  fontFamily: FontFamily.poppinsSemiBold,
+                  fontSize: FontSize.size_mini,
+                  color: '#0070FF', // Blue color
+                }}
+              >
+                Sign up
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
+      </SafeAreaView>
     </KeyboardAvoidingView>
   );
 };
@@ -185,14 +206,14 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: 'center',
     backgroundColor: "#FFFFFF",
     padding: 10,
     borderRadius: 8,
   },
-  facultyLoginContainer: {
-    justifyContent: "space-between",
-    paddingHorizontal: 15,
-    marginVertical: 10,
+  signUpContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
   },
 });
 

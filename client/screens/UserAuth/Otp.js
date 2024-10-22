@@ -18,6 +18,8 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import * as Notifications from "expo-notifications";
 
 import { BASE_URL } from "../../constants/constant";
+import GlobalHeader from "../../components/Layout/GlobalHeader";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const OTP = () => {
   const [otp, setOtp] = useState(["", "", "", "", ""]);
@@ -49,7 +51,7 @@ const OTP = () => {
   };
 
   const handleBackPress = () => {
-    navigation.navigate("SignIn");
+    navigation.navigate("LogIn");
   };
 
   const handleVerify = async () => {
@@ -147,17 +149,21 @@ const OTP = () => {
     return tokenData.data;
   };
 
+  const { top, bottom } = useSafeAreaInsets();
   return (
-    <SafeAreaView
-      className={`flex-1 bg-white ${
-        Platform.OS === "android" ? `pt-[${StatusBar.currentHeight}px]` : ""
-      }`}
+    <SafeAreaView style={{
+      flex: 1,
+      paddingTop: Platform.OS === "ios" ? 0 : StatusBar.currentHeight,
+      paddingBottom: Platform.OS === "ios" ? 0 : bottom,
+    }}
+     className='bg-white flex-1'
     >
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
-      <View className="flex-1 px-5 space-y-8">
-        <TouchableOpacity onPress={handleBackPress} className="my-5">
-          <Ionicons name="arrow-back" size={24} color="black" />
-        </TouchableOpacity>
+      <View className="bg-white px-4 py-3 ">
+          <GlobalHeader title="" />
+        </View>
+      <View className="flex-1 px-5 space-y-8 mt-4">
+     
 
         <View className="items-center">
           <Text className="text-2xl font-bold">OTP Verification</Text>

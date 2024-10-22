@@ -127,9 +127,6 @@ const SearchResults = ({
               <Icon.Plus width={15} height={15} stroke="white" strokeWidth={3}/>
               <Text
                 className="text-white ml-1 font-bold"
-                // style={{
-                //   fontFamily: FontFamily.poppinsMedium,
-                // }}
               >
                 Add
               </Text>

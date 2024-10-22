@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -9,33 +9,35 @@ import {
 import { FontFamily, FontSize } from "../../../GlobalStyles";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Icon from "react-native-feather";
-import { useNavigation } from "@react-navigation/native";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import { BASE_URL } from "../../../constants/constant";
 import { saveCartToStorage } from "../../../utils/storageUtils"; // Adjust the path as needed
+import FoodItemModal from "./FoodItemModal"; // Import the modal here
 
 const FoodCard = ({ foodItem }) => {
-  const navigation = useNavigation();
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart);
+
+  const [isModalVisible, setModalVisible] = useState(false); // State for modal visibility
 
   const itemInCart = cartItems.find((item) => item._id === foodItem._id);
 
   const handleAddToCart = () => {
     if (foodItem.isOnline === 'true') {
       dispatch(addToCart(foodItem));
-      saveCartToStorage(cartItems); 
+      saveCartToStorage(cartItems);
     }
   };
 
   const handleIncrement = () => {
-    if (itemInCart && foodItem.isOnline === 'true' > itemInCart.quantity) {
+    if (itemInCart && foodItem.isOnline === 'true' && itemInCart.quantity < foodItem.stock) {
       dispatch(
         updateCartQuantity({
           itemId: foodItem._id,
           quantity: itemInCart.quantity + 1,
         })
       );
-      saveCartToStorage(cartItems); 
+      saveCartToStorage(cartItems);
     }
   };
 
@@ -57,13 +59,34 @@ const FoodCard = ({ foodItem }) => {
   return (
     <View className="bg-white rounded-lg w-full items-center space-y-1 flex-1">
       {/* Food Image */}
-      <Image
-        source={{ uri: `${BASE_URL}/items_uploads/${foodItem.image}` }}
-        style={{ width: "100%", height: 100, borderRadius: 8 }}
-      />
+      <TouchableOpacity
+        onPress={() => setModalVisible(true)} // Open modal on image press
+        className='w-full'
+      >
+        <View style={{ position: 'relative', width: '100%', height: 100 }}>
+          <Image
+            source={{ uri: `${BASE_URL}/items_uploads/${foodItem.image}` }}
+            style={{ width: "100%", height: 100, borderRadius: 8 }}
+          />
+
+          {/* Arrow-back icon positioned inside the image */}
+          <Ionicons
+            name="information-circle-outline"
+            size={24}
+            color="white" // White to contrast against the image
+            style={{
+              position: 'absolute',
+              top: 10, // Adjust as needed
+              right: 10, // Adjust as needed
+              zIndex: 1, // Ensure the icon is above the image
+            }}
+          />
+        </View>
+      </TouchableOpacity>
+
 
       {/* Food Name and Price */}
-      <View className="w-full items-center flex-row justify-between">
+      <View className="w-full items-center flex-col justify-between">
         <Text
           style={{
             fontFamily: FontFamily.poppinsMedium,
@@ -73,33 +96,36 @@ const FoodCard = ({ foodItem }) => {
           {foodItem.itemName}
         </Text>
 
-        {/* Info Icon and Time Text */}
-        <View className="flex-row items-center justify-center space-x-1">
-          <View>
-            <Icon.Clock width={12} height={12} stroke="gray" />
-          </View>
-          <View className="justify-center items-center">
-            <Text
-              style={{ color: "gray" }}
-              className="text-xs text-center"
-            >
+        {/* Star Rating and Info */}
+        <View className="flex-row items-center space-x-1">
+          {/* Star Rating */}
+          <Ionicons name="star" size={13} color="#FFD700" />
+          <Text className="text-xs text-gray-600">3.7</Text>
+
+          {/* Separator */}
+          <Text className="text-xs text-gray-500 ml-1">|</Text>
+
+          {/* Info */}
+          <TouchableOpacity className='flex-row items-center ml-1'>
+            <Ionicons name="time" size={13} color="#FFD700" />
+            <Text className="text-xs text-gray-600" style={{ fontFamily: FontFamily.poppinsMedium, marginLeft: 2 }}>
               15 mins
             </Text>
-          </View>
+          </TouchableOpacity>
         </View>
       </View>
 
       <Text
         style={{
-          color: foodItem.isOnline === 'true' ? "green" : "red",
+          color: foodItem.isOnline === 'true' ? "green" : "green",
           fontSize: 16,
         }}
-        className="font-bold"
+        className={`font-bold ${foodItem.isOnline === 'true'? '':''}`}
       >
         ${foodItem.itemPrice}
       </Text>
 
-      {/* Add to Cart / Increment Decrement or Not Available shreya part: add stock logic here and cart page fooditems in categories page etc */ }
+      {/* Add to Cart / Increment Decrement */}
       {foodItem.isOnline === "true" ? (
         itemInCart ? (
           <View className="flex-row items-center space-x-2">
@@ -159,10 +185,11 @@ const FoodCard = ({ foodItem }) => {
       ) : (
         <Text className="text-red-500 font-semibold">Not Available</Text>
       )}
+
+      {/* Food Item Modal */}
+      <FoodItemModal isVisible={isModalVisible} onClose={() => setModalVisible(false)} />
     </View>
   );
-
- 
 };
 
 export default FoodCard;
