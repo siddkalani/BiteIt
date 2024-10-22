@@ -6,8 +6,8 @@ import FloatingCartBar from '../../screens/Cart/FloatingCart';
 import Home from '../../screens/Home/Home';
 import CartPage from '../../screens/Cart/CartPage';
 import OrderHistoryPage from '../../screens/OrderHistory/OrderHistoryPage';
-import ProfilePage from '../../screens/Profile/Profile';
-import Account from '../../screens/Account/Account';
+import ProfilePage from '../../screens/profile/Profile';
+import Account from '../../screens/account/Account';
 import { selectItemCount } from '../../store/Slices/cartSlice';
 import { useSelector } from 'react-redux';
 

@@ -30,14 +30,13 @@ const FoodCard = ({ foodItem }) => {
   };
 
   const handleIncrement = () => {
-    if (itemInCart && foodItem.isOnline === 'true' && itemInCart.quantity < foodItem.stock) {
+    if (itemInCart) {
       dispatch(
         updateCartQuantity({
           itemId: foodItem._id,
           quantity: itemInCart.quantity + 1,
         })
       );
-      saveCartToStorage(cartItems);
     }
   };
 
