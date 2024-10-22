@@ -16,7 +16,6 @@ import HomeCategory from "./screens/Categories/HomeCategory";
 import CartPage from "./screens/Cart/CartPage";
 import OrderHistoryPage from "./screens/OrderHistory/OrderHistoryPage";
 import PendingOrders from "./screens/Admin/PendingOrder";
-import Profile from "./screens/Profile/Profile";
 import PaymentService from "./screens/Payment/PaymentService";
 import Intro1 from "./screens/Intro/Intro1";
 import PaymentOption from "./screens/Payment/PaymentOption";

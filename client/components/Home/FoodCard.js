@@ -23,21 +23,20 @@ const FoodCard = ({ foodItem }) => {
   const itemInCart = cartItems.find((item) => item._id === foodItem._id);
 
   const handleAddToCart = () => {
-    if (foodItem.isOnline === 'true') {
+   
       dispatch(addToCart(foodItem));
       saveCartToStorage(cartItems);
-    }
+    
   };
 
   const handleIncrement = () => {
-    if (itemInCart && foodItem.isOnline === 'true' && itemInCart.quantity < foodItem.stock) {
+    if (itemInCart) {
       dispatch(
         updateCartQuantity({
           itemId: foodItem._id,
           quantity: itemInCart.quantity + 1,
         })
       );
-      saveCartToStorage(cartItems);
     }
   };
 

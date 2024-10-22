@@ -20,6 +20,8 @@ const HEADER_HEIGHT = 100;
 const STICKY_SEARCH_THRESHOLD = HEADER_HEIGHT / 1.5;
 
 const Home = ({ setTabBarVisible }) => {
+  console.log(setTabBarVisible)
+
   const navigation = useNavigation();
   const { width: screenWidth } = Dimensions.get("window");
   const aspectRatio = 183 / 402;
