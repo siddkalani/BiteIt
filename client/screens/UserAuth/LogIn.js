@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import {
   StatusBar,
   Pressable,
@@ -19,41 +19,88 @@ import { AntDesign } from '@expo/vector-icons'; // To use arrow icon
 import { TouchableOpacity } from "react-native";
 import * as Google from "expo-auth-session/providers/google";
 import * as WebBrowser from "expo-web-browser";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { BASE_URL } from "../../constants/constant";
+
 
 WebBrowser.maybeCompleteAuthSession();
 
 const LogIn = () => {
   const navigation = useNavigation();
-  const loginStatus = useSelector((state) => state.users.loginStatus);
-  const loading = useSelector((state) => state.users.loading);
-  const error = useSelector((state) => state.users.error);
-
-  // Google Auth State
+ 
+  const [userInfo, setUserInfo] = useState(null);
   const [request, response, promptAsync] = Google.useAuthRequest({
-    clientId: '908599769443-pc2g0ipv4mqbuj5luio3d3ltdvcebnrm.apps.googleusercontent.com',
-    redirectUri: 'https://canteenApp.expoapp.com/__/auth/handler',
+    androidClientId: "719859135966-8gls5oiqt6hkavhqr7jugf6tl33osbgr.apps.googleusercontent.com",
+    iosClientId: "719859135966-5sitmd20k7rl8e453b3l9p8s7fop58le.apps.googleusercontent.com",
+    webClientId: "719859135966-1mhgra987t2htp3g7brnuatu65q45gnh.apps.googleusercontent.com",
   });
 
-  React.useEffect(() => {
-    if (response?.type === "success") {
-      const { authentication } = response;
-      // Handle authentication (e.g., store token, navigate, etc.)
-      Alert.alert("Success", "Logged in with Google!");
-      navigation.navigate("FacultyHome"); // Navigate to the next page
-    } else if (response?.type === "error") {
-      Alert.alert("Error", "Login failed. Please try again.");
-    }
+  useEffect(() => {
+    handleGoogleLogin();
   }, [response]);
 
-  // Handle Google Login
-  const handleFacultyLogin = () => {
-    promptAsync(); // Initiate Google Login
+  async function handleGoogleLogin() {
+    const user = await AsyncStorage.getItem("@user");
+    if (!user) {
+      if (response?.type === "success") {
+        await getUserInfo(response.authentication.accessToken);
+      }
+    } else {
+      setUserInfo(JSON.parse(user));
+    }
+  }
+
+  const getUserInfo = async (token) => {
+    if (!token) return;
+    try {
+      const response = await fetch("https://www.googleapis.com/userinfo/v2/me", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      
+      const user = await response.json();
+      await AsyncStorage.setItem("@user", JSON.stringify(user));
+      setUserInfo(user);
+
+      // Send email to backend for validation
+      await validateUser(user.email);
+      
+    } catch (error) {
+      console.error("Error fetching user info: ", error);
+    }
   };
 
-  // Dummy navigation for continue button
-  const handleLogin = () => {
-    navigation.navigate("Otp");
+  const validateUser = async (email) => {
+    try {
+      const response = await fetch(`${BASE_URL}/faculty/login`, { // Replace with your backend URL
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+      
+      const data = await response.json();
+
+  
+      if (data && data.message === "Login successful") {
+        await AsyncStorage.setItem("userId", data.facultyId);
+        await AsyncStorage.setItem("userToken", data.token);
+
+        await AsyncStorage.removeItem("@user");
+        
+        navigation.navigate("ClientTabs");
+      } else if (data && data.message) {
+        Alert.alert("Error", data.message);
+      } else {
+        Alert.alert("Error", "An unexpected error occurred.");
+      }
+    } catch (error) {
+      console.error("Error validating user: ", error);
+      Alert.alert("Error", "There was a problem logging in. Please try again.");
+    }
   };
+  
+
 
   return (
     <KeyboardAvoidingView
@@ -91,7 +138,7 @@ const LogIn = () => {
 
           {/* Faculty Login Option */}
           <TouchableOpacity
-            onPress={handleFacultyLogin} // Trigger Google Login
+           onPress={() => promptAsync()}
             style={[styles.facultyLoginContainer, styles.inputContainer]}
           >
             <Text
@@ -115,7 +162,7 @@ const LogIn = () => {
           >
             <Pressable
               className="p-3 justify-center items-center"
-              onPress={handleLogin}
+              onPress={() => promptAsync()}
             >
               <Text
                 className="text-white"
@@ -124,7 +171,7 @@ const LogIn = () => {
                   fontSize: FontSize.size_lg,
                 }}
               >
-                Continue
+               FacultyLogin
               </Text>
             </Pressable>
           </LinearGradient>

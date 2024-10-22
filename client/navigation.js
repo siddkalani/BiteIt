@@ -68,13 +68,13 @@ function AppNavigator() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {/* <Stack.Screen name="Intro" component={Intro1} /> */}
+        <Stack.Screen name="Intro" component={Intro1} />
         {/* <Stack.Screen name="Keyboard" component={KeyboardTestComponent} /> */}
-        {/* <Stack.Screen name="SignIn" component={SignIn} /> 
+        <Stack.Screen name="SignIn" component={SignIn} /> 
         <Stack.Screen name="LogIn" component={LogIn} />
         <Stack.Screen name="FacultyLogin" component={FacultyLogin} />
-        <Stack.Screen name="Otp" component={OTP} />  */}
-        {/* <Stack.Screen name="NewUser" component={NewUser} />  */}
+        <Stack.Screen name="Otp" component={OTP} /> 
+        <Stack.Screen name="NewUser" component={NewUser} /> 
         <Stack.Screen name="ClientTabs" component={ClientTabs} />
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Account" component={Account} />

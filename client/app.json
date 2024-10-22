@@ -21,7 +21,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.shreyaa03.canteenApp"
+      "package": "com.shreyaa03.canteexnApp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -38,7 +38,7 @@
     "updates": {
       "url": "https://u.expo.dev/5d4647bf-23f8-4d3b-884d-91e700f01c21"
     },
-    "scheme": "canteenapp"  
+    "scheme": "canteenpp"  
   
   }
 }
