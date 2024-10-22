@@ -1,22 +1,18 @@
 const mongoose = require("mongoose");
 
 const facultySchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  department: {
-    type: String,
-    required: true,
-  },
-  // Add other fields as necessary
-});
+  
+  email: { type: String, required: true, unique: true },
+  name: { type: String },
+  password: { type: String },
+  phone: { type: String },
+  isVerified: { type: Boolean, default: false },
+  otp: { type: String }, // for OTP verification
+  otpExpires: { type: Date } },
+  {
+    timestamps: true,
+  }
 
-const Faculty = mongoose.model("Faculty", facultySchema);
+);
 
-module.exports = Faculty;
+module.exports = mongoose.model("Faculty", facultySchema);
