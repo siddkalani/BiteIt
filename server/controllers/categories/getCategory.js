@@ -29,4 +29,18 @@ const getAllCategories = asyncHandler(async (req, res) => {
   res.status(200).json({ categories: categories });
 });
 
-module.exports = { getCategory, getAllCategories };
+// GET - /category/getAllWithFoodItems
+const getAllCategoriesWithFoodItems = asyncHandler(async (req, res) => {
+  // Find all categories and populate their foodItems
+  const categories = await Category.find().populate("foodItems");
+
+  if (!categories || categories.length === 0) {
+    res.status(404);
+    throw new Error("No categories found");
+  }
+
+  res.status(200).json({ message: "Categories with food items found", categories });
+});
+
+
+module.exports = { getCategory, getAllCategories, getAllCategoriesWithFoodItems };

@@ -1,8 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef , useEffect} from 'react';
 import { View, Text, Switch, ScrollView, TouchableOpacity, Dimensions, Animated, Platform, StatusBar, TextInput } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import * as IconF from 'react-native-feather';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { BASE_URL } from '../../../../constants/constant';
 
 const { width } = Dimensions.get('window');
 const paddingHorizontal = 16;
@@ -14,8 +16,8 @@ const Category = ({ categoryName, items }) => {
   const toggleCategory = () => {
     setIsOpen(!isOpen);
   };
-
-  return (
+  
+return (
     <View className="mb-4">
       <TouchableOpacity
         onPress={toggleCategory}
@@ -33,7 +35,7 @@ const Category = ({ categoryName, items }) => {
         <View className="bg-white">
           {items.map((item, index) => (
             <View key={index} className="flex-row justify-between items-center py-2 px-4 border-b border-gray-200">
-              <Text>{item.name}</Text>
+              <Text>{item.itemName}</Text>
               <Switch value={item.available} trackColor={{ false: '#767577', true: '#F59E0B' }} thumbColor="white" />
             </View>
           ))}
@@ -48,117 +50,49 @@ const Inventory = () => {
   const [searchQuery, setSearchQuery] = useState(''); // Search query state
   const slideAnim = useRef(new Animated.Value(0)).current;
   const { top } = useSafeAreaInsets();
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Example Data for Inventory
-  const categories = [
-    {
-      name: "COLD DRINK",
-      items: [
-        { name: "2 ltr. Coca cola", available: true },
-        { name: "Frooti", available: true },
-        { name: "Sprite", available: false, outOfStock: true },
-        { name: "Pepsi", available: true },
-        { name: "Thums Up", available: true },
-        { name: "7 Up", available: false, outOfStock: true },
-      ],
-    },
-    {
-      name: "SAMOSA",
-      items: [
-        { name: "Aloo Matar Paneer samosa", available: true },
-        { name: "Chowmein Samosa", available: false, outOfStock: true },
-        { name: "Cheese Samosa", available: true },
-        { name: "Veggie Delight Samosa", available: true },
-        { name: "Chicken Samosa", available: false, outOfStock: true },
-      ],
-    },
-    {
-      name: "BURGERS",
-      items: [
-        { name: "Chicken Burger", available: true },
-        { name: "Veggie Burger", available: true },
-        { name: "Cheese Burger", available: true },
-        { name: "Double Patty Burger", available: false, outOfStock: true },
-        { name: "Grilled Chicken Burger", available: true },
-      ],
-    },
-    {
-      name: "PIZZAS",
-      items: [
-        { name: "Margherita", available: true },
-        { name: "Pepperoni Pizza", available: false, outOfStock: true },
-        { name: "BBQ Chicken Pizza", available: true },
-        { name: "Veggie Supreme Pizza", available: true },
-        { name: "Cheese Burst Pizza", available: false, outOfStock: true },
-      ],
-    },
-    {
-      name: "FRIES",
-      items: [
-        { name: "Regular Fries", available: true },
-        { name: "Cheesy Fries", available: true },
-        { name: "Spicy Fries", available: false, outOfStock: true },
-        { name: "Curly Fries", available: true },
-        { name: "Sweet Potato Fries", available: true },
-      ],
-    },
-    {
-      name: "ICE CREAM",
-      items: [
-        { name: "Vanilla", available: true },
-        { name: "Chocolate", available: true },
-        { name: "Strawberry", available: false, outOfStock: true },
-        { name: "Butterscotch", available: true },
-        { name: "Mango", available: true },
-      ],
-    },
-    {
-      name: "PASTRIES",
-      items: [
-        { name: "Black Forest Cake", available: true },
-        { name: "Red Velvet Cake", available: true },
-        { name: "Blueberry Muffin", available: false, outOfStock: true },
-        { name: "Chocolate Brownie", available: true },
-        { name: "Cheese Cake", available: true },
-      ],
-    },
-    {
-      name: "COFFEE",
-      items: [
-        { name: "Espresso", available: true },
-        { name: "Cappuccino", available: true },
-        { name: "Latte", available: false, outOfStock: true },
-        { name: "Americano", available: true },
-        { name: "Mocha", available: true },
-      ],
-    },
-    {
-      name: "SANDWICHES",
-      items: [
-        { name: "Grilled Cheese Sandwich", available: true },
-        { name: "Club Sandwich", available: false, outOfStock: true },
-        { name: "Chicken Panini", available: true },
-        { name: "Veggie Delight Sandwich", available: true },
-        { name: "Tuna Sandwich", available: true },
-      ],
-    },
-    {
-      name: "SOUPS",
-      items: [
-        { name: "Tomato Soup", available: true },
-        { name: "Chicken Noodle Soup", available: true },
-        { name: "Minestrone Soup", available: false, outOfStock: true },
-        { name: "French Onion Soup", available: true },
-        { name: "Broccoli Cheddar Soup", available: true },
-      ],
-    },
-  ]
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const token = await AsyncStorage.getItem("userToken");
+        const response = await fetch(`${BASE_URL}/category/getAllWithFoodItems`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
+        const data = await response.json();
+
+        if (response.ok) {
+          setCategories(data.categories); // Set categories along with food items
+        } else {
+          setError(data.message || "Something went wrong");
+        }
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  if (loading) return <Text>Loading...</Text>;
+  if (error) return <Text>Error: {error}</Text>;
+
+
+
+ 
   const filteredCategories = categories
     .map((category) => {
-      const isCategoryMatch = category.name.toLowerCase().includes(searchQuery.toLowerCase());
-      const filteredItems = category.items.filter((item) =>
-        item.name.toLowerCase().includes(searchQuery.toLowerCase())
+      const isCategoryMatch = category.categoryName.toLowerCase().includes(searchQuery.toLowerCase());
+      const filteredItems = category.foodItems.filter((item) =>
+        item.itemName.toLowerCase().includes(searchQuery.toLowerCase())
       );
 
       if (isCategoryMatch) {
@@ -247,7 +181,7 @@ const Inventory = () => {
         {/* Inventory List */}
         <ScrollView className="flex-1 mt-4" showsVerticalScrollIndicator={false}>
           {filteredCategories.map((category, index) => (
-            <Category key={index} categoryName={category.name} items={category.items} />
+            <Category key={index} categoryName={category.categoryName} items={category.foodItems} />
           ))}
         </ScrollView>
       </View>
