@@ -1,28 +1,27 @@
 import React, { useRef, useState, useEffect } from "react";
 import {
   View,
-  Text,
   StatusBar,
-  TouchableOpacity,
   Image,
   Dimensions,
   Animated,
   Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native";
-import * as Icon from "react-native-feather";
 import { useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Categories from "../../components/Home/Categories";
 import Featured from "../../components/Home/Featured";
 import SearchModal from "../../components/Home/SearchModal";
-import SearchBar from "../../components/Home/SearchBar";
 import CanteenSelectionModal from "../../components/Home/CanteenSelectionModal";
+import AnimatedHeader from "../../components/Home/AnimatedHeader";
 
 const HEADER_HEIGHT = 100;
 const STICKY_SEARCH_THRESHOLD = HEADER_HEIGHT / 1.5;
 
 const Home = ({ setTabBarVisible }) => {
+  console.log(setTabBarVisible)
+
   const navigation = useNavigation();
   const { width: screenWidth } = Dimensions.get("window");
   const aspectRatio = 183 / 402;
@@ -73,67 +72,16 @@ const Home = ({ setTabBarVisible }) => {
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <StatusBar barStyle="light-content" backgroundColor={"#309624"} translucent />
-
-      {/* Header Section */}
-      <Animated.View
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 1000,
-          transform: [{
-            translateY: scrollY.interpolate({
-              inputRange: [0, STICKY_SEARCH_THRESHOLD],
-              outputRange: [0, STICKY_SEARCH_THRESHOLD - HEADER_HEIGHT],
-              extrapolate: "clamp",
-            })
-          }],
-        }}
-      >
-        <SafeAreaView
-          style={{
-            backgroundColor: "#309624",
-            paddingTop: Platform.OS === "ios" ? 0 : StatusBar.currentHeight,
-          }}
-        >
-          <View style={{ backgroundColor: "#309624" }}>
-            <View className="flex-row items-center justify-between px-4 mt-2">
-              <TouchableOpacity onPress={openLocationModal}>
-                <Animated.View
-                  style={{
-                    opacity: deliverTextOpacity,
-                    transform: [{ translateY: deliverTextTranslateY }],
-                  }}
-                >
-                  <Text className="text-white text-xs">DELIVER TO</Text>
-                  <View className="flex-row items-center">
-                    <Text className="text-white font-bold mr-1">Current Location</Text>
-                    <Icon.ChevronDown height="20" width="20" stroke="white" />
-                  </View>
-                </Animated.View>
-              </TouchableOpacity>
-              <TouchableOpacity>
-                <Animated.View
-                  style={{
-                    opacity: deliverTextOpacity,
-                    transform: [{ translateY: deliverTextTranslateY }],
-                  }}
-                >
-                  <Icon.Bell height="24" width="24" stroke="white" />
-                </Animated.View>
-              </TouchableOpacity>
-            </View>
-
-            {/* Search Bar */}
-            <SearchBar
-              openSearchModal={openSearchModal}
-              scrollY={scrollY}
-              STICKY_SEARCH_THRESHOLD={STICKY_SEARCH_THRESHOLD}
-            />
-          </View>
-        </SafeAreaView>
-      </Animated.View>
+    
+      {/* Header Component */}
+      <AnimatedHeader
+        openLocationModal={openLocationModal}
+        openSearchModal={openSearchModal}
+        scrollY={scrollY}
+        STICKY_SEARCH_THRESHOLD={STICKY_SEARCH_THRESHOLD}
+        deliverTextOpacity={deliverTextOpacity}
+        deliverTextTranslateY={deliverTextTranslateY}
+      />
 
       {/* Scrollable Content */}
       <Animated.ScrollView

@@ -16,10 +16,9 @@ import HomeCategory from "./screens/Categories/HomeCategory";
 import CartPage from "./screens/Cart/CartPage";
 import OrderHistoryPage from "./screens/OrderHistory/OrderHistoryPage";
 import PendingOrders from "./screens/Admin/PendingOrder";
-import Profile from "./screens/profile/Profile";
-import PaymentService from "./screens/payment/PaymentService";
+import PaymentService from "./screens/Payment/PaymentService";
 import Intro1 from "./screens/Intro/Intro1";
-import PaymentOption from "./screens/payment/PaymentOption";
+import PaymentOption from "./screens/Payment/PaymentOption";
 import FacultyLogin from "./screens/UserAuth/FacultyLogin";
 import Inventory from "./screens/Admin/Screens/Inventory/Inventory";
 import AdminAccount from "./screens/Admin/Screens/AdminAccount/AdminAccount";
@@ -28,11 +27,12 @@ import AdminFooter from "./screens/Admin/Screens/AdminLayout/AdminTabs";
 import AdminLayout from "./screens/Admin/Screens/AdminLayout/AdminLayout";
 import AdminTabs from "./screens/Admin/Screens/AdminLayout/AdminTabs";
 import ClientTabs from "./components/TabNavigator/ClientTabs";
-import Account from "./screens/account/Account";
-import ProfilePage from "./screens/profile/Profile";
+import Account from "./screens/Account/Account";
+import ProfilePage from "./screens/Profile/Profile";
 import OrderTracking from "./screens/OrderTracking/OrderTracking";
-import PaymentConfirmation from "./screens/payment/PaymentConfirmation";
+import PaymentConfirmation from "./screens/Payment/PaymentConfirmation";
 import CreateAccount from "./screens/UserAuth/CreateAccount";
+import ForgotPw from "./screens/UserAuth/ForgotPw";
 
 const Stack = createNativeStackNavigator();
 
@@ -72,6 +72,7 @@ function AppNavigator() {
         <Stack.Screen name="LogIn" component={LogIn} />
         <Stack.Screen name="FacultyLogin" component={FacultyLogin} />
         <Stack.Screen name="Otp" component={OTP} />   */}
+        <Stack.Screen name="ForgotPw" component={ForgotPw} />
         {/* {/* <Stack.Screen name="NewUser" component={NewUser} />  */}
         {/* <Stack.Screen name="ClientTabs" component={ClientTabs} />
         <Stack.Screen name="Home" component={Home} />

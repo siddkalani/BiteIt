@@ -181,7 +181,7 @@ const SearchModal = ({ isModalVisible, closeSearchModal }) => {
   const navigate = useNavigation();
   const category = useSelector((state) => state.category.items);
   const categoryStatus = useSelector((state) => state.category.status);
-
+  const navigation = useNavigation();
   const [searchText, setSearchText] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [searchHistory, setSearchHistory] = useState([]);
@@ -277,7 +277,7 @@ const SearchModal = ({ isModalVisible, closeSearchModal }) => {
                 overflow: "hidden",
               }}
             >
-              <StatusBar barStyle={'dark-content'} backgroundColor={'white'}/>
+              <StatusBar barStyle='dark-content' backgroundColor={'white'}/>
               <View className="bg-white px-4 py-2 flex-1 rounded-none">
                 {/* Use the separated SearchHeader component */}
                 <GlobalHeader title="Search For dishes" onBackPress={closeSearchModal}/>
