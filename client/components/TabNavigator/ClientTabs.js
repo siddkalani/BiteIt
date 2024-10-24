@@ -109,20 +109,12 @@ const ClientTabs = () => {
       case 'Home':
         StatusBar.setBarStyle('light-content');
         if (Platform.OS === 'android') {
-          // StatusBar.setTranslucent(true);
-          StatusBar.setBackgroundColor('#309624');
+          // StatusBar.setBackgroundColor('#309624'); // Ensure consistent background color on home
         }
         break;
-      // case 'CartPage':
-      //   StatusBar.setBarStyle('dark-content');
-      //   if (Platform.OS === 'android') {
-      //     StatusBar.setBackgroundColor('white');
-      //   }
-      //   break;
       case 'OrderHistoryPage':
         StatusBar.setBarStyle('dark-content');
         if (Platform.OS === 'android') {
-          // StatusBar.setTranslucent(true);
           StatusBar.setBackgroundColor('white');
         }
         break;
@@ -130,7 +122,6 @@ const ClientTabs = () => {
         StatusBar.setBarStyle('dark-content');
         if (Platform.OS === 'android') {
           StatusBar.setTranslucent(true);
-          // StatusBar.setBackgroundColor('white');
         }
         break;
       default:
@@ -152,7 +143,7 @@ const ClientTabs = () => {
         screenListeners={{
           state: (e) => {
             const routeName = e.data.state.routes[e.data.state.index].name;
-            updateStatusBar(routeName);
+            updateStatusBar(routeName); // Update the status bar on screen change
           },
         }}
       >
@@ -173,5 +164,6 @@ const ClientTabs = () => {
     </View>
   );
 };
+
 
 export default ClientTabs;

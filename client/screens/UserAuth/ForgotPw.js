@@ -50,7 +50,7 @@ const ForgotPw = () => {
   };
 
   const handleVerify = () => {
-    navigation.navigate("Home");
+    navigation.navigate("ClientTabs");
   };
 
   const { top, bottom } = useSafeAreaInsets();

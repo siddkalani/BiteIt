@@ -20,9 +20,6 @@ const HEADER_HEIGHT = 100;
 const STICKY_SEARCH_THRESHOLD = HEADER_HEIGHT / 1.5;
 
 const Home = ({ setTabBarVisible }) => {
-  console.log(setTabBarVisible)
-
-  const navigation = useNavigation();
   const { width: screenWidth } = Dimensions.get("window");
   const aspectRatio = 183 / 402;
   const imageHeight = screenWidth * aspectRatio;
@@ -86,13 +83,14 @@ const Home = ({ setTabBarVisible }) => {
       {/* Scrollable Content */}
       <Animated.ScrollView
         onScroll={handleScroll}
-        scrollEventThrottle={16}
+        scrollEventThrottle={32}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingTop: HEADER_HEIGHT + safeAreaTop }}
+        contentContainerStyle={{ paddingTop: HEADER_HEIGHT + safeAreaTop}} // Add background color
+        className='rounded-b-3xl'
         bounces={false}
         overScrollMode="never"
       >
-        <View>
+        <View className='rounded-b-3xl'>
           <View className="bg-[#309624] px-4 pb-2 rounded-b-3xl">
             <Image
               source={require("../../assets/images/home/home-slider.png")}
@@ -103,7 +101,7 @@ const Home = ({ setTabBarVisible }) => {
           </View>
         </View>
 
-        <View className="px-4 pb-4 pt-2 space-y-2">
+        <View className="px-4 pb-4 pt-2 space-y-2" style={{ backgroundColor: 'white' }}>
           <Categories />
         </View>
 
@@ -122,5 +120,6 @@ const Home = ({ setTabBarVisible }) => {
     </View>
   );
 };
+
 
 export default Home;
