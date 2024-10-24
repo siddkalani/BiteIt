@@ -16,6 +16,106 @@ import SearchModal from "../../components/Home/SearchModal";
 import CanteenSelectionModal from "../../components/Home/CanteenSelectionModal";
 import AnimatedHeader from "../../components/Home/AnimatedHeader";
 
+// Base Skeleton Loader Component
+const SkeletonLoader = ({ style }) => {
+  const animatedValue = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const animation = Animated.loop(
+      Animated.sequence([
+        Animated.timing(animatedValue, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(animatedValue, {
+          toValue: 0,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+      ])
+    );
+    
+    animation.start();
+    return () => animation.stop();
+  }, []);
+
+  const opacity = animatedValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.3, 0.7],
+  });
+
+  return (
+    <Animated.View
+      style={[
+        {
+          backgroundColor: '#E1E9EE',
+          opacity,
+        },
+        style,
+      ]}
+    />
+  );
+};
+
+const FullScreenSkeleton = () => {
+  const { width: screenWidth } = Dimensions.get("window");
+  const { top: safeAreaTop } = useSafeAreaInsets();
+
+  return (
+    <View style={{ flex: 1, backgroundColor: 'white', paddingTop: safeAreaTop }}>
+      {/* Header Skeleton */}
+      <View style={{ padding: 16 }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+          <SkeletonLoader style={{ width: 120, height: 20, borderRadius: 4 }} />
+          <SkeletonLoader style={{ width: 40, height: 40, borderRadius: 20 }} />
+        </View>
+        <SkeletonLoader style={{ width: '100%', height: 50, borderRadius: 8 }} />
+      </View>
+
+      {/* Banner Skeleton */}
+      <View style={{ padding: 16 }}>
+        <SkeletonLoader style={{ width: '100%', height: screenWidth * 0.4, borderRadius: 8 }} />
+      </View>
+
+      {/* Categories Skeleton */}
+      <View style={{ padding: 16 }}>
+        <SkeletonLoader style={{ width: 120, height: 20, borderRadius: 4, marginBottom: 16 }} />
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
+            <SkeletonLoader
+              key={item}
+              style={{
+                width: screenWidth * 0.2,
+                height: screenWidth * 0.2,
+                borderRadius: 8,
+                marginBottom: 16,
+              }}
+            />
+          ))}
+        </View>
+      </View>
+
+      {/* Featured Section Skeleton */}
+      <View style={{ padding: 16 }}>
+        <SkeletonLoader style={{ width: 150, height: 20, borderRadius: 4, marginBottom: 16 }} />
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          {[1, 2].map((item) => (
+            <SkeletonLoader
+              key={item}
+              style={{
+                width: screenWidth * 0.44,
+                height: screenWidth * 0.6,
+                borderRadius: 8,
+              }}
+            />
+          ))}
+        </View>
+      </View>
+    </View>
+  );
+};
+
 const HEADER_HEIGHT = 100;
 const STICKY_SEARCH_THRESHOLD = HEADER_HEIGHT / 1.5;
 
@@ -26,8 +126,17 @@ const Home = ({ setTabBarVisible }) => {
   const scrollY = useRef(new Animated.Value(0)).current;
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isLocationModalVisible, setIsLocationModalVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // Add loading state
   const { top: safeAreaTop } = useSafeAreaInsets();
   const lastScrollY = useRef(0);
+
+  // Simulate loading
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleScroll = Animated.event(
     [{ nativeEvent: { contentOffset: { y: scrollY } } }],
@@ -66,6 +175,10 @@ const Home = ({ setTabBarVisible }) => {
   const openLocationModal = () => setIsLocationModalVisible(true);
   const closeLocationModal = () => setIsLocationModalVisible(false);
 
+  if (isLoading) {
+    return <FullScreenSkeleton />;
+  }
+
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <StatusBar barStyle="light-content" backgroundColor={"#309624"} translucent />
@@ -83,9 +196,9 @@ const Home = ({ setTabBarVisible }) => {
       {/* Scrollable Content */}
       <Animated.ScrollView
         onScroll={handleScroll}
-        scrollEventThrottle={32}
+        scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingTop: HEADER_HEIGHT + safeAreaTop}} // Add background color
+        contentContainerStyle={{ paddingTop: HEADER_HEIGHT + safeAreaTop}}
         className='rounded-b-3xl'
         bounces={false}
         overScrollMode="never"
@@ -120,6 +233,5 @@ const Home = ({ setTabBarVisible }) => {
     </View>
   );
 };
-
 
 export default Home;
