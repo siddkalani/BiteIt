@@ -26,7 +26,8 @@ const foodItemSchema = mongoose.Schema(
       type: Number,
     },
     isOnline:{
-      type:String
+      type:Boolean,
+      default:true
     }
   },
   {

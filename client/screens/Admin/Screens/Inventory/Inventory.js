@@ -10,33 +10,169 @@ const { width } = Dimensions.get('window');
 const paddingHorizontal = 16;
 const tabWidth = (width - paddingHorizontal * 2) / 2;
 
+// const Category = ({ categoryName, items , setItems }) => {
+//   const [isOpen, setIsOpen] = useState(true);
+//   const [CustomOpen, IsCustomOpen] = useState(); 
+//   const [itemOpen, setItemOpen] = useState()
+
+//   const toggleCategory = () => {
+//     setIsOpen(!isOpen);
+//   };
+
+//   const handleToggle = async (itemId, currentStatus) => {
+//     try {
+//       const token = await AsyncStorage.getItem("userToken");
+
+//       const response = await fetch(`http://localhost:3000/food-item/update`, {
+//         method: "PUT",
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${token}`,
+//         },
+//         body: JSON.stringify({
+//           itemId,
+//           isOnline: !currentStatus, 
+//         }),
+//       });
+
+//       const data = await response.json();
+
+//       if (response.ok) {
+//         setItems(prevItems => 
+//           prevItems.map(item => 
+//             item._id === itemId ? { ...item, isOnline: !currentStatus } : item
+//           )
+//         );
+//         setItemOpen(currentStatus)
+//       } else {
+//         console.error("Error updating status:", data.message);
+//       }
+//     } catch (error) {
+//       console.error("Server error:", error);
+//     }
+//   };
+
+//   // Toggle for custom open/close state
+//   const handleCustomToggle = () => {
+//     IsCustomOpen(prevState => !prevState); // Toggle the custom state
+//   };
+
+//   return (
+//     <View className="mb-4">
+//       <TouchableOpacity
+//         onPress={toggleCategory}
+//         className="flex-row justify-between items-center py-2 px-4 bg-yellow-100 rounded-lg"
+//       >
+//         <View className='flex-row space-x-2 items-center'>
+//           <Icon name={isOpen ? 'chevron-up-outline' : 'chevron-down-outline'} size={20} color="#000" />
+//           <Text className="font-semibold">{categoryName}</Text>
+//         </View>
+
+//         {/* Corrected the Switch to call handleCustomToggle */}
+//         <Switch
+//           value={CustomOpen}
+//           onValueChange={handleCustomToggle} // Set the toggle handler
+//           trackColor={{ false: '#767577', true: '#F59E0B' }}
+//           thumbColor="white"
+//         />
+//       </TouchableOpacity>
+
+//       {isOpen && (
+//         <View className="bg-white">
+//           {items.map((item, index) => (
+//             <View key={index} className="flex-row justify-between items-center py-2 px-4 border-b border-gray-200">
+//               <Text>{item.itemName}</Text>
+//               <Switch 
+//                 value={item.isOnline} 
+//                 onValueChange={() => handleToggle(item._id, item.isOnline)} 
+//                 trackColor={{ false: '#767577', true: '#F59E0B' }}
+//                 thumbColor="white"
+//               />
+//             </View>
+//           ))}
+//         </View>
+//       )}
+//     </View>
+//   );
+// };
+
 const Category = ({ categoryName, items }) => {
   const [isOpen, setIsOpen] = useState(true);
+  const [CustomOpen, IsCustomOpen] = useState(false);
+  const [localItems, setLocalItems] = useState(items); // Local state for managing item toggles
 
   const toggleCategory = () => {
     setIsOpen(!isOpen);
   };
-  
-return (
+
+  const handleToggle = async (itemId, currentStatus) => {
+    try {
+      const token = await AsyncStorage.getItem("userToken");
+
+      const response = await fetch(`http://localhost:3000/food-item/update`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          itemId,
+          isOnline: !currentStatus,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Update local state for the item toggle switch
+        setLocalItems((prevItems) =>
+          prevItems.map((item) =>
+            item._id === itemId ? { ...item, isOnline: !currentStatus } : item
+          )
+        );
+      } else {
+        console.error("Error updating status:", data.message);
+      }
+    } catch (error) {
+      console.error("Server error:", error);
+    }
+  };
+
+  // Toggle for custom open/close state
+  const handleCustomToggle = () => {
+    IsCustomOpen((prevState) => !prevState); // Toggle the custom state
+  };
+
+  return (
     <View className="mb-4">
       <TouchableOpacity
         onPress={toggleCategory}
         className="flex-row justify-between items-center py-2 px-4 bg-yellow-100 rounded-lg"
       >
-        <View className='flex-row space-x-2 items-center'>
-        <Icon name={isOpen ? 'chevron-up-outline' : 'chevron-down-outline'} size={20} color="#000" />
-        <Text className="font-semibold">{categoryName}</Text>
+        <View className="flex-row space-x-2 items-center">
+          <Icon name={isOpen ? "chevron-up-outline" : "chevron-down-outline"} size={20} color="#000" />
+          <Text className="font-semibold">{categoryName}</Text>
         </View>
 
-        <Switch value={true} trackColor={{ false: '#767577', true: '#F59E0B' }} thumbColor="white" />
+        <Switch
+          value={CustomOpen}
+          onValueChange={handleCustomToggle} // Set the toggle handler
+          trackColor={{ false: "#767577", true: "#F59E0B" }}
+          thumbColor="white"
+        />
       </TouchableOpacity>
 
       {isOpen && (
         <View className="bg-white">
-          {items.map((item, index) => (
+          {localItems.map((item, index) => (
             <View key={index} className="flex-row justify-between items-center py-2 px-4 border-b border-gray-200">
               <Text>{item.itemName}</Text>
-              <Switch value={item.available} trackColor={{ false: '#767577', true: '#F59E0B' }} thumbColor="white" />
+              <Switch
+                value={item.isOnline} // Use local state for isOnline
+                onValueChange={() => handleToggle(item._id, item.isOnline)}
+                trackColor={{ false: "#767577", true: "#F59E0B" }}
+                thumbColor="white"
+              />
             </View>
           ))}
         </View>
@@ -44,6 +180,8 @@ return (
     </View>
   );
 };
+
+
 
 const Inventory = () => {
   const [activeTab, setActiveTab] = useState('All items');
@@ -53,6 +191,7 @@ const Inventory = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [items, setItems] = useState([]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -68,7 +207,8 @@ const Inventory = () => {
         const data = await response.json();
 
         if (response.ok) {
-          setCategories(data.categories); // Set categories along with food items
+          setCategories(data.categories); 
+          setItems(data.categories.flatMap(category => category.foodItems));
         } else {
           setError(data.message || "Something went wrong");
         }
@@ -85,9 +225,6 @@ const Inventory = () => {
   if (loading) return <Text>Loading...</Text>;
   if (error) return <Text>Error: {error}</Text>;
 
-
-
- 
   const filteredCategories = categories
     .map((category) => {
       const isCategoryMatch = category.categoryName.toLowerCase().includes(searchQuery.toLowerCase());
@@ -98,7 +235,7 @@ const Inventory = () => {
       if (isCategoryMatch) {
         return category; // Return full category if category name matches
       } else if (filteredItems.length > 0) {
-        return { ...category, items: filteredItems }; // Return filtered items if only items match
+        return { ...category, foodItems: filteredItems }; // Return filtered items if only items match
       } else {
         return null; // Exclude if neither category nor items match
       }
@@ -181,7 +318,9 @@ const Inventory = () => {
         {/* Inventory List */}
         <ScrollView className="flex-1 mt-4" showsVerticalScrollIndicator={false}>
           {filteredCategories.map((category, index) => (
-            <Category key={index} categoryName={category.categoryName} items={category.foodItems} />
+            <Category key={index} categoryName={category.categoryName} items={category.foodItems} 
+
+            />
           ))}
         </ScrollView>
       </View>

@@ -23,10 +23,8 @@ const FoodCard = ({ foodItem }) => {
   const itemInCart = cartItems.find((item) => item._id === foodItem._id);
 
   const handleAddToCart = () => {
-   
-      dispatch(addToCart(foodItem));
-      saveCartToStorage(cartItems);
-    
+    dispatch(addToCart(foodItem));
+    saveCartToStorage(cartItems);
   };
 
   const handleIncrement = () => {
@@ -68,21 +66,20 @@ const FoodCard = ({ foodItem }) => {
             style={{ width: "100%", height: 100, borderRadius: 8 }}
           />
 
-          {/* Arrow-back icon positioned inside the image */}
+          {/* Info icon positioned inside the image */}
           <Ionicons
             name="information-circle-outline"
             size={24}
             color="white" // White to contrast against the image
             style={{
               position: 'absolute',
-              top: 10, // Adjust as needed
-              right: 10, // Adjust as needed
-              zIndex: 1, // Ensure the icon is above the image
+              top: 10,
+              right: 10,
+              zIndex: 1,
             }}
           />
         </View>
       </TouchableOpacity>
-
 
       {/* Food Name and Price */}
       <View className="w-full items-center flex-col justify-between">
@@ -97,17 +94,17 @@ const FoodCard = ({ foodItem }) => {
 
         {/* Star Rating and Info */}
         <View className="flex-row items-center space-x-1">
-          {/* Star Rating */}
           <Ionicons name="star" size={13} color="#FFD700" />
           <Text className="text-xs text-gray-600">3.7</Text>
 
-          {/* Separator */}
           <Text className="text-xs text-gray-500 ml-1">|</Text>
 
-          {/* Info */}
           <TouchableOpacity className='flex-row items-center ml-1'>
             <Ionicons name="time" size={13} color="#FFD700" />
-            <Text className="text-xs text-gray-600" style={{ fontFamily: FontFamily.poppinsMedium, marginLeft: 2 }}>
+            <Text
+              className="text-xs text-gray-600"
+              style={{ fontFamily: FontFamily.poppinsMedium, marginLeft: 2 }}
+            >
               15 mins
             </Text>
           </TouchableOpacity>
@@ -116,16 +113,16 @@ const FoodCard = ({ foodItem }) => {
 
       <Text
         style={{
-          color: foodItem.isOnline === 'true' ? "green" : "green",
+          color: foodItem.isOnline ? "green" : "red",
           fontSize: 16,
         }}
-        className={`font-bold ${foodItem.isOnline === 'true'? '':''}`}
+        className={`font-bold ${foodItem.isOnline ? '' : ''}`}
       >
         ${foodItem.itemPrice}
       </Text>
 
       {/* Add to Cart / Increment Decrement */}
-      {foodItem.isOnline === "true" ? (
+      {foodItem.isOnline ? (
         itemInCart ? (
           <View className="flex-row items-center space-x-2">
             <TouchableOpacity
@@ -161,14 +158,14 @@ const FoodCard = ({ foodItem }) => {
             <TouchableOpacity
               onPress={handleAddToCart}
               className="py-1 justify-center items-center flex-row"
-              style={{ alignSelf: "center" }} // Ensure the button aligns centrally
+              style={{ alignSelf: "center" }}
             >
               <View className="h-4 w-4">
                 <Icon.Plus width={15} height={15} stroke="white" />
               </View>
               <View className="h-6 w-10">
                 <Text
-                  className="text-white ml-1" // Adding some margin between icon and text
+                  className="text-white ml-1"
                   style={{
                     fontFamily: FontFamily.poppinsMedium,
                     fontSize: FontSize.size_mini,
