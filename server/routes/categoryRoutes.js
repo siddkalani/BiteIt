@@ -2,6 +2,7 @@ const express = require("express");
 const {
   getCategory,
   getAllCategories,
+  getAllCategoriesWithFoodItems,
 } = require("../controllers/categories/getCategory");
 const { createCategory } = require("../controllers/categories/postCategory");
 const upload = require("../middleware/multer");
@@ -12,6 +13,7 @@ const validateToken = require('../middleware/validateTokenHandler')
 
 router.route("/get/:id").get(getCategory);
 router.route("/get").get(getAllCategories);
+router.route("/getAllWithFoodItems").get(getAllCategoriesWithFoodItems);
 router.route("/add").post(upload.single("image"), createCategory);
 
 module.exports = router;

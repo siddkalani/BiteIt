@@ -49,10 +49,10 @@ const Item = require("../../models/foodItemModel");
 
 // Create a new Item
 const createItem = asyncHandler(async (req, res) => {
-  const { categoryId, itemName, itemPrice, itemIncredients , isOnline} = req.body;
+  const { categoryId, itemName, itemPrice, itemIncredients} = req.body;
   const image = req.file ? req.file.filename : null;
 
-  if (!categoryId || !itemName || !itemPrice || !itemIncredients || !image || !isOnline) {
+  if (!categoryId || !itemName || !itemPrice || !itemIncredients || !image ) {
     return res.status(400).json({ message: "All fields are required" });
   }
 
@@ -70,7 +70,6 @@ const createItem = asyncHandler(async (req, res) => {
     itemPrice,
     itemIncredients,
     image,
-    isOnline
   });
 
   try {
