@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import CategoryCard from "./CategoryCard";
 import { fetchcategory } from "../../store/Slices/categorySlice";
 
-const SearchCategories = () => {
+const SearchCategories = ({closeSearchModal}) => {
   const dispatch = useDispatch();
   // const foodItems = useSelector((state) => state.foodItem.items);
   // const foodItemsStatus = useSelector((state) => state.foodItem.status);
@@ -47,7 +47,7 @@ const SearchCategories = () => {
               width: "22%", // Each card takes roughly 1/4th of the screen width with spacing
             }}
           >
-            <CategoryCard category={item} />
+            <CategoryCard closeSearchModal={closeSearchModal} category={item} />
           </View>
         ))}
       </ScrollView>

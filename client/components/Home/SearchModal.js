@@ -311,7 +311,7 @@ const SearchModal = ({ isModalVisible, closeSearchModal }) => {
                       removeSearchItem={removeSearchItem}
                     />
 
-                    <SearchCategories categories={category} />
+                    <SearchCategories closeSearchModal={closeSearchModal} categories={category} />
                   </>
                 )}
               </View>

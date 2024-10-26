@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import {
   View,
   Text,
@@ -21,20 +21,22 @@ import {
   removeFromCart,
   updateCartQuantity,
   clearCart,
-  addToCart, setCart
-} from "../../store/Slices/cartSlice"; // Adjust the path as needed
+  addToCart,
+} from "../../store/Slices/cartSlice";
 import * as Icon from "react-native-feather";
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BASE_URL } from "../../constants/constant";
 import {
   saveCartToStorage,
   loadCartFromStorage,
-} from "../../utils/storageUtils"; // Adjust the path as needed
+} from "../../utils/storageUtils";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import GlobalHeader from "../../components/Layout/GlobalHeader";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Modalize } from "react-native-modalize";
 
 const { width } = Dimensions.get("window");
 
@@ -44,21 +46,24 @@ const CartPage = () => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false); // For offers modal
   const [sliderValue] = useState(new Animated.Value(0)); // Animation value for the slider
-  const [sliderActive, setSliderActive] = useState(false); // To track if slider is active
+  const modalizeRef = useRef(null); // Reference to the modalize component
   const [deliveryType, setDeliveryType] = useState(null);
-
-  const [deliveryModalVisible, setDeliveryModalVisible] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState(""); // For room number
   const [selectedCanteen, setSelectedCanteen] = useState("Canteen 1"); // Default to "Canteen 1"
 
   const handleChangeDelivery = () => {
-    setDeliveryModalVisible(true)
+    modalizeRef.current?.open(); // Open the modal
+  };
+
+  const closeModal = () => {
+    modalizeRef.current?.close(); // Close the modal
   };
 
   const handleConfirmDelivery = () => {
     // Implement any logic needed to save room and canteen changes
-    setDeliveryModalVisible(false); // Close the modal after confirmation
+    closeModal(); // Close the modal after confirmation
   };
+
   // Example values for taxes, delivery charges, offers, and tips
   const deliveryCharge = 50; // Example delivery charge
   const offerDiscount = 63; // Example discount (Cashback)
@@ -71,7 +76,11 @@ const CartPage = () => {
   );
 
   const totalBill = useMemo(
-    () => cartItems.reduce((total, item) => total + item.itemPrice * item.quantity, 0),
+    () =>
+      cartItems.reduce(
+        (total, item) => total + item.itemPrice * item.quantity,
+        0
+      ),
     [cartItems]
   );
 
@@ -81,7 +90,7 @@ const CartPage = () => {
   );
 
   const handlePayment = () => {
-    navigation.navigate('PaymentOption');
+    navigation.navigate("PaymentOption");
   };
 
   useEffect(() => {
@@ -91,7 +100,7 @@ const CartPage = () => {
 
       // Ensure items are only added to the cart if they are not already present
       savedCart.forEach((item) => {
-        const itemInCart = cartItems.find(cartItem => cartItem._id === item._id);
+        const itemInCart = cartItems.find((cartItem) => cartItem._id === item._id);
         if (!itemInCart) {
           dispatch(addToCart(item));
         }
@@ -99,19 +108,21 @@ const CartPage = () => {
     };
 
     loadCart(); // Call the loadCart function
-  }, [dispatch]); // Remove cartIt
+  }, [dispatch]);
 
   const handlePlaceOrder = async () => {
     try {
       // Retrieve necessary data from AsyncStorage
-      const userId = await AsyncStorage.getItem('userId');
-      const canteenName = "Engineering Canteen"
-      const totalBill = cartItems.reduce((sum, item) => sum + item.itemPrice * item.quantity, 0); // Calculate total bill
+      const userId = await AsyncStorage.getItem("userId");
+      const canteenName = "Engineering Canteen";
+      const totalBill = cartItems.reduce(
+        (sum, item) => sum + item.itemPrice * item.quantity,
+        0
+      ); // Calculate total bill
 
-      // const finalTotal = totalBill + deliveryCharge + taxes + donation - offerDiscount;
       const totalAmount = finalTotal.toFixed(2);
       // Prepare data for each cart item
-      const orderData = cartItems.map(item => ({
+      const orderData = cartItems.map((item) => ({
         itemId: item._id,
         itemName: item.itemName,
         itemQuantity: item.quantity,
@@ -123,21 +134,21 @@ const CartPage = () => {
         totalAmount,
         items: orderData,
         payment: 1,
-        status: "Pending"
+        status: "Pending",
       };
       const token = await AsyncStorage.getItem("userToken");
       const response = await fetch(`${BASE_URL}/user/order/add`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(payload),
       });
 
       if (response.ok) {
         // Navigate to payment service
-        navigation.navigate('PaymentService');
+        navigation.navigate("PaymentService");
 
         // Clear the cart
         dispatch(clearCart()); // Clear Redux cart state
@@ -145,11 +156,14 @@ const CartPage = () => {
 
         Alert.alert("Order Placed", `Your total is ₹${totalAmount}`);
       } else {
-        throw new Error('Failed to place order. Please try again.');
+        throw new Error("Failed to place order. Please try again.");
       }
     } catch (error) {
       console.error("Error placing order:", error);
-      Alert.alert("Order Failed", error.message || "Something went wrong. Please try again.");
+      Alert.alert(
+        "Order Failed",
+        error.message || "Something went wrong. Please try again."
+      );
     }
   };
 
@@ -157,7 +171,8 @@ const CartPage = () => {
   const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
     onPanResponderMove: (evt, gestureState) => {
-      if (gestureState.dx > 0 && gestureState.dx < (width - 100)) { // Restrict movement within bounds
+      if (gestureState.dx > 0 && gestureState.dx < width - 100) {
+        // Restrict movement within bounds
         sliderValue.setValue(gestureState.dx);
       }
     },
@@ -196,20 +211,20 @@ const CartPage = () => {
   };
 
   const handleIncrement = (itemId) => {
-    const item = cartItems.find(item => item._id === itemId);
+    const item = cartItems.find((item) => item._id === itemId);
     if (item) {
       dispatch(updateCartQuantity({ itemId, quantity: item.quantity + 1 }));
     }
   };
 
   const handleDecrement = (itemId) => {
-    const item = cartItems.find(item => item._id === itemId);
+    const item = cartItems.find((item) => item._id === itemId);
     if (item && item.quantity > 1) {
       dispatch(updateCartQuantity({ itemId, quantity: item.quantity - 1 }));
     }
   };
 
-  const { top, bottom } = useSafeAreaInsets();
+  const { top } = useSafeAreaInsets();
 
   const renderCartItem = ({ item }) => (
     <View className="flex-row items-center space-x-2 my-1 p-3 bg-white rounded-lg">
@@ -221,7 +236,7 @@ const CartPage = () => {
         <Text className="font-semibold text-lg">{item.itemName}</Text>
         <Text className="text-gray-500">₹{item.itemPrice}</Text>
       </View>
-      <View className='flex-row items-center space-x-2 h-8'>
+      <View className="flex-row items-center space-x-2 h-8">
         <View className="flex-row items-center space-x-2 bg-gray-200 rounded-md">
           <TouchableOpacity
             onPress={() => handleDecrement(item._id)}
@@ -229,8 +244,10 @@ const CartPage = () => {
           >
             <Icon.Minus width={16} height={16} stroke="green" strokeWidth="3" />
           </TouchableOpacity>
-          <View className='w-3.5 items-center justify-center'>
-            <Text adjustsFontSizeToFit numberOfLines={1} className='font-bold'>{item.quantity}</Text>
+          <View className="w-3.5 items-center justify-center">
+            <Text adjustsFontSizeToFit numberOfLines={1} className="font-bold">
+              {item.quantity}
+            </Text>
           </View>
           <TouchableOpacity
             onPress={() => handleIncrement(item._id)}
@@ -244,19 +261,18 @@ const CartPage = () => {
           onPress={() => handleRemoveFromCart(item._id)}
           className="bg-red-200 p-2 rounded-md justify-center items-center"
         >
-          <Icon.Trash2 color={'red'} height={16} width={16} />
+          <Icon.Trash2 color={"red"} height={16} width={16} />
         </TouchableOpacity>
       </View>
     </View>
   );
-
 
   return (
     <View
       className="flex-1 bg-white"
       style={{
         flex: 1,
-        paddingTop: Platform.OS === "ios" ? top : 0, // Apply paddingTop only for iOS
+        paddingTop: Platform.OS === "ios" ? top : 0,
       }}
     >
       {/* Status bar with white background */}
@@ -273,22 +289,24 @@ const CartPage = () => {
 
       {cartItems.length === 0 ? (
         <View className="flex-1 justify-center items-center">
-          <Text className="text-center text-lg font-semibold">Your cart is empty</Text>
+          <Text className="text-center text-lg font-semibold">
+            Your cart is empty
+          </Text>
         </View>
       ) : (
         <View className="flex-1 bg-gray-100">
           <ScrollView
             className="flex-1 px-4"
             contentContainerStyle={{ paddingBottom: 170 }}
-            showsVerticalScrollIndicator={false} // Hide ScrollView scroll indicator
+            showsVerticalScrollIndicator={false}
           >
             <FlatList
               data={cartItems}
               keyExtractor={(item) => item._id}
               renderItem={renderCartItem}
               className="my-2"
-              showsVerticalScrollIndicator={false} // Hide FlatList scroll indicator
-              scrollEnabled={false} // Disable FlatList scrolling
+              showsVerticalScrollIndicator={false}
+              scrollEnabled={false}
             />
 
             {/* Offers section */}
@@ -307,7 +325,9 @@ const CartPage = () => {
 
             {/* Tip section */}
             <View className="bg-white p-3 rounded-lg shadow-md mb-2">
-              <Text className="text-lg font-semibold">Please tip your delivery partner</Text>
+              <Text className="text-lg font-semibold">
+                Please tip your delivery partner
+              </Text>
               <View className="flex-row justify-start space-x-4 mt-3">
                 <TouchableOpacity className="px-4 py-2 bg-gray-200 rounded-md">
                   <Text>₹50</Text>
@@ -327,7 +347,9 @@ const CartPage = () => {
             {/* Billing Details */}
             <View className="bg-white p-3 rounded-lg shadow-md mb-2">
               <View className="flex-row justify-between items-center">
-                <Text className="text-lg font-semibold">Item Total ({totalItems} items)</Text>
+                <Text className="text-lg font-semibold">
+                  Item Total ({totalItems} items)
+                </Text>
                 <Text>₹{totalBill.toFixed(2)}</Text>
               </View>
               <View className="flex-row justify-between mt-1">
@@ -344,12 +366,13 @@ const CartPage = () => {
               </View>
               <View className="flex-row justify-between mt-1">
                 <Text className="font-semibold">Grand Total</Text>
-                <Text className="font-semibold"> ₹{finalTotal.toFixed(2)}</Text>
+                <Text className="font-semibold">
+                  ₹{finalTotal.toFixed(2)}
+                </Text>
               </View>
             </View>
 
             {/* Payment method */}
-
             <TouchableOpacity
               onPress={handlePayment}
               className="bg-white p-3 rounded-lg shadow-md mb-2 flex-row justify-between"
@@ -370,26 +393,52 @@ const CartPage = () => {
                 {/* Deliver To Section */}
                 <View className="flex-row items-center space-x-2 mb-2">
                   <View className="flex-row items-center">
-                    <Ionicons name="location-outline" size={20} color="#4CAF50" />
-                    <Text className="ml-2 text-base font-semibold text-black">Delivering to</Text>
+                    <Ionicons
+                      name="location-outline"
+                      size={20}
+                      color="#4CAF50"
+                    />
+                    <Text className="ml-2 text-base font-semibold text-black">
+                      Delivering to
+                    </Text>
                   </View>
-                  <Text className="text-sm font-medium text-gray-500">B-203</Text>
+                  <Text className="text-sm font-medium text-gray-500">
+                    B-203
+                  </Text>
                 </View>
 
                 {/* From Section */}
                 <View className="flex-row items-center space-x-2">
                   <View className="flex-row items-center">
-                    <Ionicons name="restaurant-outline" size={20} color="#4CAF50" />
-                    <Text className="ml-2 text-base font-semibold text-black">From</Text>
+                    <Ionicons
+                      name="restaurant-outline"
+                      size={20}
+                      color="#4CAF50"
+                    />
+                    <Text className="ml-2 text-base font-semibold text-black">
+                      From
+                    </Text>
                   </View>
-                  <Text className="text-sm font-medium text-gray-500">Canteen1</Text>
+                  <Text className="text-sm font-medium text-gray-500">
+                    {selectedCanteen}
+                  </Text>
                 </View>
               </View>
 
               {/* Change Button */}
-              <TouchableOpacity onPress={handleChangeDelivery} className="flex-row items-center">
-                <Icon.ChevronDown width={16} height={16} stroke="green" strokeWidth="3" />
-                <Text className="text-green-600 font-semibold ml-1">Change</Text>
+              <TouchableOpacity
+                onPress={handleChangeDelivery}
+                className="flex-row items-center"
+              >
+                <Icon.ChevronDown
+                  width={16}
+                  height={16}
+                  stroke="green"
+                  strokeWidth="3"
+                />
+                <Text className="text-green-600 font-semibold ml-1">
+                  Change
+                </Text>
               </TouchableOpacity>
             </View>
 
@@ -407,7 +456,9 @@ const CartPage = () => {
                     justifyContent: "center",
                   }}
                 >
-                  <Text style={{ textAlign: "center", color: "white", fontSize: 16 }}>
+                  <Text
+                    style={{ textAlign: "center", color: "white", fontSize: 16 }}
+                  >
                     Slide to Pay
                   </Text>
                   <Animated.View
@@ -437,76 +488,105 @@ const CartPage = () => {
           </View>
 
           {/* Change Delivery Details Modal */}
-          <Modal
-            visible={deliveryModalVisible} // Separate state for delivery modal
-            animationType="slide"
-            transparent={true}
-            onRequestClose={() => setDeliveryModalVisible(false)} // Separate close logic
-          >
-            <View className="flex-1 justify-end bg-black bg-opacity-50">
-              <View className="bg-white p-4 rounded-t-2xl">
-                <Text className="text-xl font-bold mb-4">Choose Service Type</Text>
+          <GestureHandlerRootView className='flex'>
+            <Modalize
+              ref={modalizeRef}
+              modalHeight={500}
+              handleStyle={{backgroundColor:'#D3D3D3'}}
+              onClose={() => setDeliveryType(null)}
+              handlePosition="outside"
+            >
+              <View className="p-4 flex-1">
+                {/* Close Icon */}
+                <TouchableOpacity
+                  onPress={closeModal}
+                  style={{
+                    position: "absolute",
+                    top: 10,
+                    right: 10,
+                    zIndex: 10,
+                  }}
+                >
+                  <Ionicons name="close-circle" size={30} color="gray" />
+                </TouchableOpacity>
 
-                {/* Service Type Selection */}
+                <Text className="text-xl font-bold mb-4">
+                  Choose Service Type
+                </Text>
+
+                {/* Service Type and Canteen Selection */}
                 <View>
                   <Text className="text-lg mb-2">Select Service Type:</Text>
+
                   <TouchableOpacity
-                    onPress={() => {
-                      setDeliveryType("Pickup");
-                      setDeliveryModalVisible(false); // Close modal if "Pickup" is selected
-                    }}
-                    className="p-2 mb-2 rounded-lg border border-gray-300"
+                    onPress={() => setDeliveryType("Pickup")}
+                    className={`p-2 mb-2 rounded-lg border ${
+                      deliveryType === "Pickup"
+                        ? "bg-green-100 border-green-600"
+                        : "border-gray-300"
+                    }`}
                   >
                     <Text className="text-lg">Pickup</Text>
                   </TouchableOpacity>
+
                   <TouchableOpacity
                     onPress={() => setDeliveryType("Table Service")}
-                    className="p-2 mb-2 rounded-lg border border-gray-300"
+                    className={`p-2 mb-2 rounded-lg border ${
+                      deliveryType === "Table Service"
+                        ? "bg-green-100 border-green-600"
+                        : "border-gray-300"
+                    }`}
                   >
                     <Text className="text-lg">Table Service</Text>
                   </TouchableOpacity>
-                </View>
 
-                {/* Conditional Room Number Input if Table Service is selected */}
-                {deliveryType === "Table Service" && (
-                  <>
-                    {/* Room Number Input */}
-                    <Text className="text-lg mb-2 mt-4">Enter Room Number:</Text>
-                    <TextInput
-                      value={selectedRoom}
-                      onChangeText={setSelectedRoom}
-                      className="border p-2 mb-4 rounded-lg"
-                      placeholder="Enter Room Number"
-                      keyboardType="numeric"
-                    />
+                  {/* Canteen Selection */}
+                  <Text className="text-lg mb-2 mt-4">Select Canteen:</Text>
+                  {["Canteen 1", "Canteen 2", "Canteen 3"].map((canteen) => (
+                    <TouchableOpacity
+                      key={canteen}
+                      onPress={() => setSelectedCanteen(canteen)}
+                      className={`p-2 mb-2 rounded-lg border ${
+                        selectedCanteen === canteen
+                          ? "bg-green-100 border-green-600"
+                          : "border-gray-300"
+                      }`}
+                    >
+                      <Text className="text-lg">{canteen}</Text>
+                    </TouchableOpacity>
+                  ))}
 
-                    {/* Canteen Selection */}
-                    <Text className="text-lg mb-2">Select Canteen:</Text>
-                    {["Canteen 1", "Canteen 2", "Canteen 3"].map((canteen) => (
-                      <TouchableOpacity
-                        key={canteen}
-                        onPress={() => setSelectedCanteen(canteen)}
-                        className={`p-2 mb-2 rounded-lg border ${selectedCanteen === canteen ? "bg-green-100 border-green-600" : "border-gray-300"
-                          }`}
-                      >
-                        <Text className="text-lg">{canteen}</Text>
-                      </TouchableOpacity>
-                    ))}
+                  {/* If "Table Service" is selected, show Room Number input */}
+                  {deliveryType === "Table Service" && (
+                    <>
+                      <Text className="text-lg mb-2 mt-4">
+                        Enter Room Number:
+                      </Text>
+                      <TextInput
+                        value={selectedRoom}
+                        onChangeText={setSelectedRoom}
+                        className="border p-2 mb-4 rounded-lg"
+                        placeholder="Enter Room Number"
+                        keyboardType="numeric"
+                      />
+                    </>
+                  )}
 
-                    {/* Confirm Button */}
+                  {/* Confirm Button */}
+                  {deliveryType && (
                     <TouchableOpacity
                       onPress={handleConfirmDelivery}
                       className="bg-green-500 p-3 rounded-lg mt-4"
                     >
-                      <Text className="text-white text-center text-lg font-bold">Confirm</Text>
+                      <Text className="text-white text-center text-lg font-bold">
+                        Confirm
+                      </Text>
                     </TouchableOpacity>
-                  </>
-                )}
+                  )}
+                </View>
               </View>
-            </View>
-          </Modal>
-
-
+            </Modalize>
+          </GestureHandlerRootView>
 
           {/* Modal for Offers */}
           <Modal
@@ -520,7 +600,9 @@ const CartPage = () => {
                 <Text className="text-lg font-bold mb-2">Available Offers</Text>
 
                 <TouchableOpacity className="mb-2 p-2 bg-gray-200 rounded-lg">
-                  <Text>Bank Offer: Get 10% Cashback on XYZ Bank Cards</Text>
+                  <Text>
+                    Bank Offer: Get 10% Cashback on XYZ Bank Cards
+                  </Text>
                 </TouchableOpacity>
                 <TouchableOpacity className="mb-2 p-2 bg-gray-200 rounded-lg">
                   <Text>UPI Offer: ₹50 Cashback on UPI payments</Text>

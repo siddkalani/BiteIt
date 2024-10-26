@@ -3,12 +3,14 @@ import { View, Text, Image, TouchableOpacity } from "react-native";
 import { FontFamily, FontSize } from "../../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
 import { BASE_URL } from "../../constants/constant";
+import HomeCategory from "../../screens/Categories/HomeCategory";
 
-const CategoryCard = ({ category }) => {
+const CategoryCard = ({ category ,closeSearchModal}) => {
   const navigation = useNavigation();
 
   const handlePress = () => {
-    // navigation.navigate("FoodItem", { category});
+    navigation.navigate("HomeCategory", {HomeCategory});
+   closeSearchModal()
     console.log("category page")
   };
 
