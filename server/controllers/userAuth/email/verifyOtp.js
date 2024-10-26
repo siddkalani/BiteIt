@@ -26,7 +26,7 @@ const verifyEmailOTP = asyncHandler(async (req, res) => {
   user.otpExpires = undefined;
   await user.save();
 
-  res.status(200).json({ message: "Email verified successfully." });
+  res.status(200).json({ message: "Successful" });
 });
 
 module.exports = { verifyEmailOTP };

@@ -20,7 +20,7 @@ mongoose.connect(process.env.CONNECTION_STRING, {
     process.exit(1); // Exit if unable to connect
   });
 
-const addAdmin = async (name, phone, email, password, role, adminOtp, canteenId = "admin") => {
+const addAdmin = async (name, phone, email, password, role, otp, canteenId = "admin") => {
   try {
     // Check if an admin with the email already exists
     const existingAdmin = await User.findOne({ email });
@@ -33,7 +33,7 @@ const addAdmin = async (name, phone, email, password, role, adminOtp, canteenId 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Hash the admin OTP
-    const hashedAdminOtp = await bcrypt.hash(adminOtp, 10);
+    const hashedAdminOtp = await bcrypt.hash(otp, 10);
 
     // Create a new admin
     const admin = new User({
@@ -43,13 +43,13 @@ const addAdmin = async (name, phone, email, password, role, adminOtp, canteenId 
       password: hashedPassword,
       role,
       isVerified: true,
-      adminOtp: hashedAdminOtp, // Store the hashed OTP
+      otp: hashedAdminOtp, // Store the hashed OTP
       canteenId
     });
 
     // Save the new admin
     await admin.save();
-    console.log(`${role} added successfully: ${name}`);
+    console.log(`${role} added successfully: ${name}, ${otp}`);
   } catch (error) {
     console.error("Error adding admin:", error);
   }

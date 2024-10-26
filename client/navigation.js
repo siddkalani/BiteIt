@@ -72,7 +72,7 @@ function AppNavigator() {
         <Stack.Screen name="LogIn" component={LogIn} />
         <Stack.Screen name="FacultyLogin" component={FacultyLogin} />
         <Stack.Screen name="Otp" component={OTP} />  
-        {/* <Stack.Screen name="ForgotPw" component={ForgotPw} /> */}
+        <Stack.Screen name="ForgotPassword" component={ForgotPw} />
         {/* {/* <Stack.Screen name="NewUser" component={NewUser} />  */}
         <Stack.Screen name="ClientTabs" component={ClientTabs} />
         <Stack.Screen name="Home" component={Home} />

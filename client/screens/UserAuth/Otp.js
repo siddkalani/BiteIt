@@ -28,7 +28,7 @@ const OTP = () => {
   const navigation = useNavigation();
   const route = useRoute();
 
-  const email = route.params?.email;
+  const{ email, isAdmin} = route.params;
   // const phone = route.params?.phone;
 
   const handleChangeText = (text, index) => {
@@ -55,18 +55,25 @@ const OTP = () => {
     navigation.navigate("LogIn");
   };
 
- 
 
   const handleVerify = async () => {
     try {
-      const response = await axios.post(`${BASE_URL}/user/verify/otp`, {
+      const verifyUrl = isAdmin 
+        ? `${BASE_URL}/user/admin/verify/otp` // URL for admin verification
+        : `${BASE_URL}/user/verify/otp`;  // URL for user verification
+
+      const response = await axios.post(verifyUrl, {
         email: email,
         otp: otp.join(""),
       });
       const data = response.data;
   
-      if (response.status === 200 && data.message === "Email verified successfully.") {
-        navigation.replace("Login"); 
+      if (response.status === 200 && data.message === "Successful") {
+        if (isAdmin) {
+          navigation.replace("AdminTabs");
+        } else {
+          navigation.replace("LogIn");
+        }
       } else {
         Alert.alert("Verification Failed", data.message || "An unknown error occurred.");
       }

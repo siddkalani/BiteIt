@@ -16,14 +16,17 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import GlobalHeader from "../../components/Layout/GlobalHeader";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { FontFamily, FontSize } from "../../GlobalStyles";
+import axios from 'axios'
+import { BASE_URL } from "../../constants/constant";
 
 const ForgotPw = () => {
   const [otp, setOtp] = useState(["", "", "", "", ""]);
+  const [newPassword, setNewPassword] = useState("")
   const [focusedIndex, setFocusedIndex] = useState(null);
   const inputRefs = useRef([]);
   const navigation = useNavigation();
   const route = useRoute();
-  const phone = route.params?.phone;
+  const email = route.params?.email;
 
   const handleChangeText = (text, index) => {
     let newOtp = [...otp];
@@ -45,13 +48,60 @@ const ForgotPw = () => {
     }
   };
 
+  const handleSendCode = async () => {
+    const lowercaseEmail = email.toLowerCase();
+    try {
+      const response = await axios.post(`${BASE_URL}/user/request/reset-password`, {
+        email:lowercaseEmail,
+      });
+  
+      if (response.status === 200) {
+        Alert.alert("Success", "Verification code sent to your email.");
+        // Navigate to the next screen, e.g., a verification code entry screen
+        // navigation.navigate("VerificationCodeScreen"); // Replace with your actual screen name
+      }
+    } catch (error) {
+      console.error("Send Code Error:", error);
+      if (error.response) {
+        Alert.alert("Error", error.response.data.message || "Failed to send verification code.");
+      } else {
+        Alert.alert("Error", "Network error. Please try again.");
+      }
+    }
+  };
+  
+
   const handleBackPress = () => {
     navigation.navigate("LogIn");
   };
 
-  const handleVerify = () => {
-    navigation.navigate("ClientTabs");
+  const handleVerify = async () => {
+    const otpValue = otp.join(""); // Join the OTP array into a string
+    const lowercaseEmail = email.toLowerCase(); // Ensure the email is in lowercase
+    const newPasswordValue = newPassword; // Capture the new password
+
+    try {
+      const response = await axios.post(`${BASE_URL}/user/reset-password`, {
+        email: lowercaseEmail,
+        otp: otpValue,
+        newPassword: newPasswordValue,
+      });
+
+      if (response.status === 200) {
+        Alert.alert("Success", "Your password has been reset successfully.");
+        // Optionally navigate to the login screen or another screen
+        navigation.navigate("LogIn"); 
+      }
+    } catch (error) {
+      console.error("Verify Error:", error);
+      if (error.response) {
+        Alert.alert("Error", error.response.data.message || "Failed to reset password.");
+      } else {
+        Alert.alert("Error", "Network error. Please try again.");
+      }
+    }
   };
+
 
   const { top, bottom } = useSafeAreaInsets();
 
@@ -78,13 +128,13 @@ const ForgotPw = () => {
           <Text className="text-2xl font-bold">Forgot Password?</Text>
           <Text className="text-base text-gray-500 text-center">
             Please enter the verification code sent to{" "}
-            <Text className="text-green-600">{phone}</Text>.
+            {/* <Text className="text-green-600">{phone}</Text>. */}
           </Text>
         </View>
 
         <View className="">
           <TextInput
-            placeholder="Enter your email"
+            placeholder={email}
             keyboardType="email-address"
             style={{
               fontFamily: FontFamily.poppinsRegular,
@@ -92,7 +142,7 @@ const ForgotPw = () => {
             }}
             className="w-full h-12 border p-4 rounded-lg border-gray-300"
           />
-          <TouchableOpacity className="mt-2">
+          <TouchableOpacity className="mt-2" onPress={handleSendCode}>
             <Text className="text-right text-blue-500">Send code</Text>
           </TouchableOpacity>
         </View>
@@ -120,7 +170,27 @@ const ForgotPw = () => {
         </View>
 
         <View className="">
-          <LinearGradient
+         
+
+          <View className="mt-5 items-center flex-row justify-center">
+            <Text className="text-gray-500">Didn’t receive a code?</Text>
+            <TouchableOpacity>
+              <Text className="text-green-600 font-bold ml-1"> Resend</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <Text className="text-2xl font-bold">New Password</Text>
+        <TextInput
+            placeholder="Enter your New Password"
+            keyboardType="email-address"
+            onChangeText={setNewPassword}
+            style={{
+              fontFamily: FontFamily.poppinsRegular,
+              fontSize: FontSize.size_mini,
+            }}
+            className="w-full h-12 border p-4 rounded-lg border-gray-300"
+          />
+           <LinearGradient
             colors={["#007022", "#54d17a", "#bcffd0"]}
             start={{ x: 0, y: 1 }}
             end={{ x: 1.9, y: 0 }}
@@ -134,14 +204,6 @@ const ForgotPw = () => {
               <Text className="text-white font-bold text-lg">Verify</Text>
             </Pressable>
           </LinearGradient>
-
-          <View className="mt-5 items-center flex-row justify-center">
-            <Text className="text-gray-500">Didn’t receive a code?</Text>
-            <TouchableOpacity>
-              <Text className="text-green-600 font-bold ml-1"> Resend</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
       </View>
     </SafeAreaView>
   );

@@ -55,13 +55,7 @@ const userSchema = mongoose.Schema(
       type: Boolean,
       default: false, 
     },
-    adminOtp: {
-      type: String,
-      default: null, // Optional, predefined OTP for admin
-      required: function () {
-        return this.role === "admin" || this.role === "superadmin";
-      },
-    },
+
   },
   {
     timestamps: true, 
@@ -78,19 +72,6 @@ userSchema.methods.isSuperAdmin = function () {
   return this.role === "superadmin";
 };
 
-// Two-factor authentication validation method
-userSchema.methods.validate2FA = async function (password, otp) {
-  // Check if password matches
-  const isPasswordMatch = await bcrypt.compare(password, this.password);
-  
-  // If role is 'admin' or 'superadmin', validate OTP as well
-  if (this.isAdmin() || this.isSuperAdmin()) {
-    const adminOtp = process.env.ADMIN_OTP || this.adminOtp; // Static OTP from env or stored in schema
-    return isPasswordMatch && otp === adminOtp;
-  }
-
-  return isPasswordMatch;
-};
 
 module.exports = mongoose.model("User", userSchema);
 

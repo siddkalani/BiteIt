@@ -38,21 +38,30 @@ const LogIn = () => {
       });
       const data = response.data;
   
-      // Handle success, e.g., navigate to the dashboard or home screen
       if (response.status === 200) {
-        await AsyncStorage.setItem("userToken", data.token);
-        await AsyncStorage.setItem("userName", data.data.name); // Adjusted to save from responseData
-        await AsyncStorage.setItem("userId", data.data.id);     // Adjusted to save from responseData
+        // Destructure token and userData from the response
+        const { token, data: userData, message } = data; // Added message destructuring
   
-        console.log(response.data);
-  
-        // Navigate based on user role
-        if (data.data.role === "user" || data.data.role === "faculty") {
-          navigation.navigate("ClientTabs");
-        } else if (data.data.role === "admin" || data.data.role === "superadmin") {
-          navigation.navigate("AdminTabs");
+        // Check for admin OTP requirement
+        if (message === "Admin account found. Please use OTP for login.") {
+          navigation.navigate("Otp", { email, isAdmin: true }); 
+          return; // Exit the function early
         }
   
+        // Proceed with token and user data handling for non-admin users
+        const { name, id, role } = userData; // Destructure name, id, and role from userData
+    
+        await AsyncStorage.setItem("userToken", token);
+        await AsyncStorage.setItem("userName", name);
+        await AsyncStorage.setItem("userId", id);
+        await AsyncStorage.setItem("role", role);
+    
+        console.log(data);
+    
+        // Navigate based on user role
+        if (role === "user" || role === "faculty") {
+          navigation.navigate("ClientTabs");
+        } 
         await postPushToken(); 
       }
     } catch (error) {
@@ -66,9 +75,10 @@ const LogIn = () => {
   };
   
   
+  
 
   const handleForgotPassword = () => {
-    navigation.navigate("ForgotPassword");
+    navigation.navigate("ForgotPassword",  {email:email});
   };
 
   const handleSignUp = () => {
