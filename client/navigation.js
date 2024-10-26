@@ -67,14 +67,14 @@ function AppNavigator() {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {/* <Stack.Screen name="Intro" component={Intro1} /> */}
-        {/* <Stack.Screen name="SignIn" component={SignIn} /> 
+        {/* <Stack.Screen name="SignIn" component={SignIn} />  */}
         <Stack.Screen name="CreateAccount" component={CreateAccount} />
         <Stack.Screen name="LogIn" component={LogIn} />
         <Stack.Screen name="FacultyLogin" component={FacultyLogin} />
-        <Stack.Screen name="Otp" component={OTP} />   */}
+        <Stack.Screen name="Otp" component={OTP} />  
         {/* <Stack.Screen name="ForgotPw" component={ForgotPw} /> */}
         {/* {/* <Stack.Screen name="NewUser" component={NewUser} />  */}
-        {/* <Stack.Screen name="ClientTabs" component={ClientTabs} />
+        <Stack.Screen name="ClientTabs" component={ClientTabs} />
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Account" component={Account} />
         <Stack.Screen name="ProfilePage" component={ProfilePage} />
@@ -84,14 +84,14 @@ function AppNavigator() {
         <Stack.Screen name="OrderHistory" component={OrderHistoryPage} />
         <Stack.Screen name="PendingOrder" component={PendingOrders} />
         <Stack.Screen name="PaymentService" component={PaymentService} />
-        <Stack.Screen name="PaymentOption" component={PaymentOption} /> */}
+        <Stack.Screen name="PaymentOption" component={PaymentOption} />
         
         {/* <Stack.Screen name="PaymentConfirmation" component={PaymentConfirmation} /> */}
         {/* <Stack.Screen name="OrderTracking" component={OrderTracking} /> */}
 
         {/* admin side */}
-        {/* <Stack.Screen name="AdminTabs" component={AdminTabs} /> */}
-         {/* <Stack.Screen name="AdminHome" component={OldAdmin} /> */}
+        <Stack.Screen name="AdminTabs" component={AdminTabs} />
+         <Stack.Screen name="AdminHome" component={OldAdmin} />
         <Stack.Screen name="Inventory" component={Inventory} />
         <Stack.Screen name="Bills" component={Bills} />
         <Stack.Screen name="AdminAccount" component={AdminAccount} />
