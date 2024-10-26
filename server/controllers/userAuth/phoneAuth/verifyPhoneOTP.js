@@ -1,6 +1,6 @@
 const asyncHandler = require("express-async-handler");
-const User = require("../../models/userModel");
-const Admin = require("../../models/adminModel");
+const User = require("../../../models/userModel");
+const Admin = require("../../../models/adminModel");
 
 // POST -> /user/verify/otp
 const verifyOtp = asyncHandler(async (req, res) => {

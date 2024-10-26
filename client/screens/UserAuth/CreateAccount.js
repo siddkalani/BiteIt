@@ -41,7 +41,7 @@ const CreateAccount = () => {
 
     const handleSubmit = async () => {
         try {
-          const response = await axios.post(`${BASE_URL}/faculty/register`, formData);
+          const response = await axios.post(`${BASE_URL}/user/register`, formData);
           // Handle success, e.g., navigate to the OTP screen
           console.log(response.data);
           navigation.navigate("Otp", { email: formData.email });

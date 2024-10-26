@@ -38,7 +38,6 @@ app.use("/canteen", require("./routes/canteenRoutes"));
 app.use("/category", require("./routes/categoryRoutes"));
 app.use("/food-item", require("./routes/foodItemRoutes"));
 app.use("/user/order", require("./routes/orderRoutes"));
-app.use("/faculty", require("./routes/facultyRoutes"));
 
 app.use(errorHandler);
 

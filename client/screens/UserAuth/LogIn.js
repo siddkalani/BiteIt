@@ -30,22 +30,30 @@ const LogIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  // Dummy navigation for continue button
   const handleLogin = async () => {
     try {
-      const response = await axios.post(`${BASE_URL}/faculty/login`, {
+      const response = await axios.post(`${BASE_URL}/user/login`, {
         email,
         password,
       });
       const data = response.data;
+  
       // Handle success, e.g., navigate to the dashboard or home screen
       if (response.status === 200) {
-           await AsyncStorage.setItem("userToken", data.token);
-        await AsyncStorage.setItem("userName", data.user.name);
-        await AsyncStorage.setItem("userId", data.user.id);
-        console.log(response.data); 
-         await postPushToken();
-navigation.navigate("ClientTabs")
+        await AsyncStorage.setItem("userToken", data.token);
+        await AsyncStorage.setItem("userName", data.data.name); // Adjusted to save from responseData
+        await AsyncStorage.setItem("userId", data.data.id);     // Adjusted to save from responseData
+  
+        console.log(response.data);
+  
+        // Navigate based on user role
+        if (data.data.role === "user" || data.data.role === "faculty") {
+          navigation.navigate("ClientTabs");
+        } else if (data.data.role === "admin" || data.data.role === "superadmin") {
+          navigation.navigate("AdminTabs");
+        }
+  
+        await postPushToken(); 
       }
     } catch (error) {
       console.error("Login Error:", error);
@@ -56,6 +64,7 @@ navigation.navigate("ClientTabs")
       }
     }
   };
+  
   
 
   const handleForgotPassword = () => {
@@ -228,7 +237,7 @@ navigation.navigate("ClientTabs")
                   fontSize: FontSize.size_lg,
                 }}
               >
-               FacultyLogin
+               Login
               </Text>
             </Pressable>
           </LinearGradient>

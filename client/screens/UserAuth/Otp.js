@@ -59,20 +59,14 @@ const OTP = () => {
 
   const handleVerify = async () => {
     try {
-      const response = await axios.post(`${BASE_URL}/faculty/verify/otp`, {
+      const response = await axios.post(`${BASE_URL}/user/verify/otp`, {
         email: email,
         otp: otp.join(""),
       });
       const data = response.data;
-
-      if (
-        response.status === 200 &&
-        data.message === "Email verified successfully."
-      ) {
-     
-        // console.log(data.token);
-       
-        navigation.replace("Login");
+  
+      if (response.status === 200 && data.message === "Email verified successfully.") {
+        navigation.replace("Login"); 
       } else {
         Alert.alert("Verification Failed", data.message || "An unknown error occurred.");
       }
@@ -86,6 +80,7 @@ const OTP = () => {
       }
     }
   };
+  
 
   const postPushToken = async () => {
     try {
