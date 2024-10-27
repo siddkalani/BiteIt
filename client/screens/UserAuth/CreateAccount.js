@@ -20,8 +20,16 @@ const CreateAccount = () => {
     const [isPasswordHidden, setIsPasswordHidden] = useState(true);
 
     const handleInputChange = (field, value) => {
-        const updatedValue = field === "email" ? value.toLowerCase() : value;
-        setFormData({ ...formData, [field]: value })};
+        let updatedValue = value;
+
+        // Check if the field is email and modify the first character to lowercase
+        if (field === "email" && value.length > 0) {
+            updatedValue = value.charAt(0).toLowerCase() + value.slice(1);
+        }
+
+        setFormData({ ...formData, [field]: updatedValue });
+    };
+
     const togglePasswordVisibility = () => setIsPasswordHidden(!isPasswordHidden);
 
     const renderIcon = (iconName) => {
@@ -36,21 +44,19 @@ const CreateAccount = () => {
         { icon: "Lock", placeholder: "Password", field: "password", keyboardType: "default", isPassword: true }
     ];
 
-
     const { top, bottom } = useSafeAreaInsets();
 
     const handleSubmit = async () => {
         try {
-          const response = await axios.post(`${BASE_URL}/faculty/register`, formData);
-          // Handle success, e.g., navigate to the OTP screen
-          console.log(response.data);
-          navigation.navigate("Otp", { email: formData.email });
-
+            const response = await axios.post(`${BASE_URL}/faculty/register`, formData);
+            // Handle success, e.g., navigate to the OTP screen
+            console.log(response.data);
+            navigation.navigate("Otp", { email: formData.email });
         } catch (error) {
-          // Handle error
-          console.error(error.response ? error.response.data : error.message);
+            // Handle error
+            console.error(error.response ? error.response.data : error.message);
         }
-      };
+    };
 
     return (
         <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
@@ -70,7 +76,6 @@ const CreateAccount = () => {
                     <View className='space-y-2'>
                         <View>
                             <Text style={styles.headerText} className='text-xl'>Create Account</Text>
-                            {/* <Text style={styles.subHeaderText} className="text-[#868889] mt-[-4]">Quickly create </Text> */}
                         </View>
 
                         <View className="space-y-2">

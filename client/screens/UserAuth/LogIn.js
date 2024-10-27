@@ -59,7 +59,7 @@ navigation.navigate("ClientTabs")
   
 
   const handleForgotPassword = () => {
-    navigation.navigate("ForgotPassword");
+    navigation.navigate("ForgotPw");
   };
 
   const handleSignUp = () => {
