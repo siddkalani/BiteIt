@@ -13,6 +13,7 @@ import GlobalHeader from "../../components/Layout/GlobalHeader";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import axios from "axios";
 import { BASE_URL } from "../../constants/constant";
+import {registerUser} from "../../api/userAuth"
 
 const CreateAccount = () => {
     const navigation = useNavigation();
@@ -46,17 +47,13 @@ const CreateAccount = () => {
 
     const { top, bottom } = useSafeAreaInsets();
 
-    const handleSubmit = async () => {
-        try {
-            const response = await axios.post(`${BASE_URL}/user/register`, formData);
-            // Handle success, e.g., navigate to the OTP screen
-            console.log(response.data);
-            navigation.navigate("Otp", { email: formData.email });
-        } catch (error) {
-            // Handle error
-            console.error(error.response ? error.response.data : error.message);
+    const handleSubmit = () => {
+        if (!formData.email || !formData.password) {
+          Alert.alert("Error", "Please fill all fields.");
+          return;
         }
-    };
+        registerUser(formData, navigation);
+      };
 
     return (
         <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>

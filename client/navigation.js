@@ -4,11 +4,9 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
 // import { logoutUser } from "./store/Slices/userDetailSlice";
-import SignIn from "./screens/UserAuth/SignIn";
 import LogIn from "./screens/UserAuth/LogIn";
 import Home from "./screens/Home/Home";
 import OTP from "./screens/UserAuth/Otp";
-import NewUser from "./screens/UserAuth/NewUser";
 import AdminHome from "./screens/Admin/Screens/AdminHome/AdminHome";
 import OldAdmin from "./screens/Admin/AdminHome";
 import SearchResults from "./components/SearchBar/SearchResults";
@@ -19,7 +17,6 @@ import PendingOrders from "./screens/Admin/PendingOrder";
 import PaymentService from "./screens/Payment/PaymentService";
 import Intro1 from "./screens/Intro/Intro1";
 import PaymentOption from "./screens/Payment/PaymentOption";
-import FacultyLogin from "./screens/UserAuth/FacultyLogin";
 import Inventory from "./screens/Admin/Screens/Inventory/Inventory";
 import AdminAccount from "./screens/Admin/Screens/AdminAccount/AdminAccount";
 import Bills from "./screens/Admin/Screens/Bills/Bills";
@@ -67,13 +64,10 @@ function AppNavigator() {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Intro" component={Intro1} />
-        <Stack.Screen name="SignIn" component={SignIn} /> 
         <Stack.Screen name="CreateAccount" component={CreateAccount} />
         <Stack.Screen name="LogIn" component={LogIn} />
-        <Stack.Screen name="FacultyLogin" component={FacultyLogin} />
         <Stack.Screen name="Otp" component={OTP} />  
         <Stack.Screen name="ForgotPw" component={ForgotPw} />
-        <Stack.Screen name="NewUser" component={NewUser} />  
         <Stack.Screen name="ClientTabs" component={ClientTabs} />
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Account" component={Account} />

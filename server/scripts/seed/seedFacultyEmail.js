@@ -10,7 +10,7 @@ mongoose.connect(process.env.CONNECTION_STRING, {
 
 const predefinedFacultyEmails = [
   
-    { email: 'manishashedge78703@gmail.com' },
+    { email: 'shreya.shedge@somaiya.edu' },
    
 ];
 

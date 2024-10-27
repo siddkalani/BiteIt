@@ -24,59 +24,22 @@ import axios from "axios";
 import { BASE_URL } from "../../constants/constant";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Notifications from "expo-notifications";
+import { axiosInstance } from "../../utils/refreshToken";
+import { loginUser } from "../../api/userAuth";
 
 const LogIn = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = async () => {
-    try {
-      const response = await axios.post(`${BASE_URL}/user/login`, {
-        email,
-        password,
-      });
-      const data = response.data;
-  
-      if (response.status === 200) {
-        // Destructure token and userData from the response
-        const { token, data: userData, message } = data; // Added message destructuring
-  
-        // Check for admin OTP requirement
-        if (message === "Admin account found. Please use OTP for login.") {
-          navigation.navigate("Otp", { email, isAdmin: true }); 
-          return; // Exit the function early
-        }
-  
-        // Proceed with token and user data handling for non-admin users
-        const { name, id, role } = userData; // Destructure name, id, and role from userData
-    
-        await AsyncStorage.setItem("userToken", token);
-        await AsyncStorage.setItem("userName", name);
-        await AsyncStorage.setItem("userId", id);
-        await AsyncStorage.setItem("role", role);
-    
-        // console.log(data);
-    
-        // Navigate based on user role
-        if (role === "user" || role === "faculty") {
-          navigation.navigate("ClientTabs");
-        } 
-        await postPushToken(); 
-      }
-    } catch (error) {
-      console.error("Login Error:", error);
-      if (error.response) {
-        Alert.alert("Error", error.response.data.message || "Login failed.");
-      } else {
-        Alert.alert("Error", "Network error. Please try again.");
-      }
+  const handleLogin = () => {
+    if (!email || !password) {
+        Alert.alert("Error", "Please enter your email and password.");
+        return;
     }
-  };
-  
-  
-  
-
+    loginUser(email, password, navigation);
+};
+ 
   const handleForgotPassword = () => {
     navigation.navigate("ForgotPw");
   };
@@ -84,42 +47,6 @@ const LogIn = () => {
   const handleSignUp = () => {
     navigation.navigate("CreateAccount");
   };
-
-  const postPushToken = async () => {
-    try {
-      const userId = await AsyncStorage.getItem("userId");
-      const pushToken = await getPushTokenFromDevice();
-
-      const response = await axios.post(`${BASE_URL}/user/pushToken`, {
-        userId,
-        token: pushToken,
-      });
-
-      console.log("Push token posted successfully:", response.data);
-    } catch (error) {
-      console.error("Error posting push token to backend:", error);
-    }
-  };
-
-  const getPushTokenFromDevice = async () => {
-    const { status: existingStatus } =
-      await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-
-    if (existingStatus !== "granted") {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
-    }
-
-    if (finalStatus !== "granted") {
-      Alert.alert("Failed to get push token for push notification!");
-      return;
-    }
-
-    const tokenData = await Notifications.getExpoPushTokenAsync();
-    return tokenData.data;
-  };
-
 
   const { top, bottom } = useSafeAreaInsets();
   return (

@@ -8,7 +8,7 @@ export const fetchcategory = createAsyncThunk(
     const token = await AsyncStorage.getItem("userToken");
     const response = await fetch(`${BASE_URL}/category/get`, {
       headers: {
-        Authorization: `Bearer ${token}`, // Include the token in headers
+        Authorization: `Bearer ${token}`, 
       },
     });
 
