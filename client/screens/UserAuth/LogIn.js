@@ -30,22 +30,39 @@ const LogIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  // Dummy navigation for continue button
   const handleLogin = async () => {
     try {
-      const response = await axios.post(`${BASE_URL}/faculty/login`, {
+      const response = await axios.post(`${BASE_URL}/user/login`, {
         email,
         password,
       });
       const data = response.data;
-      // Handle success, e.g., navigate to the dashboard or home screen
+  
       if (response.status === 200) {
-           await AsyncStorage.setItem("userToken", data.token);
-        await AsyncStorage.setItem("userName", data.user.name);
-        await AsyncStorage.setItem("userId", data.user.id);
-        console.log(response.data); 
-         await postPushToken();
-navigation.navigate("ClientTabs")
+        // Destructure token and userData from the response
+        const { token, data: userData, message } = data; // Added message destructuring
+  
+        // Check for admin OTP requirement
+        if (message === "Admin account found. Please use OTP for login.") {
+          navigation.navigate("Otp", { email, isAdmin: true }); 
+          return; // Exit the function early
+        }
+  
+        // Proceed with token and user data handling for non-admin users
+        const { name, id, role } = userData; // Destructure name, id, and role from userData
+    
+        await AsyncStorage.setItem("userToken", token);
+        await AsyncStorage.setItem("userName", name);
+        await AsyncStorage.setItem("userId", id);
+        await AsyncStorage.setItem("role", role);
+    
+        console.log(data);
+    
+        // Navigate based on user role
+        if (role === "user" || role === "faculty") {
+          navigation.navigate("ClientTabs");
+        } 
+        await postPushToken(); 
       }
     } catch (error) {
       console.error("Login Error:", error);
@@ -56,6 +73,8 @@ navigation.navigate("ClientTabs")
       }
     }
   };
+  
+  
   
 
   const handleForgotPassword = () => {
@@ -228,7 +247,7 @@ navigation.navigate("ClientTabs")
                   fontSize: FontSize.size_lg,
                 }}
               >
-               FacultyLogin
+               Login
               </Text>
             </Pressable>
           </LinearGradient>

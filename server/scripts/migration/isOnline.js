@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 // Load the FoodItem model
-const FoodItem = require('./models/foodItemModel'); // Adjust the path to your model file
+const FoodItem = require('../../models/foodItemModel'); // Adjust the path to your model file
 
 const updateFoodItems = async () => {
   try {

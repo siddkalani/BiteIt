@@ -1,9 +1,9 @@
 const asyncHandler = require("express-async-handler");
-const User = require("../../models/userModel");
+const User = require("../../../models/userModel");
 const bcrypt = require("bcrypt");
 const otpGenerator = require("otp-generator");
-const { sendPhoneOTP } = require("../../services/authService");
-const Admin = require("../../models/adminModel");
+const { sendPhoneOTP } = require("../../../services/authService");
+const Admin = require("../../../models/adminModel");
 
 // POST -> /user/login
 const userLogin = asyncHandler(async (req, res) => {
