@@ -37,7 +37,7 @@ const ForgotPw = () => {
 
       if (response.status === 200) {
         Alert.alert("Success", "Verification code sent to your email.");
-        setStep(2); // Move to OTP verification step
+        setStep(2); 
       }
     } catch (error) {
       Alert.alert("Error", error.response?.data.message || "Failed to send verification code.");
@@ -63,17 +63,16 @@ const ForgotPw = () => {
     const lowercaseEmail = email.toLowerCase();
 
     try {
-      const response = await axios.post(`${BASE_URL}/user/verify-otp`, {
+      const response = await axios.post(`${BASE_URL}/user/verify/resent/otp`, {
         email: lowercaseEmail,
         otp: otpValue,
       });
 
       if (response.status === 200) {
         Alert.alert("Success", "OTP verified. Please create a new password.");
-        setStep(3); // Move to password creation step
+        setStep(3); 
       }
     } catch (error) {
-      console.log(otp.join(""))
       Alert.alert("Error", error.response?.data.message || "Failed to verify OTP.");
     }
   };
@@ -87,6 +86,7 @@ const ForgotPw = () => {
     try {
       const response = await axios.post(`${BASE_URL}/user/reset-password`, {
         email: email.toLowerCase(),
+        otp:otp,
         newPassword,
       });
 

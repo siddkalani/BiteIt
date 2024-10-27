@@ -56,7 +56,7 @@ const LogIn = () => {
         await AsyncStorage.setItem("userId", id);
         await AsyncStorage.setItem("role", role);
     
-        console.log(data);
+        // console.log(data);
     
         // Navigate based on user role
         if (role === "user" || role === "faculty") {
