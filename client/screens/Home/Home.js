@@ -25,17 +25,16 @@ const SkeletonLoader = ({ style }) => {
       Animated.sequence([
         Animated.timing(animatedValue, {
           toValue: 1,
-          duration: 1000,
+          duration: 800,  // Faster duration for smoother effect
           useNativeDriver: true,
         }),
         Animated.timing(animatedValue, {
           toValue: 0,
-          duration: 1000,
+          duration: 800,
           useNativeDriver: true,
         }),
       ])
     );
-    
     animation.start();
     return () => animation.stop();
   }, []);
@@ -49,7 +48,7 @@ const SkeletonLoader = ({ style }) => {
     <Animated.View
       style={[
         {
-          backgroundColor: '#E1E9EE',
+          backgroundColor: "#E1E9EE",
           opacity,
         },
         style,
@@ -63,25 +62,25 @@ const FullScreenSkeleton = () => {
   const { top: safeAreaTop } = useSafeAreaInsets();
 
   return (
-    <View style={{ flex: 1, backgroundColor: 'white', paddingTop: safeAreaTop }}>
+    <View style={{ flex: 1, backgroundColor: "white", paddingTop: safeAreaTop }}>
       {/* Header Skeleton */}
       <View style={{ padding: 16 }}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
           <SkeletonLoader style={{ width: 120, height: 20, borderRadius: 4 }} />
           <SkeletonLoader style={{ width: 40, height: 40, borderRadius: 20 }} />
         </View>
-        <SkeletonLoader style={{ width: '100%', height: 50, borderRadius: 8 }} />
+        <SkeletonLoader style={{ width: "100%", height: 50, borderRadius: 8 }} />
       </View>
 
       {/* Banner Skeleton */}
       <View style={{ padding: 16 }}>
-        <SkeletonLoader style={{ width: '100%', height: screenWidth * 0.4, borderRadius: 8 }} />
+        <SkeletonLoader style={{ width: "100%", height: screenWidth * 0.4, borderRadius: 8 }} />
       </View>
 
       {/* Categories Skeleton */}
       <View style={{ padding: 16 }}>
         <SkeletonLoader style={{ width: 120, height: 20, borderRadius: 4, marginBottom: 16 }} />
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+        <View style={{ flexDirection: "row", justifyContent: "space-between", flexWrap: "wrap" }}>
           {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
             <SkeletonLoader
               key={item}
@@ -99,7 +98,7 @@ const FullScreenSkeleton = () => {
       {/* Featured Section Skeleton */}
       <View style={{ padding: 16 }}>
         <SkeletonLoader style={{ width: 150, height: 20, borderRadius: 4, marginBottom: 16 }} />
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           {[1, 2].map((item) => (
             <SkeletonLoader
               key={item}
@@ -126,7 +125,7 @@ const Home = ({ setTabBarVisible }) => {
   const scrollY = useRef(new Animated.Value(0)).current;
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isLocationModalVisible, setIsLocationModalVisible] = useState(false);
-  const [isLoading, setIsLoading] = useState(true); // Add loading state
+  const [isLoading, setIsLoading] = useState(true); // Loading state
   const { top: safeAreaTop } = useSafeAreaInsets();
   const lastScrollY = useRef(0);
 
@@ -134,7 +133,7 @@ const Home = ({ setTabBarVisible }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 2000);
+    }, 1500); // Reduced to 1.5s for faster transition
     return () => clearTimeout(timer);
   }, []);
 
@@ -198,12 +197,12 @@ const Home = ({ setTabBarVisible }) => {
         onScroll={handleScroll}
         scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingTop: HEADER_HEIGHT + safeAreaTop}}
-        className='rounded-b-3xl'
+        contentContainerStyle={{ paddingTop: HEADER_HEIGHT + safeAreaTop }}
+        className="rounded-b-3xl"
         bounces={false}
         overScrollMode="never"
       >
-        <View className='rounded-b-3xl'>
+        <View className="rounded-b-3xl">
           <View className="bg-[#309624] px-4 pb-2 rounded-b-3xl">
             <Image
               source={require("../../assets/images/home/home-slider.png")}
@@ -214,22 +213,25 @@ const Home = ({ setTabBarVisible }) => {
           </View>
         </View>
 
-        <View className="px-4 pb-4 pt-2 space-y-2" style={{ backgroundColor: 'white' }}>
+        <View className="px-4 pb-4 pt-2 space-y-2" style={{ backgroundColor: "white" }}>
           <Categories />
         </View>
 
         <Featured />
       </Animated.ScrollView>
 
-      {/* Location Selection Modal */}
-      <CanteenSelectionModal
-        isLocationModalVisible={isLocationModalVisible}
-        closeLocationModal={closeLocationModal}
-        safeAreaTop={safeAreaTop}
-      />
+      {/* Conditional Modals */}
+      {isLocationModalVisible && (
+        <CanteenSelectionModal
+          isLocationModalVisible={isLocationModalVisible}
+          closeLocationModal={closeLocationModal}
+          safeAreaTop={safeAreaTop}
+        />
+      )}
 
-      {/* Search Modal */}
-      <SearchModal isModalVisible={isModalVisible} closeSearchModal={closeSearchModal} />
+      {isModalVisible && (
+        <SearchModal isModalVisible={isModalVisible} closeSearchModal={closeSearchModal} />
+      )}
     </View>
   );
 };

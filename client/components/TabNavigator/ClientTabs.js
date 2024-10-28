@@ -8,12 +8,13 @@ import OrderHistoryPage from '../../screens/OrderHistory/OrderHistoryPage';
 import Account from '../../screens/Account/Account';
 import { selectItemCount } from '../../store/Slices/cartSlice';
 import { useSelector } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Tab = createBottomTabNavigator();
 const { height: screenHeight } = Dimensions.get('window');
 
 const CustomTabBarWithCart = ({ state, descriptors, navigation, translateY }) => {
-  const currentRouteName = state.routes[state.index].name; // Get the current route
+  const currentRouteName = state.routes[state.index].name;
   const itemCount = useSelector(selectItemCount);
 
   return (
@@ -24,16 +25,11 @@ const CustomTabBarWithCart = ({ state, descriptors, navigation, translateY }) =>
         left: 0,
         right: 0,
         transform: [{ translateY }],
-        paddingBottom: 0, // Extra padding to accommodate the FloatingCartBar height
+        paddingBottom: 0,
       }}
     >
-      {/* Show FloatingCartBar only on Home page */}
-      {currentRouteName === 'Home' &&  itemCount > 0 &&(
-        <FloatingCartBar
-          // itemCount={2}
-          // totalPrice={199.99}
-          // restaurantName={'Pizza Place'}
-        />
+      {currentRouteName === 'Home' && itemCount > 0 && (
+        <FloatingCartBar />
       )}
 
       <View
@@ -95,7 +91,17 @@ const getIconName = (routeName, focused) => {
 
 const ClientTabs = () => {
   const [isTabBarVisible, setIsTabBarVisible] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Track auth status
   const translateY = useRef(new Animated.Value(0)).current;
+
+  // Fetch auth status
+  useEffect(() => {
+    const fetchAuthStatus = async () => {
+      const token = await AsyncStorage.getItem('userToken');
+      setIsAuthenticated(!!token); // Set to true if token exists, otherwise false
+    };
+    fetchAuthStatus();
+  }, []);
 
   const animateTabBar = (toValue) => {
     Animated.spring(translateY, {
@@ -150,11 +156,16 @@ const ClientTabs = () => {
         <Tab.Screen name="Home">
           {(props) => <Home {...props} setTabBarVisible={setIsTabBarVisible} />}
         </Tab.Screen>
-        <Tab.Screen 
-          name="OrderHistoryPage" 
-          component={OrderHistoryPage} 
-          options={{ title: 'Orders' }} 
-        />
+        
+        {/* Conditionally render OrderHistoryPage based on authentication */}
+        {isAuthenticated && (
+          <Tab.Screen 
+            name="OrderHistoryPage" 
+            component={OrderHistoryPage} 
+            options={{ title: 'Orders' }} 
+          />
+        )}
+
         <Tab.Screen 
           name="Profile" 
           component={Account} 
@@ -164,6 +175,5 @@ const ClientTabs = () => {
     </View>
   );
 };
-
 
 export default ClientTabs;

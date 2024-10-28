@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import {
     StatusBar, Pressable, Text, View, Image, KeyboardAvoidingView,
     Platform, StyleSheet, TextInput, TouchableOpacity,
-    SafeAreaView
+    SafeAreaView, ActivityIndicator // Import ActivityIndicator for loading spinner
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -18,15 +18,13 @@ const CreateAccount = () => {
     const navigation = useNavigation();
     const [formData, setFormData] = useState({ name: "", phone: "", email: "", password: "" });
     const [isPasswordHidden, setIsPasswordHidden] = useState(true);
+    const [isLoading, setIsLoading] = useState(false); // Loading state
 
     const handleInputChange = (field, value) => {
         let updatedValue = value;
-
-        // Check if the field is email and modify the first character to lowercase
         if (field === "email" && value.length > 0) {
             updatedValue = value.charAt(0).toLowerCase() + value.slice(1);
         }
-
         setFormData({ ...formData, [field]: updatedValue });
     };
 
@@ -47,14 +45,16 @@ const CreateAccount = () => {
     const { top, bottom } = useSafeAreaInsets();
 
     const handleSubmit = async () => {
+        setIsLoading(true); // Start loading
+
         try {
             const response = await axios.post(`${BASE_URL}/faculty/register`, formData);
-            // Handle success, e.g., navigate to the OTP screen
             console.log(response.data);
             navigation.navigate("Otp", { email: formData.email });
         } catch (error) {
-            // Handle error
             console.error(error.response ? error.response.data : error.message);
+        } finally {
+            setIsLoading(false); // Stop loading
         }
     };
 
@@ -103,8 +103,12 @@ const CreateAccount = () => {
 
                     <View className='mt-4 space-y-1'>
                         <LinearGradient colors={["#007022", "#54d17a", "#bcffd0"]} start={{ x: 0, y: 1 }} end={{ x: 1.9, y: 0 }} className="rounded-xl">
-                            <Pressable className="p-3 justify-center items-center" onPress={handleSubmit}>
-                                <Text style={styles.buttonText}>Continue</Text>
+                            <Pressable className="p-3 justify-center items-center" onPress={handleSubmit} disabled={isLoading}>
+                                {isLoading ? (
+                                    <ActivityIndicator size="small" color="#ffffff" /> // Show loading spinner
+                                ) : (
+                                    <Text style={styles.buttonText}>Continue</Text>
+                                )}
                             </Pressable>
                         </LinearGradient>
 

@@ -8,17 +8,18 @@ import {
   Alert,
   Platform,
   StatusBar,
+  ActivityIndicator, // Import ActivityIndicator
 } from "react-native";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import GlobalHeader from "../../components/Layout/GlobalHeader";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { FontFamily, FontSize } from "../../GlobalStyles";
-import axios from 'axios'
+import axios from 'axios';
 import { BASE_URL } from "../../constants/constant";
 
 const ForgotPw = () => {
-  const [step, setStep] = useState(1); // Step management
+  const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState(["", "", "", "", ""]);
   const [newPassword, setNewPassword] = useState("");
@@ -27,8 +28,14 @@ const ForgotPw = () => {
   const inputRefs = useRef([]);
   const navigation = useNavigation();
   const { top, bottom } = useSafeAreaInsets();
+  
+  // Loading states for buttons
+  const [isSendingCode, setIsSendingCode] = useState(false);
+  const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
+  const [isResettingPassword, setIsResettingPassword] = useState(false);
 
   const handleSendCode = async () => {
+    setIsSendingCode(true);
     const lowercaseEmail = email.toLowerCase();
     try {
       const response = await axios.post(`${BASE_URL}/user/request/reset-password`, {
@@ -37,10 +44,12 @@ const ForgotPw = () => {
 
       if (response.status === 200) {
         Alert.alert("Success", "Verification code sent to your email.");
-        setStep(2); 
+        setStep(2);
       }
     } catch (error) {
       Alert.alert("Error", error.response?.data.message || "Failed to send verification code.");
+    } finally {
+      setIsSendingCode(false); // Stop loading
     }
   };
 
@@ -55,10 +64,11 @@ const ForgotPw = () => {
   };
 
   const handleEmailChange = (text) => {
-    setEmail(text.charAt(0).toLowerCase() + text.slice(1)); // Ensure the first letter is lowercase
+    setEmail(text.charAt(0).toLowerCase() + text.slice(1));
   };
 
   const handleOtpVerify = async () => {
+    setIsVerifyingOtp(true);
     const otpValue = otp.join("");
     const lowercaseEmail = email.toLowerCase();
 
@@ -70,10 +80,12 @@ const ForgotPw = () => {
 
       if (response.status === 200) {
         Alert.alert("Success", "OTP verified. Please create a new password.");
-        setStep(3); 
+        setStep(3);
       }
     } catch (error) {
       Alert.alert("Error", error.response?.data.message || "Failed to verify OTP.");
+    } finally {
+      setIsVerifyingOtp(false); // Stop loading
     }
   };
 
@@ -82,11 +94,12 @@ const ForgotPw = () => {
       Alert.alert("Error", "Passwords do not match.");
       return;
     }
+    setIsResettingPassword(true);
 
     try {
       const response = await axios.post(`${BASE_URL}/user/reset-password`, {
         email: email.toLowerCase(),
-        otp:otp,
+        otp: otp,
         newPassword,
       });
 
@@ -96,6 +109,8 @@ const ForgotPw = () => {
       }
     } catch (error) {
       Alert.alert("Error", error.response?.data.message || "Failed to reset password.");
+    } finally {
+      setIsResettingPassword(false); // Stop loading
     }
   };
 
@@ -130,9 +145,13 @@ const ForgotPw = () => {
               }}
               className="w-full border p-3 rounded-lg border-gray-300 mb-4"
             />
-            <TouchableOpacity className="w-full" onPress={handleSendCode}>
+            <TouchableOpacity className="w-full" onPress={handleSendCode} disabled={isSendingCode}>
               <LinearGradient colors={["#007022", "#54d17a", "#bcffd0"]} start={{ x: 0, y: 1 }} end={{ x: 1, y: 0 }} className="rounded-md">
-                <Text className="text-white font-bold text-lg text-center py-4">Send Code</Text>
+                {isSendingCode ? (
+                  <ActivityIndicator size="small" color="#ffffff" className="py-4" />
+                ) : (
+                  <Text className="text-white font-bold text-lg text-center py-4">Send Code</Text>
+                )}
               </LinearGradient>
             </TouchableOpacity>
           </>
@@ -158,9 +177,13 @@ const ForgotPw = () => {
                 />
               ))}
             </View>
-            <TouchableOpacity className="w-full" onPress={handleOtpVerify}>
+            <TouchableOpacity className="w-full" onPress={handleOtpVerify} disabled={isVerifyingOtp}>
               <LinearGradient colors={["#007022", "#54d17a", "#bcffd0"]} start={{ x: 0, y: 1 }} end={{ x: 1, y: 0 }} className="rounded-md">
-                <Text className="text-white font-bold text-lg text-center py-4">Verify OTP</Text>
+                {isVerifyingOtp ? (
+                  <ActivityIndicator size="small" color="#ffffff" className="py-4" />
+                ) : (
+                  <Text className="text-white font-bold text-lg text-center py-4">Verify OTP</Text>
+                )}
               </LinearGradient>
             </TouchableOpacity>
             <TouchableOpacity className="mt-4" onPress={() => setStep(1)}>
@@ -182,7 +205,7 @@ const ForgotPw = () => {
                 fontFamily: FontFamily.poppinsRegular,
                 fontSize: FontSize.size_mini,
               }}
-              className="w-full h-12 border p-4 rounded-lg border-gray-300 mb-4"
+              className="w-full border p-3 rounded-lg border-gray-300 mb-4"
             />
             <TextInput
               placeholder="Confirm New Password"
@@ -193,11 +216,15 @@ const ForgotPw = () => {
                 fontFamily: FontFamily.poppinsRegular,
                 fontSize: FontSize.size_mini,
               }}
-              className="w-full h-12 border p-4 rounded-lg border-gray-300 mb-4"
+              className="w-full border p-3 rounded-lg border-gray-300 mb-4"
             />
-            <TouchableOpacity className="w-full" onPress={handlePasswordReset}>
+            <TouchableOpacity className="w-full" onPress={handlePasswordReset} disabled={isResettingPassword}>
               <LinearGradient colors={["#007022", "#54d17a", "#bcffd0"]} start={{ x: 0, y: 1 }} end={{ x: 1, y: 0 }} className="rounded-md">
-                <Text className="text-white font-bold text-lg text-center py-4">Reset Password</Text>
+                {isResettingPassword ? (
+                  <ActivityIndicator size="small" color="#ffffff" className="py-4" />
+                ) : (
+                  <Text className="text-white font-bold text-lg text-center py-4">Reset Password</Text>
+                )}
               </LinearGradient>
             </TouchableOpacity>
             <TouchableOpacity className="mt-4" onPress={() => setStep(2)}>
