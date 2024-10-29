@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,7 +8,7 @@ import {
   Alert,
   Platform,
   StatusBar,
-  ActivityIndicator, // Import ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -18,7 +18,7 @@ import { FontFamily, FontSize } from "../../GlobalStyles";
 import { resendOtp, verifyResentOtp, resetPassword } from "../../api/userAuth";
 
 const ForgotPw = () => {
-  const [step, setStep] = useState(1); 
+  const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState(["", "", "", "", ""]);
   const [newPassword, setNewPassword] = useState("");
@@ -27,16 +27,36 @@ const ForgotPw = () => {
   const inputRefs = useRef([]);
   const navigation = useNavigation();
   const { top, bottom } = useSafeAreaInsets();
-  
-  // Loading states for buttons
   const [isSendingCode, setIsSendingCode] = useState(false);
   const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
   const [isResettingPassword, setIsResettingPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [countdown, setCountdown] = useState(0);
 
+  // Countdown timer for button re-enabling
+  useEffect(() => {
+    let timer;
+    if (countdown > 0) {
+      timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+    }
+    return () => clearTimeout(timer);
+  }, [countdown]);
 
-  const handleSendCode = async() =>{
-    resendOtp(email, setStep)
-  }
+  const handleSendCode = async () => {
+    setIsSendingCode(true);
+    setErrorMessage("");
+    setCountdown(60); // Disable button for 60 seconds
+
+    try {
+      await resendOtp(email, setStep);
+      setErrorMessage("");
+    } catch (error) {
+      setCountdown(0); // Reset countdown on error
+      setErrorMessage("Failed to send verification code.");
+    } finally {
+      setIsSendingCode(false);
+    }
+  };
 
   const handleOtpChange = (text, index) => {
     let newOtp = [...otp];
@@ -48,18 +68,32 @@ const ForgotPw = () => {
     }
   };
 
-  const handleEmailChange = (text) => {
-    setEmail(text.charAt(0).toLowerCase() + text.slice(1));
+  const handleOtpVerify = async () => {
+    setIsVerifyingOtp(true);
+    setErrorMessage("");
+
+    try {
+      await verifyResentOtp(email, otp, setStep);
+    } catch (error) {
+      setErrorMessage("Failed to verify OTP.");
+    } finally {
+      setIsVerifyingOtp(false);
+    }
   };
 
+  const handlePasswordReset = async () => {
+    setIsResettingPassword(true);
+    setErrorMessage("");
 
-const handleOtpVerify = () =>{
-  verifyResentOtp(email, otp, setStep)
-}
+    try {
+      await resetPassword(email, otp, newPassword, confirmPassword, navigation);
+    } catch (error) {
+      setErrorMessage("Failed to reset password.");
+    } finally {
+      setIsResettingPassword(false);
+    }
+  };
 
-  const handlePasswordReset = () =>{
-    resetPassword(email, otp, newPassword, confirmPassword, navigation)
-  }
   return (
     <SafeAreaView
       style={{
@@ -84,19 +118,24 @@ const handleOtpVerify = () =>{
               placeholder="Enter your email"
               keyboardType="email-address"
               value={email}
-              onChangeText={handleEmailChange}
+              onChangeText={(text) => setEmail(text.toLowerCase())}
               style={{
                 fontFamily: FontFamily.poppinsRegular,
                 fontSize: FontSize.size_mini,
               }}
               className="w-full border p-3 rounded-lg border-gray-300 mb-4"
             />
-            <TouchableOpacity className="w-full" onPress={handleSendCode} disabled={isSendingCode}>
+            {errorMessage ? (
+              <Text className="text-red-500 text-center mb-4">{errorMessage}</Text>
+            ) : null}
+            <TouchableOpacity className="w-full" onPress={handleSendCode} disabled={isSendingCode || countdown > 0}>
               <LinearGradient colors={["#007022", "#54d17a", "#bcffd0"]} start={{ x: 0, y: 1 }} end={{ x: 1, y: 0 }} className="rounded-md">
                 {isSendingCode ? (
                   <ActivityIndicator size="small" color="#ffffff" className="py-4" />
                 ) : (
-                  <Text className="text-white font-bold text-lg text-center py-4">Send Code</Text>
+                  <Text className="text-white font-bold text-lg text-center py-4">
+                   Send Code
+                  </Text>
                 )}
               </LinearGradient>
             </TouchableOpacity>
@@ -123,6 +162,9 @@ const handleOtpVerify = () =>{
                 />
               ))}
             </View>
+            {errorMessage ? (
+              <Text className="text-red-500 text-center mb-4">{errorMessage}</Text>
+            ) : null}
             <TouchableOpacity className="w-full" onPress={handleOtpVerify} disabled={isVerifyingOtp}>
               <LinearGradient colors={["#007022", "#54d17a", "#bcffd0"]} start={{ x: 0, y: 1 }} end={{ x: 1, y: 0 }} className="rounded-md">
                 {isVerifyingOtp ? (
@@ -132,8 +174,10 @@ const handleOtpVerify = () =>{
                 )}
               </LinearGradient>
             </TouchableOpacity>
-            <TouchableOpacity className="mt-4" onPress={() => setStep(1)}>
-              <Text className="text-center text-blue-500 font-bold">Back to Email</Text>
+            <TouchableOpacity className="mt-4" onPress={handleSendCode} disabled={isSendingCode || countdown > 0}>
+              <Text className="text-center text-blue-500 font-bold">
+                {countdown > 0 ? `Resend OTP in ${countdown}s` : "Resend OTP"}
+              </Text>
             </TouchableOpacity>
           </>
         )}
@@ -164,6 +208,9 @@ const handleOtpVerify = () =>{
               }}
               className="w-full border p-3 rounded-lg border-gray-300 mb-4"
             />
+            {errorMessage ? (
+              <Text className="text-red-500 text-center mb-4">{errorMessage}</Text>
+            ) : null}
             <TouchableOpacity className="w-full" onPress={handlePasswordReset} disabled={isResettingPassword}>
               <LinearGradient colors={["#007022", "#54d17a", "#bcffd0"]} start={{ x: 0, y: 1 }} end={{ x: 1, y: 0 }} className="rounded-md">
                 {isResettingPassword ? (
