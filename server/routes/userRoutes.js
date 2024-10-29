@@ -13,6 +13,7 @@ const logoutUser = require("../controllers/userAuth/email/logoutUer");
 const refreshAccessToken = require("../controllers/userAuth/email/refreshToken");
 const getUserDetails = require("../controllers/userAuth/userDetails");
 
+
 const router = express.Router();
 
 router.route('/login').post(loginUser);
@@ -26,6 +27,6 @@ router.route('/refresh-token').post(refreshAccessToken)
 router.route("/pushToken").post(postPushToken);
 router.route("/pushToken/:id").get(getPushToken);
 router.route('/logout').post(logoutUser)
-router.route('/:id').get(getUserDetails)
+router.route('/:id').get(validateToken, getUserDetails)
 
 module.exports = router;
