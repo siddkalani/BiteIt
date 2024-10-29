@@ -4,7 +4,7 @@ import {
   Text,
   Image,
   ScrollView,
-  ActivityIndicator,
+  Animated,
   TouchableOpacity,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,11 +13,41 @@ import { BASE_URL } from "../../constants/constant";
 import { fetchcategory } from "../../store/Slices/categorySlice";
 import { useNavigation } from "@react-navigation/native";
 
+// SkeletonLoader Component
+const SkeletonLoader = ({ style }) => {
+  const animatedValue = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const animation = Animated.loop(
+      Animated.sequence([
+        Animated.timing(animatedValue, {
+          toValue: 1,
+          duration: 800,
+          useNativeDriver: true,
+        }),
+        Animated.timing(animatedValue, {
+          toValue: 0,
+          duration: 800,
+          useNativeDriver: true,
+        }),
+      ])
+    );
+    animation.start();
+    return () => animation.stop();
+  }, []);
+
+  const opacity = animatedValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.3, 0.7],
+  });
+
+  return <Animated.View style={[{ backgroundColor: "#E1E9EE", opacity }, style]} />;
+};
+
 const Categories = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const category = useSelector((state) => state.category.items);
-  // console.log(category);
   const categoryStatus = useSelector((state) => state.category.status);
   const categoryError = useSelector((state) => state.category.error);
 
@@ -28,7 +58,7 @@ const Categories = () => {
   }, [categoryStatus, dispatch]);
 
   const handlePress = (id) => {
-    navigation.navigate("HomeCategory", { id }); // Pass categoryId to HomeCategory
+    navigation.navigate("HomeCategory", { id });
   };
 
   return (
@@ -42,7 +72,14 @@ const Categories = () => {
         Categories
       </Text>
       {categoryStatus === "loading" ? (
-        <ActivityIndicator size="large" color="#007022" />
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} className="space-x-4">
+          {[...Array(5)].map((_, index) => (
+            <View key={index} className="items-center space-y-2">
+              <SkeletonLoader style={{ width: 61, height: 62, borderRadius: 31 }} />
+              <SkeletonLoader style={{ width: 50, height: 10, borderRadius: 5, marginTop: 5 }} />
+            </View>
+          ))}
+        </ScrollView>
       ) : categoryStatus === "failed" ? (
         <Text>Error: {categoryError}</Text>
       ) : (

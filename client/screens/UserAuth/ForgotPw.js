@@ -8,8 +8,9 @@ import {
   Alert,
   Platform,
   StatusBar,
+  ActivityIndicator, // Import ActivityIndicator
 } from "react-native";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import GlobalHeader from "../../components/Layout/GlobalHeader";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -26,6 +27,11 @@ const ForgotPw = () => {
   const inputRefs = useRef([]);
   const navigation = useNavigation();
   const { top, bottom } = useSafeAreaInsets();
+  
+  // Loading states for buttons
+  const [isSendingCode, setIsSendingCode] = useState(false);
+  const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
+  const [isResettingPassword, setIsResettingPassword] = useState(false);
 
 
   const handleSendCode = async() =>{
@@ -43,7 +49,7 @@ const ForgotPw = () => {
   };
 
   const handleEmailChange = (text) => {
-    setEmail(text.charAt(0).toLowerCase() + text.slice(1)); 
+    setEmail(text.charAt(0).toLowerCase() + text.slice(1));
   };
 
 
@@ -85,9 +91,13 @@ const handleOtpVerify = () =>{
               }}
               className="w-full border p-3 rounded-lg border-gray-300 mb-4"
             />
-            <TouchableOpacity className="w-full" onPress={handleSendCode}>
+            <TouchableOpacity className="w-full" onPress={handleSendCode} disabled={isSendingCode}>
               <LinearGradient colors={["#007022", "#54d17a", "#bcffd0"]} start={{ x: 0, y: 1 }} end={{ x: 1, y: 0 }} className="rounded-md">
-                <Text className="text-white font-bold text-lg text-center py-4">Send Code</Text>
+                {isSendingCode ? (
+                  <ActivityIndicator size="small" color="#ffffff" className="py-4" />
+                ) : (
+                  <Text className="text-white font-bold text-lg text-center py-4">Send Code</Text>
+                )}
               </LinearGradient>
             </TouchableOpacity>
           </>
@@ -113,9 +123,13 @@ const handleOtpVerify = () =>{
                 />
               ))}
             </View>
-            <TouchableOpacity className="w-full" onPress={handleOtpVerify}>
+            <TouchableOpacity className="w-full" onPress={handleOtpVerify} disabled={isVerifyingOtp}>
               <LinearGradient colors={["#007022", "#54d17a", "#bcffd0"]} start={{ x: 0, y: 1 }} end={{ x: 1, y: 0 }} className="rounded-md">
-                <Text className="text-white font-bold text-lg text-center py-4">Verify OTP</Text>
+                {isVerifyingOtp ? (
+                  <ActivityIndicator size="small" color="#ffffff" className="py-4" />
+                ) : (
+                  <Text className="text-white font-bold text-lg text-center py-4">Verify OTP</Text>
+                )}
               </LinearGradient>
             </TouchableOpacity>
             <TouchableOpacity className="mt-4" onPress={() => setStep(1)}>
@@ -137,7 +151,7 @@ const handleOtpVerify = () =>{
                 fontFamily: FontFamily.poppinsRegular,
                 fontSize: FontSize.size_mini,
               }}
-              className="w-full h-12 border p-4 rounded-lg border-gray-300 mb-4"
+              className="w-full border p-3 rounded-lg border-gray-300 mb-4"
             />
             <TextInput
               placeholder="Confirm New Password"
@@ -148,11 +162,15 @@ const handleOtpVerify = () =>{
                 fontFamily: FontFamily.poppinsRegular,
                 fontSize: FontSize.size_mini,
               }}
-              className="w-full h-12 border p-4 rounded-lg border-gray-300 mb-4"
+              className="w-full border p-3 rounded-lg border-gray-300 mb-4"
             />
-            <TouchableOpacity className="w-full" onPress={handlePasswordReset}>
+            <TouchableOpacity className="w-full" onPress={handlePasswordReset} disabled={isResettingPassword}>
               <LinearGradient colors={["#007022", "#54d17a", "#bcffd0"]} start={{ x: 0, y: 1 }} end={{ x: 1, y: 0 }} className="rounded-md">
-                <Text className="text-white font-bold text-lg text-center py-4">Reset Password</Text>
+                {isResettingPassword ? (
+                  <ActivityIndicator size="small" color="#ffffff" className="py-4" />
+                ) : (
+                  <Text className="text-white font-bold text-lg text-center py-4">Reset Password</Text>
+                )}
               </LinearGradient>
             </TouchableOpacity>
             <TouchableOpacity className="mt-4" onPress={() => setStep(2)}>
