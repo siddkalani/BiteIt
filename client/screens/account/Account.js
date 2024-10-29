@@ -1,13 +1,49 @@
-import React from 'react';
+import React, { useState ,useEffect} from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StatusBar, SafeAreaView, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as IconF from "react-native-feather"; // Feather icons already imported
 import Icon from 'react-native-vector-icons/Ionicons'; // Ionicons for MenuItem icons
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { BASE_URL } from '../../constants/constant';
 
 const Account = () => {
     const insets = useSafeAreaInsets(); // Using SafeAreaInsets to get padding values for iOS and Android
     const navigation = useNavigation();
+
+    const [user, setUser] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    // Function to fetch user details from the backend
+    const fetchUserDetails = async (userId) => {
+        try {
+            const response = await axios.get(`${BASE_URL}/user/${userId}`);
+            setUser(response.data);
+        } catch (error) {
+            console.error('Error fetching user details:', error);
+        }
+    };
+
+    // Function to check Async Storage for user ID
+    const checkUserId = async () => {
+        try {
+            const userId = await AsyncStorage.getItem('userId');
+            if (userId) {
+                setIsLoggedIn(true);
+                fetchUserDetails(userId); // Fetch user details if ID exists
+            } else {
+                setIsLoggedIn(false);
+            }
+        } catch (error) {
+            console.error('Error checking user ID in Async Storage:', error);
+        }
+    };
+
+    useEffect(() => {
+        checkUserId();
+    }, []);
+
 
     const handleProfile = () => {
         navigation.navigate('ProfilePage');
@@ -18,6 +54,7 @@ const Account = () => {
         navigation.navigate('Home');
         console.log("Back clicked");
     };
+
 
     return (
         <View className="flex-1" style={{ paddingBottom: insets.bottom }}>
@@ -31,32 +68,41 @@ const Account = () => {
                         </TouchableOpacity>
                     </View>
                     <View>
-                        <Text className="text-white text-2xl font-bold">SIDDHARTH KALANI</Text>
-                        <Text numberOfLines={1} className="text-white mt-1">+91 - 8238592699 • siddh.kalani@somaiya.edu</Text>
+                    {isLoggedIn && user ? (
+                            <>
+                        <Text className="text-white text-2xl font-bold">{user.name}</Text>
+                        <Text numberOfLines={1} className="text-white mt-1">+91 - {user.phone}• {user.email}</Text>
+                        </>
+                        ) : (
+                            <Text className="text-white text-xl font-bold">Login to see your profile</Text>
+                        )}
                     </View>
                 </View>
 
                 {/* Scrollable menu content */}
-                <ScrollView
-                    className="bg-[#f9f9f9] flex-1"
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{ paddingBottom: insets.bottom + (Platform.OS === 'android' ? 60 : 40) }}
-                >
-                    {/* First menu block (like One Membership, Swiggy HDFC Credit Card, etc.) */}
-                    <MenuItem icon="star-outline" text="One Membership" badge="ACTIVE" description="You've saved ₹2,403 in 75 days. Explore more benefits." />
-                    <MenuItem icon="card-outline" text="Swiggy HDFC Bank Credit Card" description="Apply for the card and start earning cashbacks!" />
+                {isLoggedIn ? (
+                    <ScrollView
+                        className="bg-[#f9f9f9] flex-1"
+                        showsVerticalScrollIndicator={false}
+                        contentContainerStyle={{ paddingBottom: insets.bottom + (Platform.OS === 'android' ? 60 : 40) }}
+                    >
+                        <MenuItem icon="star-outline" text="One Membership" badge="ACTIVE" description="You've saved ₹2,403 in 75 days. Explore more benefits." />
+                        <MenuItem icon="card-outline" text="Swiggy HDFC Bank Credit Card" description="Apply for the card and start earning cashbacks!" />
 
-                    {/* My Account Section */}
-                    <SectionHeader title="My Account" />
-                    <MenuItem onPress={handleProfile} icon="person-outline" text="Profile" description="Full name, password & Settings" />
-                    <MenuItem icon="list-outline" text="My Eatlists" badge="NEW" description="View all your saved lists in one place" />
-                    <MenuItem icon="location-outline" text="Addresses" description="Share, Edit & Add New Addresses" />
-                    <MenuItem icon="cash-outline" text="Payments & Refunds" description="Refund Status & Payment Modes" />
+                        <SectionHeader title="My Account" />
+                        <MenuItem onPress={handleProfile} icon="person-outline" text="Profile" description="Full name, password & Settings" />
+                        <MenuItem icon="list-outline" text="My Eatlists" badge="NEW" description="View all your saved lists in one place" />
+                        <MenuItem icon="location-outline" text="Addresses" description="Share, Edit & Add New Addresses" />
+                        <MenuItem icon="cash-outline" text="Payments & Refunds" description="Refund Status & Payment Modes" />
 
-                    {/* Other sections */}
-                    <MenuItem icon="wallet-outline" text="Swiggy Money & Gift Cards" description="Account balance, Gift cards & Transaction History" />
-                    <MenuItem icon="gift-outline" text="Refer & Earn" description="Refer friends & earn on Swiggy" />
-                </ScrollView>
+                        <MenuItem icon="wallet-outline" text="Swiggy Money & Gift Cards" description="Account balance, Gift cards & Transaction History" />
+                        <MenuItem icon="gift-outline" text="Refer & Earn" description="Refer friends & earn on Swiggy" />
+                    </ScrollView>
+                ) : (
+                    <View className="flex-1 justify-center items-center bg-[#f9f9f9]">
+                        <Text className="text-lg text-[#555] font-bold">Login to access your account details</Text>
+                    </View>
+                )}
             </SafeAreaView>
         </View>
     );

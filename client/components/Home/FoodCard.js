@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -13,14 +13,38 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { BASE_URL } from "../../constants/constant";
 import { saveCartToStorage } from "../../utils/storageUtils"; // Adjust the path as needed
 import FoodItemModal from "./FoodItemModal";
+import io from "socket.io-client"; // Import socket.io-client
+
+const socket = io(BASE_URL); // Initialize socket connection
 
 const FoodCard = ({ foodItem }) => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart);
-
   const [isModalVisible, setModalVisible] = useState(false); // State for modal visibility
+  const [isOnline, setIsOnline] = useState(foodItem.isOnline); // State for online status
 
   const itemInCart = cartItems.find((item) => item._id === foodItem._id);
+
+  useEffect(() => {
+    // Listen for changes in the item's online status
+    socket.on("foodItemOnline", (updatedItem) => {
+      if (updatedItem._id === foodItem._id) {
+        setIsOnline(true);
+      }
+    });
+
+    socket.on("foodItemOffline", (updatedItem) => {
+      if (updatedItem._id === foodItem._id) {
+        setIsOnline(false);
+      }
+    });
+
+    // Clean up listeners on unmount
+    return () => {
+      socket.off("foodItemOnline");
+      socket.off("foodItemOffline");
+    };
+  }, [foodItem._id]);
 
   const handleAddToCart = () => {
     dispatch(addToCart(foodItem));
@@ -35,6 +59,7 @@ const FoodCard = ({ foodItem }) => {
           quantity: itemInCart.quantity + 1,
         })
       );
+      saveCartToStorage(cartItems);
     }
   };
 
@@ -58,9 +83,9 @@ const FoodCard = ({ foodItem }) => {
       {/* Food Image */}
       <TouchableOpacity
         onPress={() => setModalVisible(true)} // Open modal on image press
-        className='w-full'
+        className="w-full"
       >
-        <View style={{ position: 'relative', width: '100%', height: 100 }}>
+        <View style={{ position: "relative", width: "100%", height: 100 }}>
           <Image
             source={{ uri: `${BASE_URL}/items_uploads/${foodItem.image}` }}
             style={{ width: "100%", height: 100, borderRadius: 8 }}
@@ -72,7 +97,7 @@ const FoodCard = ({ foodItem }) => {
             size={24}
             color="white" // White to contrast against the image
             style={{
-              position: 'absolute',
+              position: "absolute",
               top: 10,
               right: 10,
               zIndex: 1,
@@ -99,7 +124,7 @@ const FoodCard = ({ foodItem }) => {
 
           <Text className="text-xs text-gray-500 ml-1">|</Text>
 
-          <TouchableOpacity className='flex-row items-center ml-1'>
+          <TouchableOpacity className="flex-row items-center ml-1">
             <Ionicons name="time" size={13} color="#FFD700" />
             <Text
               className="text-xs text-gray-600"
@@ -113,16 +138,16 @@ const FoodCard = ({ foodItem }) => {
 
       <Text
         style={{
-          color: foodItem.isOnline ? "green" : "red",
+          color: isOnline ? "green" : "red",
           fontSize: 16,
         }}
-        className={`font-bold ${foodItem.isOnline ? '' : ''}`}
+        className={`font-bold ${isOnline ? "" : ""}`}
       >
         ${foodItem.itemPrice}
       </Text>
 
       {/* Add to Cart / Increment Decrement */}
-      {foodItem.isOnline ? (
+      {isOnline ? (
         itemInCart ? (
           <View className="flex-row items-center space-x-2">
             <TouchableOpacity
@@ -183,7 +208,10 @@ const FoodCard = ({ foodItem }) => {
       )}
 
       {/* Food Item Modal */}
-      <FoodItemModal isVisible={isModalVisible} onClose={() => setModalVisible(false)} />
+      <FoodItemModal
+        isVisible={isModalVisible}
+        onClose={() => setModalVisible(false)}
+      />
     </View>
   );
 };

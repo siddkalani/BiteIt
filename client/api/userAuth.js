@@ -3,12 +3,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BASE_URL } from "../constants/constant";
 import { Alert } from 'react-native';
 import * as Notifications from "expo-notifications";
-import axios from "axios"
+// import axiosInstance from "axiosInstance"
 
 //Handle USER REGISTER
 export const registerUser = async (formData, navigation) => {
     try {
-      const response = await axios.post(`${BASE_URL}/user/register`, formData);
+      const response = await axiosInstance.post(`${BASE_URL}/user/register`, formData);
       console.log(response.data);
       navigation.navigate("Otp", { email: formData.email });
     } catch (error) {
@@ -19,7 +19,7 @@ export const registerUser = async (formData, navigation) => {
 // Function to handle USER LOGIN
 export const loginUser = async (email, password, navigation) => {
     try {
-      const response = await axios.post(`${BASE_URL}/user/login`, {
+      const response = await axiosInstance.post(`${BASE_URL}/user/login`, {
         email,
         password,
       });
@@ -63,7 +63,7 @@ export const loginUser = async (email, password, navigation) => {
       const userId = await AsyncStorage.getItem("userId");
       const pushToken = await getPushTokenFromDevice();
   
-      const response = await axios.post(`${BASE_URL}/user/pushToken`, {
+      const response = await axiosInstance.post(`${BASE_URL}/user/pushToken`, {
         userId,
         token: pushToken,
       });
@@ -100,7 +100,7 @@ export const verifyOtp = async (email, otp, isAdmin, navigation) => {
         ? `${BASE_URL}/user/admin/verify/otp` // URL for admin verification
         : `${BASE_URL}/user/verify/otp`;  // URL for user verification
 
-      const response = await axios.post(verifyUrl, {
+      const response = await axiosInstance.post(verifyUrl, {
         email: email,
         otp: otp.join(""),
       });
@@ -142,7 +142,7 @@ export const verifyOtp = async (email, otp, isAdmin, navigation) => {
     const lowercaseEmail = email.toLowerCase();
     
     try {
-      const response = await axios.post(`${BASE_URL}/user/request/reset-password`, {
+      const response = await axiosInstance.post(`${BASE_URL}/user/request/reset-password`, {
         email: lowercaseEmail,
       });
   
@@ -162,7 +162,7 @@ export const verifyResentOtp = async (email, otp, setStep) => {
     const lowercaseEmail = email.toLowerCase();
   
     try {
-      const response = await axios.post(`${BASE_URL}/user/verify/resent/otp`, {
+      const response = await axiosInstance.post(`${BASE_URL}/user/verify/resent/otp`, {
         email: lowercaseEmail,
         otp: otpValue,
       });
@@ -184,7 +184,7 @@ export const verifyResentOtp = async (email, otp, setStep) => {
     }
   
     try {
-      const response = await axios.post(`${BASE_URL}/user/reset-password`, {
+      const response = await axiosInstance.post(`${BASE_URL}/user/reset-password`, {
         email: email.toLowerCase(),
         otp: otp,
         newPassword,

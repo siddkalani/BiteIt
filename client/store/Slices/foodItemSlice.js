@@ -1,20 +1,15 @@
 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { BASE_URL } from "../../constants/constant";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { axiosInstance } from "../../utils/refreshToken";
 
 export const fetchFoodItems = createAsyncThunk(
   "foodItem/fetchFoodItems",
   async () => {
-    const token = await AsyncStorage.getItem("userToken");
-    const response = await fetch(`${BASE_URL}/food-item/get`, {
-      headers: {
-        Authorization: `Bearer ${token}`, // Include the token in headers
-      },
-    });
+    const response = await axiosInstance.get(`${BASE_URL}/food-item/get`);
 
-    const data = await response.json();
-
+    // const data = await response.json();
+    const data = response.data; 
     if (!Array.isArray(data.items)) {
       throw new Error("Unexpected response format");
     }

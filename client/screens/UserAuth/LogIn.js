@@ -38,6 +38,8 @@ const LogIn = () => {
         return;
     }
     loginUser(email, password, navigation);
+     setEmail('');
+     setPassword('');
 };
  
   const handleForgotPassword = () => {

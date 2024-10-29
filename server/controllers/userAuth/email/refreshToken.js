@@ -4,7 +4,8 @@ const asyncHandler = require("express-async-handler");
 const User = require("../../../models/userModel"); // Import the User model
 
 const refreshAccessToken = asyncHandler(async (req, res) => {
-  const refreshToken = req.cookies.refreshToken; // Get refresh token from cookie
+  // const refreshToken = req.cookies.refreshToken; // Get refresh token from cookie
+  const refreshToken = req.headers['authorization']?.split(' ')[1]; // Get refresh token from Authorization header
 
   if (!refreshToken) {
     return res.status(401).json({ message: "Refresh token not found. Please log in again." });

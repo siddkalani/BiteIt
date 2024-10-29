@@ -5,96 +5,13 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import * as IconF from 'react-native-feather';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BASE_URL } from '../../../../constants/constant';
+import io from 'socket.io-client';
 
 const { width } = Dimensions.get('window');
 const paddingHorizontal = 16;
 const tabWidth = (width - paddingHorizontal * 2) / 2;
 
-// const Category = ({ categoryName, items , setItems }) => {
-//   const [isOpen, setIsOpen] = useState(true);
-//   const [CustomOpen, IsCustomOpen] = useState(); 
-//   const [itemOpen, setItemOpen] = useState()
-
-//   const toggleCategory = () => {
-//     setIsOpen(!isOpen);
-//   };
-
-//   const handleToggle = async (itemId, currentStatus) => {
-//     try {
-//       const token = await AsyncStorage.getItem("userToken");
-
-//       const response = await fetch(`http://localhost:3000/food-item/update`, {
-//         method: "PUT",
-//         headers: {
-//           "Content-Type": "application/json",
-//           Authorization: `Bearer ${token}`,
-//         },
-//         body: JSON.stringify({
-//           itemId,
-//           isOnline: !currentStatus, 
-//         }),
-//       });
-
-//       const data = await response.json();
-
-//       if (response.ok) {
-//         setItems(prevItems => 
-//           prevItems.map(item => 
-//             item._id === itemId ? { ...item, isOnline: !currentStatus } : item
-//           )
-//         );
-//         setItemOpen(currentStatus)
-//       } else {
-//         console.error("Error updating status:", data.message);
-//       }
-//     } catch (error) {
-//       console.error("Server error:", error);
-//     }
-//   };
-
-//   // Toggle for custom open/close state
-//   const handleCustomToggle = () => {
-//     IsCustomOpen(prevState => !prevState); // Toggle the custom state
-//   };
-
-//   return (
-//     <View className="mb-4">
-//       <TouchableOpacity
-//         onPress={toggleCategory}
-//         className="flex-row justify-between items-center py-2 px-4 bg-yellow-100 rounded-lg"
-//       >
-//         <View className='flex-row space-x-2 items-center'>
-//           <Icon name={isOpen ? 'chevron-up-outline' : 'chevron-down-outline'} size={20} color="#000" />
-//           <Text className="font-semibold">{categoryName}</Text>
-//         </View>
-
-//         {/* Corrected the Switch to call handleCustomToggle */}
-//         <Switch
-//           value={CustomOpen}
-//           onValueChange={handleCustomToggle} // Set the toggle handler
-//           trackColor={{ false: '#767577', true: '#F59E0B' }}
-//           thumbColor="white"
-//         />
-//       </TouchableOpacity>
-
-//       {isOpen && (
-//         <View className="bg-white">
-//           {items.map((item, index) => (
-//             <View key={index} className="flex-row justify-between items-center py-2 px-4 border-b border-gray-200">
-//               <Text>{item.itemName}</Text>
-//               <Switch 
-//                 value={item.isOnline} 
-//                 onValueChange={() => handleToggle(item._id, item.isOnline)} 
-//                 trackColor={{ false: '#767577', true: '#F59E0B' }}
-//                 thumbColor="white"
-//               />
-//             </View>
-//           ))}
-//         </View>
-//       )}
-//     </View>
-//   );
-// };
+const socket = io(BASE_URL); 
 
 const Category = ({ categoryName, items }) => {
   const [isOpen, setIsOpen] = useState(true);
@@ -109,7 +26,7 @@ const Category = ({ categoryName, items }) => {
     try {
       const token = await AsyncStorage.getItem("userToken");
 
-      const response = await fetch(`http://localhost:3000/food-item/update`, {
+      const response = await fetch(`${BASE_URL}/food-item/update`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -137,6 +54,32 @@ const Category = ({ categoryName, items }) => {
       console.error("Server error:", error);
     }
   };
+
+
+  useEffect(() => {
+    // Event listener for item going online
+    socket.on("foodItemOnline", (updatedItem) => {
+      setLocalItems((prevItems) =>
+        prevItems.map((item) =>
+          item._id === updatedItem._id ? { ...item, isOnline: true } : item
+        )
+      );
+    });
+
+    // Event listener for item going offline
+    socket.on("foodItemOffline", (updatedItem) => {
+      setLocalItems((prevItems) =>
+        prevItems.map((item) =>
+          item._id === updatedItem._id ? { ...item, isOnline: false } : item
+        )
+      );
+    });
+
+    return () => {
+      socket.off("foodItemOnline");
+      socket.off("foodItemOffline");
+    };
+  }, []);
 
   // Toggle for custom open/close state
   const handleCustomToggle = () => {

@@ -9,6 +9,9 @@ const CartItem = ({ item, handleIncrement, handleDecrement, handleRemoveFromCart
     <View className="flex-1">
       <Text className="font-semibold text-lg">{item.itemName}</Text>
       <Text className="text-gray-500">₹{item.itemPrice}</Text>
+      {!item.isOnline && (
+        <Text className="text-red-500 font-semibold">Not Available</Text>
+      )}
     </View>
     <View className="flex-row items-center space-x-2 h-8">
       <TouchableOpacity onPress={() => handleDecrement(item._id)} className="p-2">

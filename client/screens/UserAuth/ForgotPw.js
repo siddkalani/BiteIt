@@ -43,7 +43,7 @@ const ForgotPw = () => {
   };
 
   const handleEmailChange = (text) => {
-    setEmail(text.charAt(0).toLowerCase() + text.slice(1)); // Ensure the first letter is lowercase
+    setEmail(text.charAt(0).toLowerCase() + text.slice(1)); 
   };
 
 

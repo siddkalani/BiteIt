@@ -1,19 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { BASE_URL } from "../../constants/constant";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { axiosInstance } from "../../utils/refreshToken";
 
 export const fetchcategory = createAsyncThunk(
   "category/fetchcategory",
   async () => {
-    const token = await AsyncStorage.getItem("userToken");
-    const response = await fetch(`${BASE_URL}/category/get`, {
-      headers: {
-        Authorization: `Bearer ${token}`, 
-      },
-    });
-
-    const data = await response.json();
-    return data.categories;
+    const response = await axiosInstance.get(`${BASE_URL}/category/get`)
+    // const data = await response.json();
+    return response.data.categories;
+    // return data.categories;
   }
 );
 

@@ -12,7 +12,17 @@ const updateFoodItemStatus = async (req, res) => {
 
     // Update the 'isOnline' status
     foodItem.isOnline = isOnline;
-    await foodItem.save(); // Save the changes
+    await foodItem.save();
+
+    const io = req.app.get("io"); // Get the io instance
+
+    // Emit socket event based on the new status
+    if (isOnline) {
+      io.emit("foodItemOnline", foodItem);
+    } else {
+      io.emit("foodItemOffline", foodItem);
+    }
+
 
     res.status(200).json({ message: 'Food item status updated', foodItem });
   } catch (error) {
