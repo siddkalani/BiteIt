@@ -62,11 +62,11 @@ export const loginUser = async (email, password, navigation, setIsLoading, setEr
   } else if (!email.includes("@")) {
     setErrorMessage("Please enter a valid email");
     setIsLoading(false);
-    return;
-  } else if (!email.endsWith("@somaiya.edu") && email.includes("@")) {
-    setErrorMessage("Only @somaiya.edu emails are allowed");
-    setIsLoading(false);
-    return;
+    return
+  // } else if (!email.endsWith("@somaiya.edu") && email.includes("@")) {
+  //   setErrorMessage("Only @somaiya.edu emails are allowed");
+  //   setIsLoading(false);
+  //   return;
   } else if (!password) {
     setErrorMessage("Please enter password");
     setIsLoading(false);

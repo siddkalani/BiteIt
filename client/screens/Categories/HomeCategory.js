@@ -23,10 +23,15 @@ import { LinearGradient } from "expo-linear-gradient";
 import * as Icon from "react-native-feather";
 import { FontFamily } from "../../GlobalStyles";
 import SafeAreaAndroid from "../../components/utils/SafeAreaAndroid";
+import io from "socket.io-client";
+
+const socket = io(BASE_URL); 
 
 const HEADER_HEIGHT = 300;
 
-const FoodItemCard = ({ item, handleAddToCart, handleIncrement, handleDecrement, itemInCart }) => {
+const FoodItemCard = ({ item, handleAddToCart, handleIncrement, handleDecrement, itemInCart, isOnline }) => {
+
+
   return (
     <View className="bg-white rounded-lg shadow-sm flex-row items-center mb-2 px-3 py-2">
       <Image
@@ -42,7 +47,7 @@ const FoodItemCard = ({ item, handleAddToCart, handleIncrement, handleDecrement,
           <Ionicons name="star" size={13} color="#FFD700" />
           <Text className="text-xs text-gray-600">{item.rating || "3.7"}</Text>
           <Text className="text-xs text-gray-500 ml-1">|</Text>
-          <TouchableOpacity className='flex-row items-center ml-1'>
+          <TouchableOpacity className="flex-row items-center ml-1">
             <Ionicons name="time" size={13} color="#FFD700" />
             <Text className="text-xs text-gray-600" style={{ fontFamily: FontFamily.poppinsMedium, marginLeft: 2 }}>
               Info
@@ -53,48 +58,60 @@ const FoodItemCard = ({ item, handleAddToCart, handleIncrement, handleDecrement,
           ₹{item.itemPrice}
         </Text>
       </View>
-      {itemInCart ? (
-        <View className="flex-row items-center space-x-1 bg-gray-200 rounded-md">
-          <TouchableOpacity onPress={(event) => {
-              event.persist(); // Keep the event
-              handleDecrement(item); // Call your function
-            }} className="p-2">
-            <Icon.Minus width={16} height={16} stroke="green" strokeWidth="3" />
-          </TouchableOpacity>
-          <View className="w-3.5 items-center justify-center">
-            <Text adjustsFontSizeToFit numberOfLines={1} className="font-bold">
-              {itemInCart.quantity}
-            </Text>
+      {isOnline ? (
+        itemInCart ? (
+          <View className="flex-row items-center space-x-1 bg-gray-200 rounded-md">
+            <TouchableOpacity
+              onPress={(event) => {
+                event.persist(); // Keep the event
+                handleDecrement(item); // Call your function
+              }}
+              className="p-2"
+            >
+              <Icon.Minus width={16} height={16} stroke="green" strokeWidth="3" />
+            </TouchableOpacity>
+            <View className="w-3.5 items-center justify-center">
+              <Text adjustsFontSizeToFit numberOfLines={1} className="font-bold">
+                {itemInCart.quantity}
+              </Text>
+            </View>
+            <TouchableOpacity
+              onPress={(event) => {
+                event.persist(); // Keep the event
+                handleIncrement(item); // Call your function
+              }}
+              className="p-2"
+            >
+              <Icon.Plus width={16} height={16} stroke="green" strokeWidth="3" />
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity onPress={(event) => {
-              event.persist(); // Keep the event
-              handleIncrement(item); // Call your function
-            }} className="p-2">
-            <Icon.Plus width={16} height={16} stroke="green" strokeWidth="3" />
-          </TouchableOpacity>
-        </View>
-      ) : (
-        <LinearGradient
-          colors={["#007022", "#54d17a", "#bcffd0"]}
-          start={{ x: 0, y: 1 }}
-          end={{ x: 1.9, y: 0 }}
-          className="rounded-md"
-          style={{ paddingHorizontal: 10, paddingVertical: 6 }}
-        >
-          <TouchableOpacity
-            onPress={(event) => {
+        ) : (
+          <LinearGradient
+            colors={["#007022", "#54d17a", "#bcffd0"]}
+            start={{ x: 0, y: 1 }}
+            end={{ x: 1.9, y: 0 }}
+            className="rounded-md"
+            style={{ paddingHorizontal: 10, paddingVertical: 6 }}
+          >
+            <TouchableOpacity
+              onPress={(event) => {
                 event.persist(); // Keep the event
                 handleAddToCart(item); // Call your function
-              }} className="flex-row items-center justify-center"
-            style={{ borderRadius: 5 }}
-          >
-            <Icon.Plus width={15} height={15} stroke="white" strokeWidth="3" />
-            <Text className="text-white ml-1 font-bold">Add</Text>
-          </TouchableOpacity>
-        </LinearGradient>
+              }}
+              className="flex-row items-center justify-center"
+              style={{ borderRadius: 5 }}
+            >
+              <Icon.Plus width={15} height={15} stroke="white" strokeWidth="3" />
+              <Text className="text-white ml-1 font-bold">Add</Text>
+            </TouchableOpacity>
+          </LinearGradient>
+        )
+      ) : (
+        <Text className="text-red-500 font-semibold">Not Available</Text>
       )}
     </View>
   );
+  
 };
 
 
@@ -108,9 +125,11 @@ const HomeCategory = () => {
   const [error, setError] = useState(null);
   const modalizeRef = useRef(null);
   const screenHeight = Dimensions.get('window').height;
+  const [itemOnlineStatus, setItemOnlineStatus] = useState({});
   
   const { id } = route.params;
   const cartItems = useSelector((state) => state.cart);
+  
 
   useEffect(() => {
     const fetchFoodItems = async () => {
@@ -125,6 +144,13 @@ const HomeCategory = () => {
         const data = await response.json();
         if (data.foodItems) {
           setFoodItems(data.foodItems);
+          // Initialize online status for each item
+          const onlineStatus = data.foodItems.reduce((acc, item) => {
+            acc[item._id] = false; // Assuming false by default
+            return acc;
+          }, {});
+          setItemOnlineStatus(onlineStatus);
+
         } else {
           setError("No food items found");
         }
@@ -136,6 +162,37 @@ const HomeCategory = () => {
     };
     fetchFoodItems();
   }, [id]);
+
+  useEffect(() => {
+    // Initialize online status based on fetched items
+    const initialStatus = {};
+    foodItems.forEach(item => {
+        initialStatus[item._id] = item.isOnline; // Assuming item has isOnline property
+    });
+    setItemOnlineStatus(initialStatus);
+
+    // Listen for changes in the item's online status
+    socket.on("foodItemOnline", (updatedItem) => {
+        setItemOnlineStatus((prevStatus) => ({
+            ...prevStatus,
+            [updatedItem._id]: true, // Set item as online
+        }));
+    });
+
+    socket.on("foodItemOffline", (updatedItem) => {
+        setItemOnlineStatus((prevStatus) => ({
+            ...prevStatus,
+            [updatedItem._id]: false, // Set item as offline
+        }));
+    });
+
+    // Clean up listeners on unmount
+    return () => {
+        socket.off("foodItemOnline");
+        socket.off("foodItemOffline");
+    };
+}, [foodItems]);
+
 
   const handleAddToCart = useCallback((item) => {
     dispatch(addToCart(item));
@@ -177,8 +234,9 @@ const HomeCategory = () => {
       handleIncrement={handleIncrement}
       handleDecrement={handleDecrement}
       itemInCart={cartItems.find((i) => i._id === item._id)}
+      isOnline={itemOnlineStatus[item._id]}
     />
-  ), [handleAddToCart, handleIncrement, handleDecrement, cartItems]);
+  ), [handleAddToCart, handleIncrement, handleDecrement, cartItems, itemOnlineStatus]);
 
   const modalHeight = screenHeight - 250;
   const modalFull = screenHeight ;
