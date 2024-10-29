@@ -10,19 +10,44 @@ import { useState } from "react";
 
 
 //Handle USER REGISTER
-export const registerUser = async (formData, navigation) => {
-  const [isLoading, setIsLoading] = useState(false);
+export const registerUser = async (formData, navigation, setIsLoading, setErrorMessage) => {
   setIsLoading(true); // Start loading
+  setErrorMessage(''); // Clear previous errors
+
+  // Email Validation
+  if (!formData.email) {
+    setErrorMessage("Please enter an email");
+    setIsLoading(false);
+    return;
+  } else if (!formData.email.includes("@")) {
+    setErrorMessage("Please enter a valid email");
+    setIsLoading(false);
+    return;
+  } else if (!formData.email.endsWith("@somaiya.edu") && formData.email.includes("@")) {
+    setErrorMessage("Only @somaiya.edu emails are allowed");
+    setIsLoading(false);
+    return;
+  } else if (!formData.password) {
+    setErrorMessage("Please enter a password");
+    setIsLoading(false);
+    return;
+  }
+
   try {
     const response = await axios.post(`${BASE_URL}/user/register`, formData);
-    console.log(response.data);
-    navigation.navigate("Otp", { email: formData.email });
+    console.log("Registration successful:", response.data);
+
+    if (response.status === 200) {
+      navigation.navigate("Otp", { email: formData.email });
+    }
   } catch (error) {
-    console.error(error.response ? error.response.data : error.message);
+    console.error("Registration Error:", error);
+    setErrorMessage(error.response?.data.message || "Registration failed.");
   } finally {
-    setIsLoading(false); // Stop loading
+    setIsLoading(false); // Stop loading in both success and error cases
   }
 };
+
 
 // Function to handle USER LOGIN
 export const loginUser = async (email, password, navigation, setIsLoading, setErrorMessage) => {
