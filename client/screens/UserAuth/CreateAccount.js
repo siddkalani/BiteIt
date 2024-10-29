@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import {
     StatusBar, Pressable, Text, View, Image, KeyboardAvoidingView,
     Platform, StyleSheet, TextInput, TouchableOpacity,
-    SafeAreaView, ActivityIndicator // Import ActivityIndicator for loading spinner
+    SafeAreaView, ActivityIndicator, Alert
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -11,15 +11,15 @@ import * as IconF from "react-native-feather";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import GlobalHeader from "../../components/Layout/GlobalHeader";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import axios from "axios";
+import { registerUser } from "../../api/userAuth";
 import { BASE_URL } from "../../constants/constant";
-import {registerUser} from "../../api/userAuth"
 
 const CreateAccount = () => {
     const navigation = useNavigation();
     const [formData, setFormData] = useState({ name: "", phone: "", email: "", password: "" });
     const [isPasswordHidden, setIsPasswordHidden] = useState(true);
-    const [isLoading, setIsLoading] = useState(false); // Loading state
+    const [isLoading, setIsLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(''); // Error message state
 
     const handleInputChange = (field, value) => {
         let updatedValue = value;
@@ -43,15 +43,16 @@ const CreateAccount = () => {
         { icon: "Lock", placeholder: "Password", field: "password", keyboardType: "default", isPassword: true }
     ];
 
-    const { top, bottom } = useSafeAreaInsets();
-
     const handleSubmit = () => {
         if (!formData.email || !formData.password) {
-          Alert.alert("Error", "Please fill all fields.");
+          setErrorMessage("Please fill all fields.");
           return;
         }
-        registerUser(formData, navigation);
-      };
+        setErrorMessage(""); // Clear any previous errors
+        registerUser(formData, navigation, setIsLoading, setErrorMessage);
+    };
+
+    const { top, bottom } = useSafeAreaInsets();
 
     return (
         <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
@@ -94,6 +95,11 @@ const CreateAccount = () => {
                                 </View>
                             ))}
                         </View>
+
+                        {/* Error Message */}
+                        {errorMessage ? (
+                            <Text style={styles.errorText}>{errorMessage}</Text>
+                        ) : null}
                     </View>
 
                     <View className='mt-4 space-y-1'>
@@ -130,14 +136,9 @@ const styles = StyleSheet.create({
         fontFamily: FontFamily.poppinsBold,
         fontSize: FontSize.textRegularLowercase_size,
     },
-    subHeaderText: {
-        fontFamily: FontFamily.poppinsMedium,
-        fontSize: FontSize.size_mini,
-    },
     inputContainer: {
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: 'center',
         backgroundColor: "#FFFFFF",
         padding: 10,
         borderRadius: 8,
@@ -159,6 +160,12 @@ const styles = StyleSheet.create({
         fontFamily: FontFamily.poppinsRegular,
         fontSize: FontSize.size_mini,
         color: '#868889',
+    },
+    errorText: {
+        color: 'red',
+        fontSize: FontSize.size_mini,
+        fontFamily: FontFamily.poppinsRegular,
+        marginTop: 5,
     },
 });
 
