@@ -6,6 +6,7 @@ const cors = require("cors");
 const errorHandler = require("./middleware/errorHandler");
 const path = require("path");
 const initializeSocket = require("./config/socket");
+const cookieParser = require('cookie-parser');
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use(
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 // Static files
 app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));

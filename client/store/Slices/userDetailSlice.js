@@ -3,7 +3,6 @@ import axios from "axios";
 import { BASE_URL } from "../../constants/constant";
 // import { BASE_URL } from "../../../shared/constants/constants";
 
-// Async thunk for logging in the user
 export const loginUser = createAsyncThunk(
   "users/loginUser",
   async (phone, { rejectWithValue }) => {

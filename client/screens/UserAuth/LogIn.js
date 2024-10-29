@@ -26,6 +26,8 @@ import axios from "axios";
 import { BASE_URL } from "../../constants/constant";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Notifications from "expo-notifications";
+import { axiosInstance } from "../../utils/refreshToken";
+import { loginUser } from "../../api/userAuth";
 
 const LogIn = () => {
   const navigation = useNavigation();
@@ -39,113 +41,20 @@ const LogIn = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
 
-  const handleLogin = async () => {
-    setIsLoading(true);
-    setErrorMessage(''); // Clear previous errors
-
-   // Email and Password Validation
-if (!email) {
-  setErrorMessage("Please enter email");
-  setIsLoading(false);
-  return;
-} else if (!email.includes("@")) {
-  setErrorMessage("Please enter a valid email");
-  setIsLoading(false);
-  return;
-} else if (!email.endsWith("@somaiya.edu") && email.includes("@")) {
-  setErrorMessage("Only @somaiya.edu emails are allowed");
-  setIsLoading(false);
-  return;
-} else if (!password) {
-  setErrorMessage("Please enter password");
-  setIsLoading(false);
-  return;
-}
-
-    try {
-      const response = await axios.post(`${BASE_URL}/user/login`, {
-        email,
-        password,
-      });
-      const data = response.data;
-
-      if (response.status === 200) {
-        const { token, data: userData, message } = data;
-
-        if (message === "Admin account found. Please use OTP for login.") {
-          navigation.navigate("Otp", { email, isAdmin: true });
-          setIsLoading(false);
-          return;
-        }
-
-        const { name, id, role } = userData;
-
-        await AsyncStorage.setItem("userToken", token);
-        await AsyncStorage.setItem("userName", name);
-        await AsyncStorage.setItem("userId", id);
-        await AsyncStorage.setItem("role", role);
-
-        navigation.dispatch(
-          CommonActions.reset({
-            index: 0,
-            routes: [{ name: "ClientTabs" }],
-          })
-        );
-
-        if (role === "user" || role === "faculty") {
-          navigation.navigate("ClientTabs");
-        }
-        await postPushToken();
-      }
-    } catch (error) {
-      console.error("Login Error:", error);
-      setErrorMessage(error.response?.data.message || "Login failed."); // Set error message here
-    } finally {
-      setIsLoading(false);
+  const handleLogin = () => {
+    if (!email || !password) {
+        Alert.alert("Error", "Please enter your email and password.");
+        return;
     }
-  };
-
+    loginUser(email, password, navigation , setIsLoading,setErrorMessage);
+};
+ 
   const handleForgotPassword = () => {
     navigation.navigate("ForgotPw");
   };
 
   const handleSignUp = () => {
     navigation.navigate("CreateAccount");
-  };
-
-  const postPushToken = async () => {
-    try {
-      const userId = await AsyncStorage.getItem("userId");
-      const pushToken = await getPushTokenFromDevice();
-
-      const response = await axios.post(`${BASE_URL}/user/pushToken`, {
-        userId,
-        token: pushToken,
-      });
-
-      console.log("Push token posted successfully:", response.data);
-    } catch (error) {
-      console.error("Error posting push token to backend:", error);
-    }
-  };
-
-  const getPushTokenFromDevice = async () => {
-    const { status: existingStatus } =
-      await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-
-    if (existingStatus !== "granted") {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
-    }
-
-    if (finalStatus !== "granted") {
-      Alert.alert("Failed to get push token for push notification!");
-      return;
-    }
-
-    const tokenData = await Notifications.getExpoPushTokenAsync();
-    return tokenData.data;
   };
 
   const { top, bottom } = useSafeAreaInsets();

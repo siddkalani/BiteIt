@@ -11,13 +11,9 @@ import {
   StatusBar,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "expo-linear-gradient";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import * as Notifications from "expo-notifications";
-
-import { BASE_URL } from "../../constants/constant";
+import { verifyOtp } from "../../api/userAuth";
 import GlobalHeader from "../../components/Layout/GlobalHeader";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -56,74 +52,10 @@ const OTP = () => {
   };
 
 
-  const handleVerify = async () => {
-    try {
-      const verifyUrl = isAdmin 
-        ? `${BASE_URL}/user/admin/verify/otp` // URL for admin verification
-        : `${BASE_URL}/user/verify/otp`;  // URL for user verification
-
-      const response = await axios.post(verifyUrl, {
-        email: email,
-        otp: otp.join(""),
-      });
-      const data = response.data;
+  const handleVerify = () => {
+    verifyOtp(email, otp, isAdmin, navigation);
+};
   
-      if (response.status === 200 && data.message === "Successful") {
-        if (isAdmin) {
-          navigation.replace("AdminTabs");
-        } else {
-          navigation.replace("LogIn");
-        }
-      } else {
-        Alert.alert("Verification Failed", data.message || "An unknown error occurred.");
-      }
-    } catch (error) {
-      console.error("Verification Error:", error);
-      if (error.response) {
-        const errorData = error.response.data;
-        Alert.alert("Verification Error", errorData.message || "An error occurred during verification.");
-      } else {
-        Alert.alert("Error", "Network Error. Please try again.");
-      }
-    }
-  };
-  
-
-  const postPushToken = async () => {
-    try {
-      const userId = await AsyncStorage.getItem("userId");
-      const pushToken = await getPushTokenFromDevice();
-
-      const response = await axios.post(`${BASE_URL}/user/pushToken`, {
-        userId,
-        token: pushToken,
-      });
-
-      console.log("Push token posted successfully:", response.data);
-    } catch (error) {
-      console.error("Error posting push token to backend:", error);
-    }
-  };
-
-  const getPushTokenFromDevice = async () => {
-    const { status: existingStatus } =
-      await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-
-    if (existingStatus !== "granted") {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
-    }
-
-    if (finalStatus !== "granted") {
-      Alert.alert("Failed to get push token for push notification!");
-      return;
-    }
-
-    const tokenData = await Notifications.getExpoPushTokenAsync();
-    return tokenData.data;
-  };
-
   const { top, bottom } = useSafeAreaInsets();
   return (
     <SafeAreaView style={{

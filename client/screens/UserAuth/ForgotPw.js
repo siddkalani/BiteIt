@@ -15,11 +15,10 @@ import { LinearGradient } from "expo-linear-gradient";
 import GlobalHeader from "../../components/Layout/GlobalHeader";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { FontFamily, FontSize } from "../../GlobalStyles";
-import axios from 'axios';
-import { BASE_URL } from "../../constants/constant";
+import { resendOtp, verifyResentOtp, resetPassword } from "../../api/userAuth";
 
 const ForgotPw = () => {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(1); 
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState(["", "", "", "", ""]);
   const [newPassword, setNewPassword] = useState("");
@@ -34,24 +33,10 @@ const ForgotPw = () => {
   const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
   const [isResettingPassword, setIsResettingPassword] = useState(false);
 
-  const handleSendCode = async () => {
-    setIsSendingCode(true);
-    const lowercaseEmail = email.toLowerCase();
-    try {
-      const response = await axios.post(`${BASE_URL}/user/request/reset-password`, {
-        email: lowercaseEmail,
-      });
 
-      if (response.status === 200) {
-        Alert.alert("Success", "Verification code sent to your email.");
-        setStep(2);
-      }
-    } catch (error) {
-      Alert.alert("Error", error.response?.data.message || "Failed to send verification code.");
-    } finally {
-      setIsSendingCode(false); // Stop loading
-    }
-  };
+  const handleSendCode = async() =>{
+    resendOtp(email, setStep)
+  }
 
   const handleOtpChange = (text, index) => {
     let newOtp = [...otp];
@@ -67,53 +52,14 @@ const ForgotPw = () => {
     setEmail(text.charAt(0).toLowerCase() + text.slice(1));
   };
 
-  const handleOtpVerify = async () => {
-    setIsVerifyingOtp(true);
-    const otpValue = otp.join("");
-    const lowercaseEmail = email.toLowerCase();
 
-    try {
-      const response = await axios.post(`${BASE_URL}/user/verify/resent/otp`, {
-        email: lowercaseEmail,
-        otp: otpValue,
-      });
+const handleOtpVerify = () =>{
+  verifyResentOtp(email, otp, setStep)
+}
 
-      if (response.status === 200) {
-        Alert.alert("Success", "OTP verified. Please create a new password.");
-        setStep(3);
-      }
-    } catch (error) {
-      Alert.alert("Error", error.response?.data.message || "Failed to verify OTP.");
-    } finally {
-      setIsVerifyingOtp(false); // Stop loading
-    }
-  };
-
-  const handlePasswordReset = async () => {
-    if (newPassword !== confirmPassword) {
-      Alert.alert("Error", "Passwords do not match.");
-      return;
-    }
-    setIsResettingPassword(true);
-
-    try {
-      const response = await axios.post(`${BASE_URL}/user/reset-password`, {
-        email: email.toLowerCase(),
-        otp: otp,
-        newPassword,
-      });
-
-      if (response.status === 200) {
-        Alert.alert("Success", "Your password has been reset successfully.");
-        navigation.navigate("LogIn");
-      }
-    } catch (error) {
-      Alert.alert("Error", error.response?.data.message || "Failed to reset password.");
-    } finally {
-      setIsResettingPassword(false); // Stop loading
-    }
-  };
-
+  const handlePasswordReset = () =>{
+    resetPassword(email, otp, newPassword, confirmPassword, navigation)
+  }
   return (
     <SafeAreaView
       style={{
