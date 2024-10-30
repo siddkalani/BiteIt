@@ -20,6 +20,7 @@ import { BASE_URL } from "../../../../constants/constant";
 import io from "socket.io-client";
 import AsyncStorage from "@react-native-async-storage/async-storage"
 
+const socket = io(BASE_URL);
 const AdminHome = () => {
   const navigation = useNavigation();
   const { width: screenWidth } = Dimensions.get("window");
@@ -240,6 +241,21 @@ const handlePaymentDone = async (orderId) => {
     console.error("Error updating payment status:", error);
   }
 };
+
+useEffect(() => {
+  // Listening for payment updates
+  socket.on("paymentUpdate", (updatedOrder) => {
+    setPickedUpOrders((prevOrders) =>
+      prevOrders.map((order) =>
+        order._id === updatedOrder._id ? { ...order, payment: updatedOrder.payment } : order
+      )
+    );
+  });
+
+  return () => {
+    socket.off("paymentUpdate");
+  };
+}, []);
 
 
   return (
