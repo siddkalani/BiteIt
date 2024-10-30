@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, FlatList } from "react-native";
 import { FontFamily, FontSize } from "../../GlobalStyles";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,11 +8,49 @@ import {
   removeFromCart,
 } from "../../store/Slices/cartSlice";
 import FoodItemCard from "../utils/FoodItemCard";
+import io from "socket.io-client"; 
+import { BASE_URL } from "../../constants/constant";
+
+const socket = io(BASE_URL); 
 
 const SearchResults = ({ searchResults, updateSearchHistory }) => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart);
+  const [onlineStatus, setOnlineStatus] = useState({});
 
+
+  useEffect(() => {
+    // Initialize online status based on fetched items
+    const initialStatus = {};
+    searchResults.forEach(item => {
+        initialStatus[item._id] = item.isOnline; // Assuming item has isOnline property
+    });
+    setOnlineStatus(initialStatus);
+
+    // Listen for changes in the item's online status
+    const handleOnlineStatusUpdate = (updatedItem) => {
+      setOnlineStatus((prevStatus) => ({
+        ...prevStatus,
+        [updatedItem._id]: true,
+      }));
+    };
+
+    const handleOfflineStatusUpdate = (updatedItem) => {
+      setOnlineStatus((prevStatus) => ({
+        ...prevStatus,
+        [updatedItem._id]: false,
+      }));
+    };
+
+    socket.on("foodItemOnline", handleOnlineStatusUpdate);
+    socket.on("foodItemOffline", handleOfflineStatusUpdate);
+
+    // Clean up listeners on unmount
+    return () => {
+      socket.off("foodItemOnline", handleOnlineStatusUpdate);
+      socket.off("foodItemOffline", handleOfflineStatusUpdate);
+    };
+  }, [searchResults]);
   const handleAddToCart = (item) => {
     const existingItem = cartItems.find(
       (cartItem) => cartItem._id === item._id
@@ -50,6 +88,7 @@ const SearchResults = ({ searchResults, updateSearchHistory }) => {
 
   const renderItem = ({ item }) => {
     const itemInCart = cartItems.find((cartItem) => cartItem._id === item._id);
+    const isOnline = onlineStatus[item._id] !== undefined ? onlineStatus[item._id] : true;
 
     return (
       <FoodItemCard
@@ -58,6 +97,7 @@ const SearchResults = ({ searchResults, updateSearchHistory }) => {
         handleIncrement={handleIncrement}
         handleDecrement={handleDecrement}
         itemInCart={itemInCart}
+        isOnline={isOnline}
       />
     );
   };
