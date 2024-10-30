@@ -42,10 +42,10 @@ const LogIn = () => {
   };
 
   const handleLogin = () => {
-    if (!email || !password) {
-        Alert.alert("Error", "Please enter your email and password.");
-        return;
-    }
+    // if (!email || !password) {
+    //     Alert.alert("Error", "Please enter your email and password.");
+    //     return;
+    // }
     loginUser(email, password, navigation , setIsLoading,setErrorMessage);
 };
  
