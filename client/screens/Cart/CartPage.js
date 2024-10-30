@@ -137,7 +137,7 @@ const CartPage = () => {
         canteenName: selectedCanteen,
         totalAmount,
         items: orderData,
-        payment: 1,
+        payment: 0,
         status: "Pending",
         deliverTo: deliveryType
       };

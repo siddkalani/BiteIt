@@ -11,6 +11,7 @@ const {
   updateOrderStatus,
   getAllOrders,
 } = require("../controllers/admin/adminOrder/getPendingOrder");
+const { updatePaymentStatus } = require("../controllers/admin/adminOrder/updatePaymentStatus");
 
 // router.use(validateToken);
 
@@ -21,5 +22,6 @@ router.route("/add").post(addAdmin);
 // router.route("/order/:status").get(getPendingOrders);
 router.route("/order/all").get(getAllOrders);
 router.route("/order/status/:id").patch(updateOrderStatus);
+router.route('/payment/:id').patch(updatePaymentStatus)
 
  module.exports = router;
