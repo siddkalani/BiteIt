@@ -1,78 +1,129 @@
+// components/Cart/DeliveryModalComponent.js
 import React from "react";
-import { View, Text, Modal, TouchableOpacity, TextInput } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  TextInput,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { Modalize } from "react-native-modalize";
+import { FontFamily, FontSize } from "../../GlobalStyles";
 
-const DeliveryModal = ({
-  visible,
-  setDeliveryModalVisible,
+const DeliveryModalComponent = ({
+  modalizeRef,
+  isModalOpen,
+  setIsModalOpen,
+  serviceOptions,
+  handleOptionPress,
   deliveryType,
-  setDeliveryType,
   selectedRoom,
   setSelectedRoom,
-  selectedCanteen,
-  setSelectedCanteen,
-}) => (
-  <Modal
-    visible={visible}
-    animationType="slide"
-    transparent={true}
-    onRequestClose={() => setDeliveryModalVisible(false)}
-  >
-    <View className="flex-1 justify-end bg-black bg-opacity-50">
-      <View className="bg-white p-4 rounded-t-2xl">
+  errorMessage,
+  handleProceed,
+  isLoading,
+}) => {
+  return (
+    <Modalize
+      ref={modalizeRef}
+      modalHeight={500}
+      handleStyle={{ backgroundColor: "#D3D3D3" }}
+      handlePosition="outside"
+      onOpen={() => setIsModalOpen(true)}
+      onClose={() => setIsModalOpen(false)}
+      scrollViewProps={{
+        // Allow scrolling within the modal if content exceeds modal height
+        scrollEnabled: true,
+      }}
+    >
+      <View className="p-4 flex-1">
         <Text className="text-xl font-bold mb-4">Choose Service Type</Text>
-
-        <View>
-          <Text className="text-lg mb-2">Select Service Type:</Text>
+        {serviceOptions.map((option) => (
           <TouchableOpacity
-            onPress={() => {
-              setDeliveryType("Pickup");
-              setDeliveryModalVisible(false);
-            }}
-            className="p-2 mb-2 rounded-lg border border-gray-300"
+            key={option.id}
+            onPress={() => handleOptionPress(option.id)}
+            className="flex-row items-center bg-white p-4 rounded-lg shadow-md my-2"
           >
-            <Text className="text-lg">Pickup</Text>
+            <Image
+              source={option.image}
+              style={{
+                width: 80,
+                height: 90,
+                resizeMode: "cover",
+                borderRadius: 8,
+              }}
+            />
+            <Text
+              className="ml-4 text-base font-medium"
+              style={{ fontFamily: FontFamily.poppinsRegular }}
+            >
+              {option.title}
+            </Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setDeliveryType("Table Service")}
-            className="p-2 mb-2 rounded-lg border border-gray-300"
-          >
-            <Text className="text-lg">Table Service</Text>
-          </TouchableOpacity>
-        </View>
+        ))}
 
+        {/* If "Table Service" is selected, show Room Number input */}
         {deliveryType === "Table Service" && (
           <>
-            <Text className="text-lg mb-2 mt-4">Enter Room Number:</Text>
+            <Text className="text-lg font-bold mt-4">Enter Room Number</Text>
             <TextInput
+              placeholder="Eg: B-203"
               value={selectedRoom}
               onChangeText={setSelectedRoom}
-              className="border p-2 mb-4 rounded-lg"
-              placeholder="Enter Room Number"
-              keyboardType="numeric"
+              keyboardType="default"
+              style={{
+                height: 50,
+                borderColor: "#ccc",
+                borderWidth: 1,
+                borderRadius: 8,
+                paddingHorizontal: 12,
+                marginBottom: 20,
+                fontFamily: FontFamily.poppinsRegular,
+                fontSize: FontSize.size_mini,
+              }}
             />
-
-            <Text className="text-lg mb-2">Select Canteen:</Text>
-            {["Canteen 1", "Canteen 2", "Canteen 3"].map((canteen) => (
-              <TouchableOpacity
-                key={canteen}
-                onPress={() => setSelectedCanteen(canteen)}
-                className={`p-2 mb-2 rounded-lg border ${selectedCanteen === canteen ? "bg-green-100 border-green-600" : "border-gray-300"}`}
-              >
-                <Text className="text-lg">{canteen}</Text>
-              </TouchableOpacity>
-            ))}
-
-            <TouchableOpacity
-              onPress={() => setDeliveryModalVisible(false)}
-              className="bg-green-500 p-3 rounded-lg mt-4"
+            {errorMessage ? (
+              <Text className="text-red-500 text-center mb-4">
+                {errorMessage}
+              </Text>
+            ) : null}
+            <LinearGradient
+              colors={["#007022", "#54d17a", "#bcffd0"]}
+              start={{ x: 0, y: 1 }}
+              end={{ x: 1, y: 0 }}
+              style={{ borderRadius: 8 }}
             >
-              <Text className="text-white text-center text-lg font-bold">Confirm</Text>
-            </TouchableOpacity>
+              <Pressable
+                onPress={handleProceed}
+                style={{
+                  padding: 15,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {isLoading ? (
+                  <ActivityIndicator size="small" color="#ffffff" />
+                ) : (
+                  <Text
+                    style={{
+                      color: "white",
+                      fontFamily: FontFamily.poppinsSemiBold,
+                      fontSize: FontSize.size_lg,
+                    }}
+                  >
+                    Proceed
+                  </Text>
+                )}
+              </Pressable>
+            </LinearGradient>
           </>
         )}
       </View>
-    </View>
-  </Modal>
-);
+    </Modalize>
+  );
+};
 
-export default DeliveryModal;
+export default DeliveryModalComponent;

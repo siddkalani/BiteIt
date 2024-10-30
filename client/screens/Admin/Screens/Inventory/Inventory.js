@@ -250,12 +250,9 @@ const Inventory = () => {
           />
         </View>
 
-        <View className="flex-row justify-between items-center">
-          <Text className="font-semibold text-lg">Items</Text>
-          <TouchableOpacity className="flex-row items-center">
-            <Icon name="pencil" size={16} color="black" />
-            <Text className="text-black ml-1">Edit menu</Text>
-          </TouchableOpacity>
+        <View className="flex-row items-center">
+        <Icon name="list" size={16} color="black" />
+          <Text className="font-semibold text-lg ml-1">Items</Text>
         </View>
 
         {/* Inventory List */}
