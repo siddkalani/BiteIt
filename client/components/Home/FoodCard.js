@@ -138,7 +138,7 @@ const FoodCard = ({ foodItem }) => {
 
       <Text
         style={{
-          color: isOnline ? "green" : "red",
+          color: isOnline ? "green" : "green",
           fontSize: 16,
         }}
         className={`font-bold ${isOnline ? "" : ""}`}
@@ -204,7 +204,32 @@ const FoodCard = ({ foodItem }) => {
           </LinearGradient>
         )
       ) : (
-        <Text className="text-red-500 font-semibold">Not Available</Text>
+        <LinearGradient
+        colors={["#b0b0b0", "#d3d3d3", "#e0e0e0"]} // Shades of gray for unavailable state
+        start={{ x: 0, y: 1 }}
+        end={{ x: 1.9, y: 0 }}
+        className="rounded-md w-full"
+      >
+        <TouchableOpacity
+          className="py-1 justify-center items-center flex-row"
+          style={{ alignSelf: "center" }}
+        >
+          
+          <View className="h-6">
+            <Text
+              className="text-red-500 text-center" // Red text color for "Not Available"
+              style={{
+                fontFamily: FontFamily.poppinsMedium,
+                fontSize: FontSize.size_mini,
+                textAlignVertical: "center",
+              }}
+            >
+              Not Available
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </LinearGradient>
+      
       )}
 
       {/* Food Item Modal */}

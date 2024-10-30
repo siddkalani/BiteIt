@@ -11,13 +11,8 @@ mongoose.connect(process.env.CONNECTION_STRING, {
 const predefinedCategories = [
   {
     categoryName: "Sandwiches",
-    image: "path/to/sandwiches.jpg",
+    image: "/public/menu-images/curd-rice.png",
   },
-  {
-    categoryName: "Burgers",
-    image: "path/to/burgers.jpg",
-  },
-  // Add more categories as needed
 ];
 
 const seedCategories = async () => {
