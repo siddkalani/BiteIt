@@ -20,9 +20,9 @@ const createOrder = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "All fields are required" });
   }
 
-  if (payment !== 1) {
-    return res.status(400).json({ message: "Payment not done!" });
-  }
+  // if (payment !== 1) {
+  //   return res.status(400).json({ message: "Payment not done!" });
+  // }
 
   try {
     // Validate the canteen exists

@@ -13,6 +13,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { BASE_URL } from "../../constants/constant";
 import * as Icon from "react-native-feather";
 import GlobalHeader from "../../components/Layout/GlobalHeader";
+import io from "socket.io-client";
+
+const socket = io(BASE_URL); 
 
 const dummyOrderHistory = [
   {
@@ -89,6 +92,15 @@ const OrderHistoryPage = () => {
     };
 
     fetchOrderHistory();
+
+    socket.on("orderDelivered", (newOrder) => {
+      setOrderHistory((prevOrders) => [newOrder, ...prevOrders]);
+    });
+
+    return () => {
+      socket.off("orderDelivered"); // Clean up listener on unmount
+    };
+    
   }, []);
 
   const renderOrderItem = ({ item }) => {

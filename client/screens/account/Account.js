@@ -12,13 +12,19 @@ const Account = () => {
     const insets = useSafeAreaInsets(); // Using SafeAreaInsets to get padding values for iOS and Android
     const navigation = useNavigation();
 
-    const [user, setUser] = useState(false);
+    const [user, setUser] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     // Function to fetch user details from the backend
     const fetchUserDetails = async (userId) => {
         try {
-            const response = await axios.get(`${BASE_URL}/user/${userId}`);
+            const token = await AsyncStorage.getItem('userToken'); // Retrieve accessToken
+
+            const response = await axios.get(`${BASE_URL}/user/${userId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`, // Set Bearer token in headers
+                },
+            });
             setUser(response.data);
         } catch (error) {
             console.error('Error fetching user details:', error);
@@ -28,10 +34,11 @@ const Account = () => {
     // Function to check Async Storage for user ID
     const checkUserId = async () => {
         try {
+            
             const userId = await AsyncStorage.getItem('userId');
             if (userId) {
                 setIsLoggedIn(true);
-                fetchUserDetails(userId); // Fetch user details if ID exists
+                await fetchUserDetails(userId); // Fetch user details if ID exists
             } else {
                 setIsLoggedIn(false);
             }
@@ -70,9 +77,11 @@ const Account = () => {
                     <View>
                     {isLoggedIn && user ? (
                             <>
-                        <Text className="text-white text-2xl font-bold">{user.name}</Text>
-                        <Text numberOfLines={1} className="text-white mt-1">+91 - {user.phone}• {user.email}</Text>
-                        </>
+                                <Text className="text-white text-2xl font-bold">{user.name}</Text>
+                                <Text numberOfLines={1} className="text-white mt-1">
+                                    +91 - {user.phone} • {user.email}
+                                </Text>
+                            </>
                         ) : (
                             <Text className="text-white text-xl font-bold">Login to see your profile</Text>
                         )}

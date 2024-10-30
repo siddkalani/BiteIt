@@ -7,8 +7,6 @@ import axios from "axios"
 import { CommonActions } from "@react-navigation/native";
 import { useState } from "react";
 
-
-
 //Handle USER REGISTER
 export const registerUser = async (formData, navigation, setIsLoading, setErrorMessage) => {
   setIsLoading(true); // Start loading
@@ -23,10 +21,10 @@ export const registerUser = async (formData, navigation, setIsLoading, setErrorM
     setErrorMessage("Please enter a valid email");
     setIsLoading(false);
     return;
-  } else if (!formData.email.endsWith("@somaiya.edu") && formData.email.includes("@")) {
-    setErrorMessage("Only @somaiya.edu emails are allowed");
-    setIsLoading(false);
-    return;
+  // } else if (!formData.email.endsWith("@somaiya.edu") && formData.email.includes("@")) {
+  //   setErrorMessage("Only @somaiya.edu emails are allowed");
+  //   setIsLoading(false);
+  //   return;
   } else if (!formData.password) {
     setErrorMessage("Please enter a password");
     setIsLoading(false);

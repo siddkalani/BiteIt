@@ -6,6 +6,8 @@ import SearchBar from "./SearchBar";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CommonActions } from "@react-navigation/native";
+import { clearCart } from "../../store/Slices/cartSlice";
+import { useSelector, useDispatch } from "react-redux";
 
 const AnimatedHeader = ({
   openLocationModal,
@@ -17,7 +19,7 @@ const AnimatedHeader = ({
 }) => {
   const navigation = useNavigation();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
+  const dispatch = useDispatch();
   // Check if the user is authenticated
   useEffect(() => {
     const checkAuthStatus = async () => {
@@ -43,7 +45,10 @@ const AnimatedHeader = ({
             await AsyncStorage.removeItem("userRefreshToken");
             await AsyncStorage.removeItem("userName");
             await AsyncStorage.removeItem("role");
-            setIsAuthenticated(false); //Reset auth status
+            dispatch(clearCart());
+
+            setIsAuthenticated(false); 
+            // Reset auth status
             navigation.dispatch(
               CommonActions.reset({
                 index: 0,
