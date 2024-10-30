@@ -38,6 +38,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Modalize } from "react-native-modalize";
 import io from "socket.io-client";
+import { setCanteenName, setDeliveryType } from "../../store/Slices/orderServiceSlice";
 
 const socket = io(BASE_URL); 
 
@@ -50,9 +51,9 @@ const CartPage = () => {
   const [modalVisible, setModalVisible] = useState(false); // For offers modal
   const [sliderValue] = useState(new Animated.Value(0)); // Animation value for the slider
   const modalizeRef = useRef(null); // Reference to the modalize component
-  const [deliveryType, setDeliveryType] = useState(null);
+  const deliveryType = useSelector((state) => state.service.deliveryType);
+  const selectedCanteen = useSelector((state) => state.service.canteenName);
   const [selectedRoom, setSelectedRoom] = useState(""); // For room number
-  const [selectedCanteen, setSelectedCanteen] = useState("Canteen 1"); 
 
   const handleChangeDelivery = () => {
     modalizeRef.current?.open(); // Open the modal
@@ -116,6 +117,7 @@ const CartPage = () => {
     try {
       // Retrieve necessary data from AsyncStorage
       const userId = await AsyncStorage.getItem("userId");
+      console.log(deliveryType)
       const canteenName = "Engineering Canteen";
       const totalBill = cartItems.reduce(
         (sum, item) => sum + item.itemPrice * item.quantity,
@@ -132,11 +134,12 @@ const CartPage = () => {
 
       const payload = {
         userId,
-        canteenName,
+        canteenName: selectedCanteen,
         totalAmount,
         items: orderData,
         payment: 1,
         status: "Pending",
+        deliverTo: deliveryType
       };
       const token = await AsyncStorage.getItem("userToken");
       const response = await fetch(`${BASE_URL}/user/order/add`, {
@@ -451,7 +454,7 @@ const CartPage = () => {
                     </Text>
                   </View>
                   <Text className="text-sm font-medium text-gray-500">
-                    B-203
+                    {deliveryType}
                   </Text>
                 </View>
 
