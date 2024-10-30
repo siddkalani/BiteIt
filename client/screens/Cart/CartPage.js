@@ -37,6 +37,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Modalize } from "react-native-modalize";
+import io from "socket.io-client";
+
+const socket = io(BASE_URL); 
 
 const { width } = Dimensions.get("window");
 
@@ -49,7 +52,7 @@ const CartPage = () => {
   const modalizeRef = useRef(null); // Reference to the modalize component
   const [deliveryType, setDeliveryType] = useState(null);
   const [selectedRoom, setSelectedRoom] = useState(""); // For room number
-  const [selectedCanteen, setSelectedCanteen] = useState("Canteen 1"); // Default to "Canteen 1"
+  const [selectedCanteen, setSelectedCanteen] = useState("Canteen 1"); 
 
   const handleChangeDelivery = () => {
     modalizeRef.current?.open(); // Open the modal
@@ -92,7 +95,6 @@ const CartPage = () => {
   const handlePayment = () => {
     navigation.navigate("PaymentOption");
   };
-
   useEffect(() => {
     // Load cart data when the component mounts
     const loadCart = async () => {
@@ -107,9 +109,9 @@ const CartPage = () => {
       });
     };
 
-    loadCart(); // Call the loadCart function
-  }, [dispatch]);
-
+    loadCart();
+  }, [dispatch, cartItems]); 
+  
   const handlePlaceOrder = async () => {
     try {
       // Retrieve necessary data from AsyncStorage
@@ -166,6 +168,46 @@ const CartPage = () => {
       );
     }
   };
+
+  const [itemOnlineStatus, setItemOnlineStatus] = useState({});
+
+  // useEffect(() => {
+  //   // Initialize online status based on fetched items
+  //   const initialStatus = {};
+  //   cartItems.forEach(item => {
+  //     initialStatus[item._id] = item.isOnline; // Assuming item has isOnline property
+  //   });
+  //   setItemOnlineStatus(initialStatus);
+
+  //   // Listen for changes in the item's online status
+  //   socket.on("foodItemOnline", (updatedItem) => {
+  //     setItemOnlineStatus((prevStatus) => ({
+  //       ...prevStatus,
+  //       [updatedItem._id]: true, // Set item as online
+  //     }));
+  //   });
+
+  //   socket.on("foodItemOffline", (updatedItem) => {
+  //     setItemOnlineStatus((prevStatus) => ({
+  //       ...prevStatus,
+  //       [updatedItem._id]: false, // Set item as offline
+  //     }));
+      
+  //     // Automatically remove the item from the cart if it goes offline
+  //     const itemInCart = cartItems.find(item => item._id === updatedItem._id);
+  //     if (itemInCart) {
+  //       dispatch(removeFromCart({ itemId: updatedItem._id }));
+  //       Alert.alert("Item Unavailable", `${itemInCart.itemName} is now offline and has been removed from your cart.`);
+  //     }
+  //   });
+
+  //   // Clean up listeners on unmount
+  //   return () => {
+  //     socket.off("foodItemOnline");
+  //     socket.off("foodItemOffline");
+  //   };
+  // }, [cartItems, dispatch, socket]);
+
 
   // PanResponder to handle slider movement
   const panResponder = PanResponder.create({
@@ -224,6 +266,7 @@ const CartPage = () => {
     }
   };
 
+  
   const { top } = useSafeAreaInsets();
 
   const renderCartItem = ({ item }) => (
@@ -235,11 +278,15 @@ const CartPage = () => {
       <View className="flex-1">
         <Text className="font-semibold text-lg">{item.itemName}</Text>
         <Text className="text-gray-500">₹{item.itemPrice}</Text>
+        {/* {!itemOnlineStatus[item._id] && (
+          <Text className="text-red-500 font-semibold">Not Available</Text>
+        )} */}
       </View>
       <View className="flex-row items-center space-x-2 h-8">
         <View className="flex-row items-center space-x-2 bg-gray-200 rounded-md">
           <TouchableOpacity
             onPress={() => handleDecrement(item._id)}
+            disabled={!itemOnlineStatus[item._id]}
             className="p-2"
           >
             <Icon.Minus width={16} height={16} stroke="green" strokeWidth="3" />
@@ -251,6 +298,7 @@ const CartPage = () => {
           </View>
           <TouchableOpacity
             onPress={() => handleIncrement(item._id)}
+            disabled={!itemOnlineStatus[item._id]}
             className="p-2"
           >
             <Icon.Plus width={16} height={16} stroke="green" strokeWidth="3" />
