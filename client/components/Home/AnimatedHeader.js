@@ -43,7 +43,7 @@ const AnimatedHeader = ({
             await AsyncStorage.removeItem("userRefreshToken");
             await AsyncStorage.removeItem("userName");
             await AsyncStorage.removeItem("role");
-            setIsAuthenticated(false); // Reset auth status
+            setIsAuthenticated(false); //Reset auth status
             navigation.dispatch(
               CommonActions.reset({
                 index: 0,
