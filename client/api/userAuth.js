@@ -203,7 +203,8 @@ export const resendOtp = async (email, setStep) => {
       setStep(2);
     }
   } catch (error) {
-    Alert.alert("Error", error.response?.data.message || "Failed to send verification code.");
+    // Alert.alert("Error", error.response?.data.message || "Failed to send verification code.");
+    console.log(error.response?.data.message)
   }
 };
 

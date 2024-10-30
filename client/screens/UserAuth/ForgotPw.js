@@ -43,13 +43,24 @@ const ForgotPw = () => {
   }, [countdown]);
 
   const handleSendCode = async () => {
-    setIsSendingCode(true);
+    // Clear any previous error message
     setErrorMessage("");
+  
+    // Email validation
+    if (!email) {
+      setErrorMessage("Please enter an email");
+      return; // Stop further execution
+    } else if (!email.endsWith("@somaiya.edu")) {
+      setErrorMessage("Please enter a valid @somaiya.edu email");
+      return; // Stop further execution
+    }
+  
+    // If validation passes, proceed to send the code
+    setIsSendingCode(true);
     setCountdown(60); // Disable button for 60 seconds
-
+  
     try {
       await resendOtp(email, setStep);
-      setErrorMessage("");
     } catch (error) {
       setCountdown(0); // Reset countdown on error
       setErrorMessage("Failed to send verification code.");
@@ -57,6 +68,7 @@ const ForgotPw = () => {
       setIsSendingCode(false);
     }
   };
+  
 
   const handleOtpChange = (text, index) => {
     let newOtp = [...otp];
@@ -128,7 +140,7 @@ const ForgotPw = () => {
             {errorMessage ? (
               <Text className="text-red-500 text-center mb-4">{errorMessage}</Text>
             ) : null}
-            <TouchableOpacity className="w-full" onPress={handleSendCode} disabled={isSendingCode || countdown > 0}>
+            <TouchableOpacity className="w-full" onPress={handleSendCode} disabled={isSendingCode}>
               <LinearGradient colors={["#007022", "#54d17a", "#bcffd0"]} start={{ x: 0, y: 1 }} end={{ x: 1, y: 0 }} className="rounded-md">
                 {isSendingCode ? (
                   <ActivityIndicator size="small" color="#ffffff" className="py-4" />
