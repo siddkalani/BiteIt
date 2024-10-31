@@ -7,8 +7,6 @@ import axios from "axios"
 import { CommonActions } from "@react-navigation/native";
 import { useState } from "react";
 
-
-
 //Handle USER REGISTER
 export const registerUser = async (formData, navigation, setIsLoading, setErrorMessage) => {
   setIsLoading(true); // Start loading

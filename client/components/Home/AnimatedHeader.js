@@ -120,9 +120,6 @@ const AnimatedHeader = ({
               >
                 {isAuthenticated ? (
                   <>
-                    <TouchableOpacity>
-                      <Icon.Bell height="24" width="24" stroke="white" />
-                    </TouchableOpacity>
                     <TouchableOpacity onPress={handleLogout}>
                       <Icon.LogOut height="24" width="24" stroke="white" />
                     </TouchableOpacity>
