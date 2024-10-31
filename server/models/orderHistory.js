@@ -46,7 +46,10 @@ const orderHistorySchema = mongoose.Schema(
       ],
       default: "Pending",
     },
-   
+   payment:{
+    type:Number,
+    default:0
+   },
     orderPlacedAt: {
       type: Date,
       default: Date.now,

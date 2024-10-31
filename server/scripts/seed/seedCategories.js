@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv").config();
-const Category = require("../../models/categoryModel"); // Adjust path as necessary
+const Category = require("../../models/categoryModel"); 
+const fs = require("fs");
+const path = require("path");
 
 // Connect to MongoDB
 mongoose.connect(process.env.CONNECTION_STRING, {
@@ -8,16 +10,14 @@ mongoose.connect(process.env.CONNECTION_STRING, {
   useUnifiedTopology: true,
 });
 
+const getImagePath = (imageName) => `/uploads/${imageName}`;
+
+// Seed categories with image paths
 const predefinedCategories = [
-  {
-    categoryName: "Sandwiches",
-    image: "path/to/sandwiches.jpg",
-  },
-  {
-    categoryName: "Burgers",
-    image: "path/to/burgers.jpg",
-  },
-  // Add more categories as needed
+    {
+        categoryName: "mango",
+        image: getImagePath("sandwich.webp"),
+    },
 ];
 
 const seedCategories = async () => {
