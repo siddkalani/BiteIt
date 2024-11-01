@@ -57,6 +57,11 @@ const Account = () => {
         console.log("Profile clicked");
     };
 
+    const handleOrders = () => {
+        navigation.navigate('OrderHistory');
+        // console.log("Profile clicked");
+    };
+
     const handleBack = () => {
         navigation.navigate('Home');
         console.log("Back clicked");
@@ -95,17 +100,15 @@ const Account = () => {
                         showsVerticalScrollIndicator={false}
                         contentContainerStyle={{ paddingBottom: insets.bottom + (Platform.OS === 'android' ? 60 : 40) }}
                     >
-                        <MenuItem icon="star-outline" text="One Membership" badge="ACTIVE" description="You've saved ₹2,403 in 75 days. Explore more benefits." />
-                        <MenuItem icon="card-outline" text="Swiggy HDFC Bank Credit Card" description="Apply for the card and start earning cashbacks!" />
-
+                        
                         <SectionHeader title="My Account" />
                         <MenuItem onPress={handleProfile} icon="person-outline" text="Profile" description="Full name, password & Settings" />
-                        <MenuItem icon="list-outline" text="My Eatlists" badge="NEW" description="View all your saved lists in one place" />
-                        <MenuItem icon="location-outline" text="Addresses" description="Share, Edit & Add New Addresses" />
-                        <MenuItem icon="cash-outline" text="Payments & Refunds" description="Refund Status & Payment Modes" />
+                        <MenuItem onPress={handleOrders} icon="list-outline" text="My Orders" badge="NEW" description="View all your past orders in one place" />
+                        <MenuItem icon="location-outline" text="Address" badge="UPCOMING" description="Your saved address" />
+                        <MenuItem icon="document-outline" text="T&Cs" description="Terms & Conditions" />
 
-                        <MenuItem icon="wallet-outline" text="Swiggy Money & Gift Cards" description="Account balance, Gift cards & Transaction History" />
-                        <MenuItem icon="gift-outline" text="Refer & Earn" description="Refer friends & earn on Swiggy" />
+                        <MenuItem icon="wallet-outline" text="Wallet" description="Account balance & Gift cards" badge="UPCOMING"/>
+                        <MenuItem icon="help-outline" text="FAQs" description="Frequently asked questions" />
                     </ScrollView>
                 ) : (
                     <View className="flex-1 justify-center items-center bg-[#f9f9f9]">
