@@ -82,7 +82,10 @@ const adminLoginWithOtp = asyncHandler(async (req, res) => {
     message: "Successful",
     token: token,
     refreshToken: refreshToken,
-    data: { role: user.role, name: user.name, id: user._id },
+    data: { role: user.role, name: user.name, id: user._id , 
+      canteenId: user.canteenId._id, 
+      canteenName: user.canteenId.canteenName, 
+    },
   });
 });
 

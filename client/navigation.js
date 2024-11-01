@@ -81,7 +81,7 @@ function AppNavigator() {
         <Stack.Screen name="PendingOrder" component={PendingOrders} />
         <Stack.Screen name="PaymentOption" component={PaymentOption} />
 
-        {/* <Stack.Screen name="PaymentConfirmation" component={PaymentConfirmation} /> */}
+
         <Stack.Screen name="OrderTracking" component={OrderTracking} />
 
         {/* admin side */}
