@@ -12,7 +12,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { BASE_URL } from "../../constants/constant";
 import * as Icon from "react-native-feather";
-import GlobalHeader from "../../components/Layout/GlobalHeader";
 import io from "socket.io-client";
 
 const socket = io(BASE_URL); 

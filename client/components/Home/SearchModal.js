@@ -195,8 +195,8 @@ const SearchModal = ({ isModalVisible, closeSearchModal }) => {
 
   useEffect(() => {
     if (!isModalVisible) {
-      setSearchText(""); // Clear search text when modal is closed
-      setSearchResults([]); // Clear search results
+      setSearchText("");
+      setSearchResults([]);
     }
   }, [isModalVisible]);
 
