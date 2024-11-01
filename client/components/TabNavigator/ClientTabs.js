@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Animated, Dimensions, StatusBar, Platform, TouchableOpacity } from 'react-native';
+import { Text,View, Animated, Dimensions, StatusBar, Platform, TouchableOpacity } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
 import FloatingCartBar from '../Cart/FloatingCart';
@@ -7,9 +7,13 @@ import Home from '../../screens/Home/Home';
 import OrderHistoryPage from '../../screens/OrderHistory/OrderHistoryPage';
 import Account from '../../screens/Account/Account';
 import { selectItemCount } from '../../store/Slices/cartSlice';
+import { selectCanteenId } from '../../store/Slices/orderServiceSlice';
 import { useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { BASE_URL } from '../../constants/constant';
+import io from "socket.io-client";
 
+const socket = io(BASE_URL);
 const Tab = createBottomTabNavigator();
 const { height: screenHeight } = Dimensions.get('window');
 
@@ -93,15 +97,49 @@ const ClientTabs = () => {
   const [isTabBarVisible, setIsTabBarVisible] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false); // Track auth status
   const translateY = useRef(new Animated.Value(0)).current;
+  const canteenId = useSelector(selectCanteenId);
+  const [isCanteenOnline, setIsCanteenOnline] = useState(true); 
 
-  // Fetch auth status
+
+ // Fetch auth status
   useEffect(() => {
     const fetchAuthStatus = async () => {
       const token = await AsyncStorage.getItem('userToken');
-      setIsAuthenticated(!!token); // Set to true if token exists, otherwise false
+      setIsAuthenticated(!!token);
     };
     fetchAuthStatus();
   }, []);
+
+  // Fetch canteen status
+  useEffect(() => {
+    const fetchCanteenStatus = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/canteen/${canteenId}/status`);
+        const data = await response.json();
+        setIsCanteenOnline(data.isOnline); 
+        console.log(data.isOnline)
+      } catch (error) {
+        console.error("Error fetching canteen status:", error);
+      }
+    };
+
+    fetchCanteenStatus();
+
+    // Initialize socket connection
+
+    // Listen for canteen status updates
+    socket.on('canteenStatus', (status) => {
+      if (status.canteenId === canteenId) {
+        console.log('Canteen status updated from socket:', status.isOnline);
+        setIsCanteenOnline(status.isOnline);
+      }
+    });
+
+    // Clean up the socket connection
+    return () => {
+      socket.disconnect();
+    };
+  }, [canteenId]);
 
   const animateTabBar = (toValue) => {
     Animated.spring(translateY, {
@@ -138,6 +176,15 @@ const ClientTabs = () => {
   useEffect(() => {
     animateTabBar(isTabBarVisible);
   }, [isTabBarVisible]);
+  if (!isCanteenOnline) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={{ color: 'red', textAlign: 'center', margin: 10 }}>
+          Oops! The canteen is offline. Please try again later.
+        </Text>
+      </View>
+    );
+  }
 
   return (
     <View style={{ flex: 1 }}>
@@ -149,7 +196,7 @@ const ClientTabs = () => {
         screenListeners={{
           state: (e) => {
             const routeName = e.data.state.routes[e.data.state.index].name;
-            updateStatusBar(routeName); // Update the status bar on screen change
+            updateStatusBar(routeName);
           },
         }}
       >
@@ -175,5 +222,6 @@ const ClientTabs = () => {
     </View>
   );
 };
+
 
 export default ClientTabs;

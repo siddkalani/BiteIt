@@ -18,18 +18,19 @@ import { useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BASE_URL } from "../../../../constants/constant";
 import io from "socket.io-client";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import { selectCanteenId } from "../../../../store/Slices/orderServiceSlice";
+import { useSelector } from 'react-redux';
 import Animated from "react-native-reanimated";
-
 const socket = io(BASE_URL); // Initialize socket connection once
 
 const AdminHome = () => {
   const navigation = useNavigation();
   const { width: screenWidth } = Dimensions.get("window");
   const { top } = useSafeAreaInsets();
-
-  // State Variables
-  const [isOnline, setIsOnline] = useState(true);
+  const [isOnline, setIsOnline] = useState(false);
+  // const [canteenId, setCanteenId] = useState(null);
+  const canteenId = useSelector(selectCanteenId);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [actionLoading, setActionLoading] = useState({});
   const flatListRef = useRef(null);
@@ -44,7 +45,71 @@ const AdminHome = () => {
   const [loading, setLoading] = useState(true); // Loading State
   const [searchQuery, setSearchQuery] = useState(""); // Search Query State
 
-  const toggleOnlineStatus = () => setIsOnline((prev) => !prev);
+  useEffect(() => {
+    const fetchCanteenData = async () => {
+      if (!canteenId) {
+        Alert.alert("Error", "Canteen ID not available.");
+        return;
+      }
+
+      try {
+        const responseStatus = await fetch(`${BASE_URL}/canteen/${canteenId}/status`);
+        if (!responseStatus.ok) {
+          throw new Error("Failed to fetch canteen status");
+        }
+
+        const dataStatus = await responseStatus.json();
+        // Update the online status based on the response
+        setIsOnline(dataStatus.isOnline); // Assuming response contains { isOnline: true/false }
+
+      } catch (error) {
+        console.error("Failed to fetch canteen data:", error);
+
+      }
+    };
+
+    fetchCanteenData();
+  }, [canteenId]); // Ensure the effect runs when canteenId changes
+
+  // Toggle function that sends the updated status to the backend
+  const toggleOnlineStatus = async () => {
+    if (!canteenId) return;
+
+    try {
+      // Check the current online status
+      const currentStatus = isOnline;
+
+      // Determine the new status
+      const newStatus = !currentStatus;
+
+      // Update the local state first (optimistic update)
+      setIsOnline(newStatus);
+
+      // Make the API request to update the status on the server
+      const response = await fetch(`${BASE_URL}/canteen/${canteenId}/status`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ isOnline: newStatus }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update status");
+      }
+
+      const data = await response.json();
+      // Handle the response data if necessary
+
+
+    } catch (error) {
+      console.error("Error updating status:", error);
+      // Revert status if update fails
+      setIsOnline(currentStatus);
+
+    }
+  };
+
 
   // Slides for Promo Banner (if any)
   const slides = [

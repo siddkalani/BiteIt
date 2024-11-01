@@ -4,7 +4,7 @@ const canteenSchema = new mongoose.Schema(
   {
     isOnline:{
      type:Boolean ,
-     default: true,
+     default: false,
     },
     canteenName: {
       type: String,
