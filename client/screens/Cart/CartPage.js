@@ -400,6 +400,7 @@ const CartPage = () => {
         ) : (
           <View className="flex-1 bg-gray-100">
             <ScrollView
+            
               className="flex-1 px-4"
               contentContainerStyle={{ paddingBottom: 170 }}
               showsVerticalScrollIndicator={false}
