@@ -230,7 +230,7 @@ const handlePaymentDone = async (orderId) => {
 
     if (response.ok) {
       const data = await response.json();
-      console.log("Payment updated successfully:", data);
+      // console.log("Payment updated successfully:", data);
 
       // Optionally, you might want to refresh the order list here
       // fetchOrders(); // Define this function to refresh your orders
@@ -244,7 +244,7 @@ const handlePaymentDone = async (orderId) => {
 
 useEffect(() => {
   // Listening for payment updates
-  socket.on("paymentUpdate", (updatedOrder) => {
+  socket.on("paymentDone", (updatedOrder) => {
     setPickedUpOrders((prevOrders) =>
       prevOrders.map((order) =>
         order._id === updatedOrder._id ? { ...order, payment: updatedOrder.payment } : order
@@ -253,7 +253,7 @@ useEffect(() => {
   });
 
   return () => {
-    socket.off("paymentUpdate");
+    socket.off("paymentDone");
   };
 }, []);
 
@@ -570,19 +570,23 @@ useEffect(() => {
                   <View className="flex-row justify-between mt-2">
                     <Text className="text-base font-bold">Total Bill</Text>
                     <Text className="text-base font-bold">₹{order.totalAmount}</Text>
-                    <Text className="text-base font-bold">{order.payment}</Text>
+                    <Text className="text-base font-bold">     {order.payment === 1 ? "Payment Done" : "Pending Payment"}</Text>
                   </View>
-                  <View className="flex-row justify-between mt-4">
-                    <TouchableOpacity
-                      className="bg-green-500 p-2 rounded-lg"
-                      onPress={() => handlePaymentDone(order._id)} 
-                    >
-                      <Text className="text-white">Payment Done</Text>
-                    </TouchableOpacity>
-                  </View>
-                  <Text className="text-base text-green-500 font-bold mt-2">
-                    Order Picked Up
-                  </Text>
+                  {order.payment !== 1 && (
+      <View className="flex-row justify-between mt-4">
+        <TouchableOpacity
+          className="bg-green-500 p-2 rounded-lg"
+          onPress={() => handlePaymentDone(order._id)}
+        >
+          <Text className="text-white">Payment Done</Text>
+        </TouchableOpacity>
+      </View>
+    )}
+    {order.payment === 1 && (
+      <Text className="text-base text-green-500 font-bold mt-2">
+        Order Picked Up
+      </Text>
+    )}
                 </View>
               ))}
             </View>

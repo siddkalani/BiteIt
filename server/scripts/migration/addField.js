@@ -1,23 +1,22 @@
-// migrations/addRefreshTokenField.js
 const mongoose = require("mongoose");
-const User = require("../../models/userModel");
-const dotenv = require("dotenv").config() // Adjust the path as necessary
+const OrderHistory = require("../../models/orderHistory"); // Adjust the path as necessary
+const dotenv = require("dotenv").config(); // Load environment variables
 
-const uri = process.env.CONNECTION_STRING; 
+const uri = process.env.CONNECTION_STRING;
 
-const addRefreshTokenField = async () => {
+const addPaymentField = async () => {
   try {
     await mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
     
-    // Update all users to set refreshToken to null (or you can modify based on your requirements)
-    const result = await User.updateMany({}, { $set: { refreshToken: null } });
+    // Set payment field to 0 (Pending) for all documents that don't have it
+    const result = await OrderHistory.updateMany({}, { $set: { payment: 0 } });
 
-    console.log(`${result.modifiedCount} users updated with refreshToken field.`);
+    console.log(`${result.modifiedCount} order history records updated with payment field.`);
   } catch (error) {
-    console.error("Error updating users:", error);
+    console.error("Error updating order history records:", error);
   } finally {
     await mongoose.disconnect();
   }
 };
 
-addRefreshTokenField();
+addPaymentField();

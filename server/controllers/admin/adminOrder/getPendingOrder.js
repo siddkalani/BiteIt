@@ -88,6 +88,7 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
           items: order.items, // Store the array of ordered items
           totalAmount: order.totalAmount,
           status: "Delivered",
+          payment: order.payment,
           orderPlacedAt: order.orderPlacedAt,
         });
 
@@ -103,6 +104,7 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
       await sendNotification(order.userId, "Order Delivered", `Your order has been delivered.`);
       break;
     case "Rejected":
+      await Order.findByIdAndDelete(id); 
       io.emit("orderRejected", order);
       await sendNotification(order.userId, "Order Rejected", `Your order has been rejected.`);
       break;
