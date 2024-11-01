@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, StatusBar, Animated, Platform, Alert } from "react-native";
 import { SafeAreaView } from "react-native";
 import * as Icon from "react-native-feather";
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import SearchBar from "./SearchBar";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -94,16 +95,22 @@ const AnimatedHeader = ({
         <View style={{ backgroundColor: "#309624" }}>
           <View className="flex-row items-center justify-between px-4 mt-2">
             {/* Delivery Location */}
-            <TouchableOpacity onPress={openLocationModal}>
+            <TouchableOpacity
+            //  onPress={openLocationModal}
+             >
               <Animated.View
                 style={{
                   opacity: deliverTextOpacity,
                   transform: [{ translateY: deliverTextTranslateY }],
                 }}
               >
-                <Text className="text-white text-xs">DELIVER TO</Text>
+                <View className='flex-row'>
+                <Ionicons name="location-outline" size={14} color="white" /> 
+                <View className="flex-row items-center"></View>
+                <Text className="text-white text-xs ml-1">FROM</Text>
+                </View>
                 <View className="flex-row items-center">
-                  <Text className="text-white font-bold mr-1">Current Location</Text>
+                  <Text className="text-white font-bold mr-1">Engginering canteen</Text>
                   <Icon.ChevronDown height="20" width="20" stroke="white" />
                 </View>
               </Animated.View>
