@@ -46,6 +46,7 @@ const AnimatedHeader = ({
             await AsyncStorage.removeItem("userRefreshToken");
             await AsyncStorage.removeItem("userName");
             await AsyncStorage.removeItem("role");
+            
             dispatch(clearCart());
 
             setIsAuthenticated(false); 
