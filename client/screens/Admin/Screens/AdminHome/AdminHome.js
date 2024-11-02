@@ -41,6 +41,7 @@ const AdminHome = () => {
   const [pickedUpOrders, setPickedUpOrders] = useState([]); // Picked Up Orders
   const [activeTab, setActiveTab] = useState("Pending"); // Tabs State
 
+
   useEffect(() => {
     const fetchCanteenData = async () => {
       if (!canteenId) {
@@ -458,11 +459,11 @@ useEffect(() => {
                   className="p-4 bg-gray-50 rounded-lg shadow-sm my-2"
                 >
                   <View className="flex-row justify-between">
-                    <Text className="text-xl font-bold">ID: {order._id}</Text>
+                    <Text className="text-xl font-bold">ID: {order.orderId}</Text>
                     {/* <Text className="text-gray-500">{order.time}</Text> */}
                   </View>
                   <Text className="text-sm text-blue-500">
-                    1st order by {order.userId}
+                    1st order by {order.userName}
                   </Text>
                   {order.items.map((item, idx) => (
                     <View key={idx} className="flex-row justify-between mt-2">
@@ -524,11 +525,11 @@ useEffect(() => {
                   className="p-4 bg-gray-50 rounded-lg shadow-sm my-2"
                 >
                   <View className="flex-row justify-between">
-                    <Text className="text-xl font-bold">ID: {order._id}</Text>
+                    <Text className="text-xl font-bold">ID: {order.orderId}</Text>
                     {/* <Text className="text-gray-500">{order.time}</Text> */}
                   </View>
                   <Text className="text-sm text-blue-500">
-                    1st order by {order.userId}
+                    1st order by {order.userName}
                   </Text>
                   {order.items.map((item, idx) => (
                     <View key={idx} className="flex-row justify-between mt-2">
@@ -582,11 +583,11 @@ useEffect(() => {
                   className="p-4 bg-gray-50 rounded-lg shadow-sm my-2"
                 >
                   <View className="flex-row justify-between">
-                    <Text className="text-xl font-bold">ID: {order._id}</Text>
+                    <Text className="text-xl font-bold">ID: {order.orderId}</Text>
                     {/* <Text className="text-gray-500">{order.time}</Text> */}
                   </View>
                   <Text className="text-sm text-blue-500">
-                    1st order by {order.userId}
+                    1st order by {order.userName}
                   </Text>
                   {order.items.map((item, idx) => (
                     <View key={idx} className="flex-row justify-between mt-2">
@@ -621,11 +622,11 @@ useEffect(() => {
                   className="p-4 bg-gray-50 rounded-lg shadow-sm my-2"
                 >
                   <View className="flex-row justify-between">
-                    <Text className="text-xl font-bold">ID: {order._id}</Text>
+                    <Text className="text-xl font-bold">ID: {order.orderId}</Text>
                     {/* <Text className="text-gray-500">{order.time}</Text> */}
                   </View>
                   <Text className="text-sm text-blue-500">
-                    1st order by {order.userId}
+                    1st order by {order.userName}
                   </Text>
                   {order.items.map((item, idx) => (
                     <View key={idx} className="flex-row justify-between mt-2">

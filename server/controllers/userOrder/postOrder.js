@@ -8,6 +8,7 @@ const io = require("../../config/socket");
 const createOrder = asyncHandler(async (req, res) => {
   const {
     userId,
+    userName,
     canteenName,
     items,
     totalAmount,
@@ -54,6 +55,7 @@ const createOrder = asyncHandler(async (req, res) => {
     // Create the new order with multiple items
     const newOrder = new Order({
       userId,
+      userName,
       canteenId: canteen._id,
       items: orderedItems, // Store the array of ordered items
       totalAmount,
