@@ -148,6 +148,7 @@ const AdminHome = () => {
     const fetchOrders = async () => {
       try {
         const adminToken = await AsyncStorage.getItem("adminToken");
+        console.log(adminToken);
         if (!adminToken) {
           Alert.alert("Error", "Admin is not authenticated");
           setLoading(false);
@@ -213,14 +214,14 @@ const AdminHome = () => {
     try {
       // Set action loading state
       setActionLoading((prev) => ({ ...prev, [id]: true }));
-  
+
       const adminToken = await AsyncStorage.getItem("adminToken");
       if (!adminToken) {
         Alert.alert("Error", "Admin is not authenticated");
         setActionLoading((prev) => ({ ...prev, [id]: false }));
         return;
       }
-  
+
       const response = await fetch(`${BASE_URL}/admin/order/status/${id}`, {
         method: "PATCH",
         headers: {
@@ -229,12 +230,12 @@ const AdminHome = () => {
         },
         body: JSON.stringify({ status }),
       });
-  
+
       const data = await response.json();
       if (!response.ok) {
         throw new Error(data.message || "Failed to update order status");
       }
-  
+
       // Update local state based on new status
       if (status === "Rejected" || status === "Delivered") {
         setPendingOrders((prevOrders) =>
@@ -253,7 +254,7 @@ const AdminHome = () => {
           )
         );
       }
-  
+
       // Handle specific status updates
       if (status === "Preparing") {
         handleAcceptOrder(id);
@@ -273,7 +274,7 @@ const AdminHome = () => {
       setActionLoading((prev) => ({ ...prev, [id]: false }));
     }
   };
-  
+
 
   // Handle Accept Order
   const handleAcceptOrder = (orderId) => {
@@ -323,7 +324,7 @@ const AdminHome = () => {
     try {
       // Set action loading state
       setActionLoading((prev) => ({ ...prev, [orderId]: true }));
-  
+
       const token = await AsyncStorage.getItem("userToken"); // Retrieve the token
       const response = await fetch(`${BASE_URL}/admin/payment/${orderId}`, {
         method: "PATCH",
@@ -333,7 +334,7 @@ const AdminHome = () => {
         },
         body: JSON.stringify({ payment: 1 }), // Sending payment status as 1
       });
-  
+
       if (response.ok) {
         const data = await response.json();
         // Update the specific order's payment status
@@ -357,7 +358,7 @@ const AdminHome = () => {
       setActionLoading((prev) => ({ ...prev, [orderId]: false }));
     }
   };
-  
+
 
   // Filter orders based on search query for the active tab
   const getFilteredOrders = () => {
@@ -389,6 +390,7 @@ const AdminHome = () => {
   };
 
   const filteredOrders = getFilteredOrders();
+
 
   return (
     <View
@@ -423,11 +425,10 @@ const AdminHome = () => {
               <Icon.Search height={24} width={24} stroke="black" />
             </TouchableOpacity>
             <TouchableOpacity>
-              <Icon.Settings height={24} width={24} stroke="black" />
+              <Icon.LogOut height={24} width={24} stroke="black" />
             </TouchableOpacity>
           </View>
         </View>
-
         {/* Tab Section */}
         <View className="flex-row justify-between space-x-2">
           <TouchableOpacity
