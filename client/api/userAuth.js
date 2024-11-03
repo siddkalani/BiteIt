@@ -6,7 +6,8 @@ import * as Notifications from "expo-notifications";
 import axios from "axios"
 import { CommonActions } from "@react-navigation/native";
 import { useState } from "react";
-
+import jwtDecode from "jwt-decode";
+import { clearCart } from "../store/Slices/cartSlice";
 //Handle USER REGISTER
 export const registerUser = async (formData, navigation, setIsLoading, setErrorMessage) => {
   setIsLoading(true); // Start loading
@@ -91,6 +92,7 @@ export const loginUser = async (email, password, navigation, setIsLoading, setEr
       await AsyncStorage.setItem("userId", id);
       await AsyncStorage.setItem("role", role);
 
+
       navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: "ClientTabs" }] }));
 
       if (role === "user" || role === "faculty") {
@@ -163,12 +165,12 @@ export const verifyOtp = async (email, otp, isAdmin, navigation) => {
 
         await AsyncStorage.setItem("userToken", token);
         // await AsyncStorage.setItem("userRefreshToken", refreshToken);
-        await AsyncStorage.setItem("userName", name);
+        // await AsyncStorage.setItem("userName", name);
         await AsyncStorage.setItem("userId", id);
         await AsyncStorage.setItem("role", role);
         await AsyncStorage.setItem("canteenId", canteenId);
         // await AsyncStorage.setItem("canteenName", canteenName);
-        console.log(token, canteenId)
+        console.log(token, id, role)
 
         navigation.replace("AdminTabs");
 
@@ -250,5 +252,59 @@ export const resetPassword = async (email, otp, newPassword, confirmPassword, na
     }
   } catch (error) {
     Alert.alert("Error", error.response?.data.message || "Failed to reset password.");
+  }
+};
+
+
+//LOGOUT 
+export const logoutUser = async (navigation, dispatch, setIsAuthenticated) => {
+  try {
+    // Retrieve role from AsyncStorage
+    const role = await AsyncStorage.getItem("role");
+
+    Alert.alert("Logout", "Are you sure you want to log out?", [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "Logout",
+        onPress: async () => {
+          try {
+            // Check role and clear local storage accordingly
+            if (role === "admin") {
+              // Clear all except userName for admin
+              await AsyncStorage.multiRemove(["userToken", "userId", "role","canteenId" ]);
+            } else {
+              // Clear all data for non-admin users
+              await AsyncStorage.multiRemove([
+                "userToken",
+                "userId",
+                "userName",
+                "role",
+              ]);
+            }
+
+            // Clear other states if needed, such as the cart
+            dispatch(clearCart());
+
+            // Reset auth status
+            setIsAuthenticated(false);
+
+            // Navigate to Intro screen
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{ name: "Intro" }],
+              })
+            );
+          } catch (error) {
+            console.error("Logout Error:", error);
+          }
+        },
+      },
+    ]);
+  } catch (error) {
+    console.error("Error fetching role:", error);
   }
 };

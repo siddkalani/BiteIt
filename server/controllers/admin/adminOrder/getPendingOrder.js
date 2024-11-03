@@ -82,6 +82,7 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
       // Save the order to OrderHistory when delivered
       try {
         const newOrderHistory = new OrderHistory({
+          orderId:order._id,
           userId: order.userId,
           canteenId: order.canteenId,
           canteenName: order.canteenName,

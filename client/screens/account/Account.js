@@ -29,7 +29,11 @@ const Account = () => {
             setLoading(false); // Stop loading after data is fetched
         } catch (error) {
             console.error('Error fetching user details:', error);
-            setLoading(false); // Stop loading in case of error
+            
+            if (error.response?.status === 401) {
+                logoutUser(navigation); 
+              } 
+
         }
     };
 

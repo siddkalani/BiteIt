@@ -16,7 +16,9 @@ const Featured = () => {
     if (foodItemsStatus === "idle") {
       dispatch(fetchFoodItems());
     }
-  }, [foodItemsStatus, dispatch]);
+  }, []);
+
+ 
 
   return (
     <View className="px-4 py-2 space-y-2 flex-1 bg-[#F4F5F9]">

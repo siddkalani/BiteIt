@@ -1,15 +1,15 @@
 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { BASE_URL } from "../../constants/constant";
-import { axiosInstance } from "../../utils/refreshToken";
+
 
 export const fetchFoodItems = createAsyncThunk(
   "foodItem/fetchFoodItems",
   async () => {
-    const response = await axiosInstance.get(`${BASE_URL}/food-item/get`);
+    const response = await fetch(`${BASE_URL}/food-item/get`);
 
-    // const data = await response.json();
-    const data = response.data; 
+    const data = await response.json();
+
     if (!Array.isArray(data.items)) {
       throw new Error("Unexpected response format");
     }
