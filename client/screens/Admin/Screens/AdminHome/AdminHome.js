@@ -495,12 +495,12 @@ const AdminHome = () => {
                 >
                   {/* Order Header */}
                   <View className="flex-row justify-between">
-                    <Text className="text-xl font-bold">ID: {order._id}</Text>
+                    <Text className="text-xl font-bold">ID: {order.orderId}</Text>
                     {/* Optional: Display order time if available */}
                     {/* <Text className="text-gray-500">{order.time}</Text> */}
                   </View>
                   <Text className="text-sm text-blue-500">
-                    1st order by {order.userId}
+                    1st order by {order.userName}
                   </Text>
 
                   {/* Order Items */}

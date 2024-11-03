@@ -9,7 +9,7 @@ const getAllOrders = asyncHandler(async (req, res) => {
     const orders = await Order.find({
       status: { $in: ['Pending', 'Accepted', 'Preparing', 'Ready', 'Delivered'] }
     }).select(
-      "userId items totalAmount payment status canteenId canteenName orderPlacedAt updatedAt"
+      "orderId userId userName items totalAmount payment status canteenId canteenName orderPlacedAt updatedAt"
     );
 
     // Iterate over each order and log the items for debugging

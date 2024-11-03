@@ -10,6 +10,9 @@ const orderSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    userName: {
+    type:String
+    },
     canteenId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Canteen",
@@ -62,5 +65,13 @@ const orderSchema = new mongoose.Schema(
     timestamps: true, // Automatically adds `createdAt` and `updatedAt` fields
   }
 );
+
+orderSchema.pre("save", async function (next) {
+  if (this.isNew) {
+    const lastOrder = await this.constructor.findOne().sort({ orderId: -1 });
+    this.orderId = lastOrder ? lastOrder.orderId + 1 : 1; // Start from 1 if no orders exist
+  }
+  next();
+});
 
 module.exports = mongoose.model("Order", orderSchema);

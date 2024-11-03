@@ -176,11 +176,14 @@ const CartPage = () => {
     loadCart();
   }, [dispatch, cartItems]);
 
+  
   // Handle placing the order
   const handlePlaceOrder = async () => {
     try {
       // Retrieve necessary data from AsyncStorage
       const userId = await AsyncStorage.getItem("userId");
+      const userName = await AsyncStorage.getItem("userName");
+      console.log(userName)
       console.log(deliveryType);
       const canteenName = selectedCanteen || "Engineering Canteen";
       const totalAmount = finalTotal.toFixed(2);
@@ -194,6 +197,7 @@ const CartPage = () => {
 
       const payload = {
         userId,
+        userName,
         canteenName: selectedCanteen,
         totalAmount,
         items: orderData,
