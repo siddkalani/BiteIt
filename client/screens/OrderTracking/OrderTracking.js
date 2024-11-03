@@ -47,7 +47,7 @@ const OrderTrackingScreen = () => {
     socket.on("orderRejected", (order) => {
       setOrderStatus("Rejected");
       alert("Your order has been rejected.");
-      navigation.navigate("Home"); 
+      navigation.navigate("ClientTabs"); 
     });
 
     // Clean up on component unmount

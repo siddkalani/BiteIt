@@ -9,6 +9,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CommonActions } from "@react-navigation/native";
 import { clearCart } from "../../store/Slices/cartSlice";
 import { useSelector, useDispatch } from "react-redux";
+import { logoutUser } from "../../api/userAuth";
 
 const AnimatedHeader = ({
   openLocationModal,
@@ -25,44 +26,14 @@ const AnimatedHeader = ({
   useEffect(() => {
     const checkAuthStatus = async () => {
       const token = await AsyncStorage.getItem("userToken");
-      setIsAuthenticated(!!token); // Set to true if token exists, otherwise false
+      setIsAuthenticated(!!token); 
     };
     checkAuthStatus();
   }, []);
 
   // Handle Logout function
   const handleLogout = async () => {
-    Alert.alert("Logout", "Are you sure you want to log out?", [
-      {
-        text: "Cancel",
-        style: "cancel",
-      },
-      {
-        text: "Logout",
-        onPress: async () => {
-          try {
-            await AsyncStorage.removeItem("userToken");
-            await AsyncStorage.removeItem("userId");
-            await AsyncStorage.removeItem("userRefreshToken");
-            await AsyncStorage.removeItem("userName");
-            await AsyncStorage.removeItem("role");
-            
-            dispatch(clearCart());
-
-            setIsAuthenticated(false); 
-            // Reset auth status
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 0,
-                routes: [{ name: "Intro" }],
-              })
-            );
-          } catch (error) {
-            console.error("Logout Error:", error);
-          }
-        },
-      },
-    ]);
+    await logoutUser(navigation, dispatch, setIsAuthenticated);
   };
 
   // Handle Login navigation

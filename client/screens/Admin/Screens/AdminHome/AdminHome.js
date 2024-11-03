@@ -20,11 +20,15 @@ import { BASE_URL } from "../../../../constants/constant";
 import io from "socket.io-client";
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { selectCanteenId } from "../../../../store/Slices/orderServiceSlice";
-import { useSelector } from 'react-redux';
 import Animated from "react-native-reanimated";
-const socket = io(BASE_URL); // Initialize socket connection once
+import { useSelector, useDispatch } from "react-redux";
+const socket = io(BASE_URL);
+import { clearCart } from "../../../../store/Slices/cartSlice"; 
+import { CommonActions } from "@react-navigation/native";
+import { logoutUser } from "../../../../api/userAuth";
 
 const AdminHome = () => {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   const { width: screenWidth } = Dimensions.get("window");
   const { top } = useSafeAreaInsets();
@@ -45,6 +49,10 @@ const AdminHome = () => {
   const [loading, setLoading] = useState(true); // Loading State
   const [searchQuery, setSearchQuery] = useState(""); // Search Query State
 
+  const handleLogout = async () => {
+    await logoutUser(navigation, dispatch, () => {}); 
+  };
+
   useEffect(() => {
     const fetchCanteenData = async () => {
       if (!canteenId) {
@@ -59,8 +67,7 @@ const AdminHome = () => {
         }
 
         const dataStatus = await responseStatus.json();
-        // Update the online status based on the response
-        setIsOnline(dataStatus.isOnline); // Assuming response contains { isOnline: true/false }
+        setIsOnline(dataStatus.isOnline); 
 
       } catch (error) {
         console.error("Failed to fetch canteen data:", error);
@@ -69,9 +76,8 @@ const AdminHome = () => {
     };
 
     fetchCanteenData();
-  }, [canteenId]); // Ensure the effect runs when canteenId changes
+  }, [canteenId]); 
 
-  // Toggle function that sends the updated status to the backend
   const toggleOnlineStatus = async () => {
     if (!canteenId) return;
 
@@ -423,7 +429,7 @@ const AdminHome = () => {
             <TouchableOpacity>
               <Icon.Search height={24} width={24} stroke="black" />
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={handleLogout}>
               <Icon.LogOut height={24} width={24} stroke="black" />
             </TouchableOpacity>
           </View>

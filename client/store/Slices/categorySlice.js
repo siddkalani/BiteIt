@@ -5,10 +5,9 @@ import { axiosInstance } from "../../utils/refreshToken";
 export const fetchcategory = createAsyncThunk(
   "category/fetchcategory",
   async () => {
-    const response = await axiosInstance.get(`${BASE_URL}/category/get`)
-    // const data = await response.json();
-    return response.data.categories;
-    // return data.categories;
+    const response = await fetch(`${BASE_URL}/category/get`)
+    const data = await response.json();
+    return data.categories;
   }
 );
 

@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 
 const orderHistorySchema = mongoose.Schema(
   {
+    orderId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Order",
+      required: true, // Ensures every OrderHistory has a reference to the original Order
+    },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

@@ -9,6 +9,7 @@ import io from "socket.io-client";
 import { BASE_URL } from "./constants/constant";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+
 if (Platform.OS === "android") {
   Notifications.setNotificationChannelAsync("default", {
     name: "default",
@@ -26,6 +27,7 @@ const App = () => {
     "Poppins-Bold": require("./assets/fonts/Poppins-Bold.ttf"),
     "Inter-Medium": require("./assets/fonts/Inter-Medium.ttf"),
   });
+ ;
 
   useEffect(() => {
     // Register for push notifications
