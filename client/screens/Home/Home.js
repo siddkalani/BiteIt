@@ -6,6 +6,8 @@ import {
   Dimensions,
   Animated,
   Platform,
+  Text,
+  TouchableOpacity,
 } from "react-native";
 import { SafeAreaView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -181,7 +183,7 @@ const Home = ({ setTabBarVisible }) => {
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <StatusBar barStyle="light-content" backgroundColor={"#309624"} translucent />
-    
+
       {/* Header Component */}
       <AnimatedHeader
         openLocationModal={openLocationModal}
@@ -204,12 +206,34 @@ const Home = ({ setTabBarVisible }) => {
       >
         <View className="rounded-b-3xl">
           <View className="bg-[#309624] px-4 pb-2 rounded-b-3xl">
-            <Image
-              source={require("../../assets/images/home/home-slider.png")}
-              resizeMode="contain"
-              style={{ width: "100%", height: imageHeight }}
-              className="rounded-lg w-full"
-            />
+            <View className=''>
+              <View
+                style={{
+                  borderRadius: 8,
+                  padding: 16,
+                  alignItems: "center",
+                }}
+              >
+                <Text style={{ color: "white", fontSize: 18, fontWeight: "bold", textAlign: "center" }}>
+                  ORDER WITHIN 10 SEC VIA UPI PAYMENT
+                </Text>
+                <Text style={{ color: "#000", fontSize: 14, marginTop: 8, textAlign: "center" }}>
+                  Choose your favorite item and complete the order within seconds
+                </Text>
+                <TouchableOpacity
+                  style={{
+                    marginTop: 16,
+                    backgroundColor: "#FF9800", // Button color
+                    paddingVertical: 8,
+                    paddingHorizontal: 16,
+                    borderRadius: 4,
+                  }}
+                >
+                  <Text style={{ color: "#FFF", fontSize: 16 }}>Check Details</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
           </View>
         </View>
 
