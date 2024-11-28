@@ -161,6 +161,7 @@ export const verifyOtp = async (email, otp, isAdmin, navigation) => {
     if (response.status === 200 && data.message === "Successful") {
       if (isAdmin) {
         const { token, refreshToken, data: userData, message } = data;
+        console.log(token, userData)
         const { name, id, role, canteenId } = userData; // Destructure name, id, and role from userData
 
         await AsyncStorage.setItem("userToken", token);
@@ -170,7 +171,7 @@ export const verifyOtp = async (email, otp, isAdmin, navigation) => {
         await AsyncStorage.setItem("role", role);
         await AsyncStorage.setItem("canteenId", canteenId);
         // await AsyncStorage.setItem("canteenName", canteenName);
-        console.log(token, id, role)
+
 
         navigation.replace("AdminTabs");
 

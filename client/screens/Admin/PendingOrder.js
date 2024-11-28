@@ -146,9 +146,10 @@ const PendingOrders = () => {
 
     const fetchPendingOrders = async () => {
       try {
-        const adminToken = await AsyncStorage.getItem("adminToken");
+        const adminToken = await AsyncStorage.getItem("userToken");
+        console.log("Token from AsyncStorage:", adminToken);
         if (!adminToken) {
-          Alert.alert("Error", "Admin is not authenticated");
+          Alert.alert("Error", "Admin is not authenticated fetchpending");
           return;
         }
 
@@ -194,9 +195,9 @@ const PendingOrders = () => {
 
   const updateOrderStatus = async (id, status) => {
     try {
-      const adminToken = await AsyncStorage.getItem("adminToken");
+      const adminToken = await AsyncStorage.getItem("userToken");
       if (!adminToken) {
-        Alert.alert("Error", "Admin is not authenticated");
+        Alert.alert("Error", "Admin is not authenticated - updateOrder");
         return;
       }
   
