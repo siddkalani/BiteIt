@@ -13,7 +13,7 @@ const {
 } = require("../controllers/admin/adminOrder/getPendingOrder");
 const { updatePaymentStatus } = require("../controllers/admin/adminOrder/updatePaymentStatus");
 
-// router.use(validateToken);
+router.use(validateToken);
 
 router.route("/all").get(getAllAdmins);
 router.route("/:phone").get(getSingleAdmin);

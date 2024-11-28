@@ -1,5 +1,5 @@
-import React, { useState ,useEffect} from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StatusBar, SafeAreaView, Platform } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, StatusBar, SafeAreaView, Platform, ActivityIndicator } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as IconF from "react-native-feather"; // Feather icons already imported
 import Icon from 'react-native-vector-icons/Ionicons'; // Ionicons for MenuItem icons
@@ -14,18 +14,19 @@ const Account = () => {
 
     const [user, setUser] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [loading, setLoading] = useState(true); // Loading state for skeleton screen
 
     // Function to fetch user details from the backend
     const fetchUserDetails = async (userId) => {
         try {
             const token = await AsyncStorage.getItem('userToken'); // Retrieve accessToken
-
             const response = await axios.get(`${BASE_URL}/user/${userId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`, // Set Bearer token in headers
                 },
             });
             setUser(response.data);
+            setLoading(false); // Stop loading after data is fetched
         } catch (error) {
             console.error('Error fetching user details:', error);
             
@@ -39,23 +40,23 @@ const Account = () => {
     // Function to check Async Storage for user ID
     const checkUserId = async () => {
         try {
-            
             const userId = await AsyncStorage.getItem('userId');
             if (userId) {
                 setIsLoggedIn(true);
                 await fetchUserDetails(userId); // Fetch user details if ID exists
             } else {
                 setIsLoggedIn(false);
+                setLoading(false); // Stop loading if not logged in
             }
         } catch (error) {
             console.error('Error checking user ID in Async Storage:', error);
+            setLoading(false);
         }
     };
 
     useEffect(() => {
         checkUserId();
     }, []);
-
 
     const handleProfile = () => {
         navigation.navigate('ProfilePage');
@@ -64,14 +65,11 @@ const Account = () => {
 
     const handleOrders = () => {
         navigation.navigate('OrderHistory');
-        // console.log("Profile clicked");
     };
 
     const handleBack = () => {
         navigation.navigate('Home');
-        console.log("Back clicked");
     };
-
 
     return (
         <View className="flex-1" style={{ paddingBottom: insets.bottom }}>
@@ -85,7 +83,11 @@ const Account = () => {
                         </TouchableOpacity>
                     </View>
                     <View>
-                    {isLoggedIn && user ? (
+                        {loading ? (
+                            <View className="mt-2">
+                                <SkeletonPlaceholder />
+                            </View>
+                        ) : isLoggedIn && user ? (
                             <>
                                 <Text className="text-white text-2xl font-bold">{user.name}</Text>
                                 <Text numberOfLines={1} className="text-white mt-1">
@@ -99,20 +101,20 @@ const Account = () => {
                 </View>
 
                 {/* Scrollable menu content */}
-                {isLoggedIn ? (
+                {loading ? (
+                    <LoadingSkeletonMenu />
+                ) : isLoggedIn ? (
                     <ScrollView
                         className="bg-[#f9f9f9] flex-1"
                         showsVerticalScrollIndicator={false}
                         contentContainerStyle={{ paddingBottom: insets.bottom + (Platform.OS === 'android' ? 60 : 40) }}
                     >
-                        
                         <SectionHeader title="My Account" />
                         <MenuItem onPress={handleProfile} icon="person-outline" text="Profile" description="Full name, password & Settings" />
                         <MenuItem onPress={handleOrders} icon="list-outline" text="My Orders" badge="NEW" description="View all your past orders in one place" />
                         <MenuItem icon="location-outline" text="Address" badge="UPCOMING" description="Your saved address" />
                         <MenuItem icon="document-outline" text="T&Cs" description="Terms & Conditions" />
-
-                        <MenuItem icon="wallet-outline" text="Wallet" description="Account balance & Gift cards" badge="UPCOMING"/>
+                        <MenuItem icon="wallet-outline" text="Wallet" description="Account balance & Gift cards" badge="UPCOMING" />
                         <MenuItem icon="help-outline" text="FAQs" description="Frequently asked questions" />
                     </ScrollView>
                 ) : (
@@ -124,6 +126,24 @@ const Account = () => {
         </View>
     );
 };
+
+// Skeleton for profile and menu
+const SkeletonPlaceholder = () => (
+    <View className="my-2">
+        <View className="h-6 w-3/4 bg-gray-300 mb-2" />
+        <View className="h-4 w-2/4 bg-gray-300 " />
+    </View>
+);
+
+const LoadingSkeletonMenu = () => (
+    <ScrollView className="bg-[#f9f9f9] flex-1" contentContainerStyle={{ padding: 16 }}>
+        {Array(5)
+            .fill()
+            .map((_, index) => (
+                <View key={index} className="h-16 bg-gray-200 rounded-lg mb-4" />
+            ))}
+    </ScrollView>
+);
 
 // Section Header Component
 const SectionHeader = ({ title }) => (
