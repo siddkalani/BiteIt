@@ -318,13 +318,28 @@ const AdminHome = () => {
   // Handle Picked Up Order
   const handlePickedUpOrder = (orderId) => {
     const order = readyOrders.find((order) => order._id === orderId);
+  
     if (order) {
-      setPickedUpOrders((prev) =>
-        [...prev, order].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-      );
+      setPickedUpOrders((prev) => {
+        // Check if the order already exists in `pickedUpOrders`
+        const isDuplicate = prev.some((existingOrder) => existingOrder._id === order._id);
+        if (!isDuplicate) {
+          // Add the new order to the top of the list
+          const updatedOrders = [order, ...prev];
+          // Sort the orders in descending order by their orderPlacedAt date
+          updatedOrders.sort((a, b) => new Date(b.orderPlacedAt) - new Date(a.orderPlacedAt));
+          return updatedOrders;
+        }
+        return prev;
+      });
+  
       setReadyOrders((prev) => prev.filter((order) => order._id !== orderId));
     }
   };
+  
+  
+  
+  
 
   const handlePaymentDone = async (orderId) => {
     try {
@@ -511,7 +526,7 @@ const AdminHome = () => {
 
                   {/* Order Items */}
                   {order.items.map((item, idx) => (
-                    <View key={idx} className="flex-row justify-between mt-2">
+                    <View key={item.itemId} className="flex-row justify-between mt-2">
                       <Text className="text-base">
                         {item.itemQuantity} x {item.itemName}
                       </Text>
