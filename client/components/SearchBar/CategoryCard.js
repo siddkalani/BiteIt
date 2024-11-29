@@ -3,15 +3,16 @@ import { View, Text, Image, TouchableOpacity } from "react-native";
 import { FontFamily, FontSize } from "../../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
 import { BASE_URL } from "../../constants/constant";
-import HomeCategory from "../../screens/Categories/HomeCategory";
+import { InteractionManager } from "react-native";
 
-const CategoryCard = ({ category ,closeSearchModal}) => {
+const CategoryCard = ({ category, closeSearchModal }) => {
   const navigation = useNavigation();
 
   const handlePress = () => {
-    navigation.navigate("HomeCategory", {HomeCategory});
-   closeSearchModal()
-    console.log("category page")
+    closeSearchModal(); // Close the modal first
+    InteractionManager.runAfterInteractions(() => {
+      navigation.navigate("HomeCategory", { id: category._id }); // Navigate after modal animation
+    });
   };
 
   return (
@@ -19,11 +20,11 @@ const CategoryCard = ({ category ,closeSearchModal}) => {
       <View className="bg-white rounded-lg mt-4 w-full items-center">
         <Image
           source={{ uri: `${BASE_URL}/uploads/${category.image}` }}
-          className="w-full h-[90px] rounded-lg" // Use Tailwind for the circle image
+          className="w-full h-[90px] rounded-lg"
           resizeMode="cover"
         />
         <Text
-          className="text-center w-full mt-1" // Center the text and add margin
+          className="text-center w-full mt-1"
           style={{
             fontFamily: FontFamily.poppinsMedium,
             fontSize: FontSize.size_mini,

@@ -31,7 +31,6 @@ const HEADER_HEIGHT = 300;
 
 const FoodItemCard = ({ item, handleAddToCart, handleIncrement, handleDecrement, itemInCart, isOnline }) => {
 
-
   return (
     <View className="bg-white rounded-lg shadow-sm flex-row items-center mb-2 px-3 py-2">
       <Image
