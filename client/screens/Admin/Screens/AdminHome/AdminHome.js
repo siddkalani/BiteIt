@@ -19,6 +19,7 @@ import * as Icon from "react-native-feather";
 import { useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BASE_URL } from "../../../../constants/constant";
+import ContentLoader, { Rect } from "react-content-loader/native";
 import io from "socket.io-client";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { selectCanteenId } from "../../../../store/Slices/orderServiceSlice";
@@ -56,8 +57,75 @@ const AdminHome = () => {
   const [loading, setLoading] = useState(true); // Loading State
   const [searchQuery, setSearchQuery] = useState(""); // Search Query State
 
+
+  useEffect(() => {
+    const simulateLoading = setTimeout(() => {
+      setLoading(false); // Simulate data load
+    }, 2000); // Replace with real fetch logic
+
+    return () => clearTimeout(simulateLoading);
+  }, []);
+
+  const FullScreenSkeleton = () => (
+    <View style={styles.skeletonContainer}>
+      {/* Header Skeleton */}
+      <ContentLoader
+        speed={2}
+        width={screenWidth}
+        height={60}
+        backgroundColor="#f3f3f3"
+        foregroundColor="#ecebeb"
+      >
+        <Rect x="10" y="15" rx="4" ry="4" width="150" height="30" />
+        <Rect x={screenWidth - 60} y="15" rx="15" ry="15" width="50" height="30" />
+      </ContentLoader>
+
+      {/* Tabs Skeleton */}
+      <ContentLoader
+        speed={2}
+        width={screenWidth}
+        height={50}
+        backgroundColor="#f3f3f3"
+        foregroundColor="#ecebeb"
+      >
+        <Rect x="10" y="15" rx="4" ry="4" width="80" height="20" />
+        <Rect x="100" y="15" rx="4" ry="4" width="80" height="20" />
+        <Rect x="190" y="15" rx="4" ry="4" width="80" height="20" />
+        <Rect x="280" y="15" rx="4" ry="4" width="80" height="20" />
+      </ContentLoader>
+
+      {/* Search Bar Skeleton */}
+      <ContentLoader
+        speed={2}
+        width={screenWidth}
+        height={50}
+        backgroundColor="#f3f3f3"
+        foregroundColor="#ecebeb"
+      >
+        <Rect x="10" y="10" rx="4" ry="4" width="95%" height="30" />
+      </ContentLoader>
+
+      {/* Orders Skeleton */}
+      {[1, 2, 3, 4].map((key) => (
+        <ContentLoader
+          key={key}
+          speed={2}
+          width={screenWidth}
+          height={100}
+          backgroundColor="#f3f3f3"
+          foregroundColor="#ecebeb"
+          style={{ marginBottom: 10 }}
+        >
+          <Rect x="10" y="15" rx="4" ry="4" width="90%" height="20" />
+          <Rect x="10" y="45" rx="4" ry="4" width="70%" height="20" />
+          <Rect x="10" y="75" rx="4" ry="4" width="50%" height="20" />
+        </ContentLoader>
+      ))}
+    </View>
+  );
+
   const handleLogout = async () => {
-    await logoutUser(navigation, dispatch, () => {});
+    await logoutUser(navigation, dispatch, () => { });
   };
 
   // Fetch Canteen Status
@@ -84,7 +152,7 @@ const AdminHome = () => {
     fetchCanteenData();
   }, [canteenId]);
 
-  
+
   // Toggle Online Status
   const toggleOnlineStatus = async () => {
     if (!canteenId) return;
@@ -153,6 +221,7 @@ const AdminHome = () => {
   // Fetch Orders on Mount
   useEffect(() => {
     const fetchOrders = async () => {
+      setLoading(true); // Set loading to true before fetching
       try {
         const adminToken = await AsyncStorage.getItem("userToken");
         console.log(adminToken);
@@ -220,6 +289,7 @@ const AdminHome = () => {
   // Update Order Status
   const updateOrderStatus = async (id, status) => {
     try {
+      // Ensure actionLoading is an object and update the loading state for the specific order
       setActionLoading((prev) => ({ ...prev, [id]: true }));
 
       const adminToken = await AsyncStorage.getItem("userToken");
@@ -243,27 +313,12 @@ const AdminHome = () => {
         throw new Error(data.message || "Failed to update order status");
       }
 
-      // Update local state based on new status
-      if (status === "Rejected" || status === "Delivered") {
+      // Handle specific status updates (e.g., moving order between tabs)
+      if (status === "Rejected") {
         setPendingOrders((prevOrders) =>
           prevOrders.filter((order) => order._id !== id)
         );
-        if (status === "Delivered") {
-          setPickedUpOrders((prev) => [
-            ...prev,
-            { ...data.order, payment: data.order.payment || 0 },
-          ]);
-        }
-      } else {
-        setPendingOrders((prevOrders) =>
-          prevOrders.map((order) =>
-            order._id === id ? { ...order, status } : order
-          )
-        );
-      }
-
-      // Handle specific status updates
-      if (status === "Preparing") {
+      } else if (status === "Preparing") {
         handleAcceptOrder(id);
       } else if (status === "Ready") {
         handleOrderReady(id);
@@ -277,9 +332,12 @@ const AdminHome = () => {
         error.message || "Something went wrong. Please try again."
       );
     } finally {
+      // Reset the loading state for the specific order
       setActionLoading((prev) => ({ ...prev, [id]: false }));
     }
   };
+
+
 
   // Handle Accept Order
   const handleAcceptOrder = (orderId) => {
@@ -385,18 +443,18 @@ const AdminHome = () => {
       return activeTab === "Pending"
         ? pendingOrders
         : activeTab === "Preparing"
-        ? orders
-        : activeTab === "Ready"
-        ? readyOrders
-        : pickedUpOrders;
+          ? orders
+          : activeTab === "Ready"
+            ? readyOrders
+            : pickedUpOrders;
     }
-  
+
     const filterByQuery = (order) => {
       const orderId = order.orderId?.toString().toLowerCase() || ""; // Safely access and convert to string
       const userName = order.userName?.toLowerCase() || ""; // Safely access and convert to string
       return orderId.includes(query) || userName.includes(query);
     };
-  
+
     switch (activeTab) {
       case "Pending":
         return pendingOrders.filter(filterByQuery);
@@ -410,7 +468,7 @@ const AdminHome = () => {
         return [];
     }
   };
-  
+
 
   const filteredOrders = getFilteredOrders();
 
@@ -424,35 +482,40 @@ const AdminHome = () => {
       className="bg-white"
     >
       <StatusBar barStyle="dark-content" backgroundColor={"white"} translucent />
+      {loading ? (
+        <FullScreenSkeleton />
+      ) : (
 
-      <View style={styles.container}>
-        {/* Header */}
-        <Header isOnline={isOnline} toggleOnlineStatus={toggleOnlineStatus} handleLogout={handleLogout} />
+        <View style={styles.container}>
+          {/* Header */}
+          <Header isOnline={isOnline} toggleOnlineStatus={toggleOnlineStatus} handleLogout={handleLogout} />
 
-        {/* Tabs */}
-        <Tabs
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          pendingCount={pendingOrders.length}
-          preparingCount={orders.length}
-          readyCount={readyOrders.length}
-          pickedUpCount={pickedUpOrders.length}
-        />
+          {/* Tabs */}
+          <Tabs
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            pendingCount={pendingOrders.length}
+            preparingCount={orders.length}
+            readyCount={readyOrders.length}
+            pickedUpCount={pickedUpOrders.length}
+          />
 
-        {/* Search Bar */}
-        <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+          {/* Search Bar */}
+          <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 
-        {/* Orders List */}
-        <OrderList
-          loading={loading}
-          orders={filteredOrders}
-          activeTab={activeTab}
-          actionLoading={actionLoading}
-          updateOrderStatus={updateOrderStatus}
-          handlePaymentDone={handlePaymentDone}
-        />
-      </View>
+          {/* Orders List */}
 
+          <OrderList
+            loading={loading}
+            orders={filteredOrders}
+            activeTab={activeTab}
+            actionLoading={actionLoading}
+            updateOrderStatus={updateOrderStatus}
+            handlePaymentDone={handlePaymentDone}
+          />
+
+        </View>
+      )}
       {/* Footer */}
       {/* <AdminFooter /> */}
     </View>
