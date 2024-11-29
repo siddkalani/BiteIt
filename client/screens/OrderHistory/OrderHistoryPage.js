@@ -51,6 +51,7 @@ const OrderHistoryPage = () => {
   const [orderHistory, setOrderHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
+  
 
   useEffect(() => {
     const fetchOrderHistory = async () => {
@@ -123,6 +124,11 @@ const OrderHistoryPage = () => {
       minute: "2-digit",
     });
 
+  
+    const handleTrackOrder = () => {
+    navigation.navigate("OrderTracking", { order: item }); // Pass the entire order object
+  };
+  
     return (
       <View className="bg-white p-4 rounded-lg mb-4">
         <Text className="font-bold text-lg mb-2">Order Details</Text>
@@ -131,7 +137,7 @@ const OrderHistoryPage = () => {
           Ordered On: {formattedDate} at {formattedTime}
         </Text>
         <Text className="font-bold mb-2">Items:</Text>
-        
+  
         {/* Loop through all items in the order */}
         {item.items.map((orderItem) => (
           <View
@@ -148,24 +154,42 @@ const OrderHistoryPage = () => {
             <View className="flex-1 ml-4">
               {/* Display item name */}
               <Text className="font-semibold">{orderItem.itemName}</Text>
-              <Text className="text-gray-500">Quantity: {orderItem.itemQuantity}</Text>
+              <Text className="text-gray-500">
+                Quantity: {orderItem.itemQuantity}
+              </Text>
             </View>
           </View>
         ))}
-        
+  
         <Text className="text-gray-500 mt-2">Total: ${item.totalAmount}</Text>
-        <Text className={`mt-2 ${item.status === 'Delivered' ? 'text-green-600' : 'text-gray-500'}`}>
+        <Text
+          className={`mt-2 ${
+            item.status === "Delivered" ? "text-green-600" : "text-gray-500"
+          }`}
+        >
           Status: {item.status}
         </Text>
-
-          {/* Payment Status */}
-          <Text className={`mt-2 ${item.payment === 1 ? 'text-green-600' : 'text-red-600'}`}>
+  
+        {/* Payment Status */}
+        <Text
+          className={`mt-2 ${
+            item.payment === 1 ? "text-green-600" : "text-red-600"
+          }`}
+        >
           Payment: {item.payment === 1 ? "Done" : "Pending"}
         </Text>
-
+  
+        {/* Track Order Button */}
+        <TouchableOpacity
+        onPress={handleTrackOrder}
+        className="mt-4 bg-blue-500 p-3 rounded-lg"
+      >
+        <Text className="text-white text-center font-semibold">Track Order</Text>
+      </TouchableOpacity>
       </View>
     );
   };
+  
 
   if (loading) {
     return <Text>Loading...</Text>;

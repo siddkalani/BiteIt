@@ -1,15 +1,15 @@
-
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearCart, selectItemCount } from '../../store/Slices/cartSlice'; // Adjust the import path
+import { selectOrderPlaced } from '../../store/Slices/orderSlice';
 
 const FloatingCartBar = ({ imageUrl, restaurantName }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-
+  const orderPlaced = useSelector(selectOrderPlaced); // Access global state
   // Get itemCount from cartSlice
   const itemCount = useSelector(selectItemCount);
 

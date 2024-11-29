@@ -31,6 +31,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import io from "socket.io-client";
 import { setCanteenName, setDeliveryType } from "../../store/Slices/orderServiceSlice";
 import { FontFamily, FontSize } from "../../GlobalStyles";
+import { placeOrder } from '../../store/Slices/orderSlice';
 
 // Import components
 import HeaderComponent from "../../components/Cart/HeaderComponent";
@@ -101,8 +102,8 @@ const CartPage = () => {
       optionId === 1
         ? "Table Service"
         : optionId === 2
-        ? "Counter Pick-up"
-        : "Advance Order";
+          ? "Counter Pick-up"
+          : "Advance Order";
 
     dispatch(setDeliveryType(selectedDelivery));
 
@@ -176,7 +177,7 @@ const CartPage = () => {
     loadCart();
   }, [dispatch, cartItems]);
 
-  
+
   // Handle placing the order
   const handlePlaceOrder = async () => {
     try {
@@ -219,8 +220,10 @@ const CartPage = () => {
       });
 
       if (response.ok) {
+
+        dispatch(placeOrder(payload)); // Dispatch action to update global state
         // Navigate to payment service
-        navigation.navigate("OrderTracking");
+        navigation.navigate("OrderTracking", { order: payload });
 
         // Clear the cart
         dispatch(clearCart()); // Clear Redux cart state
@@ -292,8 +295,8 @@ const CartPage = () => {
       },
     })
   ).current;
-  
-  
+
+
 
   useEffect(() => {
     panResponder.panHandlers = PanResponder.create({
@@ -404,7 +407,7 @@ const CartPage = () => {
         ) : (
           <View className="flex-1 bg-gray-100">
             <ScrollView
-            
+
               className="flex-1 px-4"
               contentContainerStyle={{ paddingBottom: 170 }}
               showsVerticalScrollIndicator={false}
@@ -463,13 +466,13 @@ const CartPage = () => {
         {/* Bottom Bar */}
         {cartItems.length > 0 && (
           <BottomBarComponent
-          deliveryType={deliveryType}
-          selectedCanteen={selectedCanteen}
-          handleChangeDelivery={handleChangeDelivery}
-          sliderValue={sliderValue}
-          handlePlaceOrder={handlePlaceOrder}
-        />
-        
+            deliveryType={deliveryType}
+            selectedCanteen={selectedCanteen}
+            handleChangeDelivery={handleChangeDelivery}
+            sliderValue={sliderValue}
+            handlePlaceOrder={handlePlaceOrder}
+          />
+
         )}
 
         {/* Delivery Modal */}

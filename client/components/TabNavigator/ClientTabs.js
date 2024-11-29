@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Text,View, Animated, Dimensions, StatusBar, Platform, TouchableOpacity } from 'react-native';
+import { Text, View, Animated, Dimensions, StatusBar, Platform, TouchableOpacity } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
 import FloatingCartBar from '../Cart/FloatingCart';
@@ -11,6 +11,7 @@ import { selectCanteenId } from '../../store/Slices/orderServiceSlice';
 import { useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BASE_URL } from '../../constants/constant';
+import { selectOrderPlaced } from '../../store/Slices/orderSlice';
 import io from "socket.io-client";
 
 const socket = io(BASE_URL);
@@ -20,6 +21,7 @@ const { height: screenHeight } = Dimensions.get('window');
 const CustomTabBarWithCart = ({ state, descriptors, navigation, translateY }) => {
   const currentRouteName = state.routes[state.index].name;
   const itemCount = useSelector(selectItemCount);
+  const orderPlaced = useSelector(selectOrderPlaced);
 
   return (
     <Animated.View
@@ -32,9 +34,10 @@ const CustomTabBarWithCart = ({ state, descriptors, navigation, translateY }) =>
         paddingBottom: 0,
       }}
     >
-      {currentRouteName === 'Home' && itemCount > 0 && (
+      {currentRouteName === 'Home' && (itemCount > 0) && (
         <FloatingCartBar />
       )}
+
 
       <View
         style={{
@@ -98,10 +101,10 @@ const ClientTabs = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false); // Track auth status
   const translateY = useRef(new Animated.Value(0)).current;
   const canteenId = useSelector(selectCanteenId);
-  const [isCanteenOnline, setIsCanteenOnline] = useState(true); 
+  const [isCanteenOnline, setIsCanteenOnline] = useState(true);
 
 
- // Fetch auth status
+  // Fetch auth status
   useEffect(() => {
     const fetchAuthStatus = async () => {
       const token = await AsyncStorage.getItem('userToken');
@@ -116,7 +119,7 @@ const ClientTabs = () => {
       try {
         const response = await fetch(`${BASE_URL}/canteen/${canteenId}/status`);
         const data = await response.json();
-        setIsCanteenOnline(data.isOnline); 
+        setIsCanteenOnline(data.isOnline);
         console.log(data.isOnline)
       } catch (error) {
         console.error("Error fetching canteen status:", error);
@@ -203,20 +206,20 @@ const ClientTabs = () => {
         <Tab.Screen name="Home">
           {(props) => <Home {...props} setTabBarVisible={setIsTabBarVisible} />}
         </Tab.Screen>
-        
+
         {/* Conditionally render OrderHistoryPage based on authentication */}
         {isAuthenticated && (
-          <Tab.Screen 
-            name="OrderHistoryPage" 
-            component={OrderHistoryPage} 
-            options={{ title: 'Orders' }} 
+          <Tab.Screen
+            name="OrderHistoryPage"
+            component={OrderHistoryPage}
+            options={{ title: 'Orders' }}
           />
         )}
 
-        <Tab.Screen 
-          name="Profile" 
-          component={Account} 
-          options={{ title: 'Account' }} 
+        <Tab.Screen
+          name="Profile"
+          component={Account}
+          options={{ title: 'Account' }}
         />
       </Tab.Navigator>
     </View>
