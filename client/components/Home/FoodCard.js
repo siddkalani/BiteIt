@@ -202,17 +202,19 @@ const FoodCard = ({ foodItem }) => {
             </TouchableOpacity>
           </View>
         ) : (
+          <TouchableOpacity
+              onPress={handleAddToCart}
+              className="rounded-md w-full"
+              style={{ alignSelf: "center" }}
+            >
           <LinearGradient
             colors={["#007022", "#54d17a", "#bcffd0"]}
             start={{ x: 0, y: 1 }}
             end={{ x: 1.9, y: 0 }}
-            className="rounded-md w-full"
+            
+            className="py-1 justify-center rounded-md items-center flex-row"
           >
-            <TouchableOpacity
-              onPress={handleAddToCart}
-              className="py-1 justify-center items-center flex-row"
-              style={{ alignSelf: "center" }}
-            >
+            
               <View className="h-4 w-4">
                 <Icon.Plus width={15} height={15} stroke="white" />
               </View>
@@ -228,8 +230,9 @@ const FoodCard = ({ foodItem }) => {
                   Add
                 </Text>
               </View>
+              </LinearGradient>
             </TouchableOpacity>
-          </LinearGradient>
+          
         )
       ) : (
         <LinearGradient

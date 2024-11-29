@@ -1,3 +1,4 @@
+// AdminHome.js
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
   View,
@@ -12,20 +13,28 @@ import {
   TextInput,
   ActivityIndicator,
   Alert,
+  StyleSheet,
 } from "react-native";
 import * as Icon from "react-native-feather";
 import { useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BASE_URL } from "../../../../constants/constant";
 import io from "socket.io-client";
-import AsyncStorage from "@react-native-async-storage/async-storage"
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { selectCanteenId } from "../../../../store/Slices/orderServiceSlice";
-import Animated from "react-native-reanimated";
 import { useSelector, useDispatch } from "react-redux";
-const socket = io(BASE_URL);
-import { clearCart } from "../../../../store/Slices/cartSlice"; 
+import { clearCart } from "../../../../store/Slices/cartSlice";
 import { CommonActions } from "@react-navigation/native";
 import { logoutUser } from "../../../../api/userAuth";
+
+// Import Sub-components
+import Header from "../../../../components/Admin/Header/HeaderAdmin";
+import Tabs from "../../../../components/Admin/Tabs/Tabs";
+import SearchBar from "../../../../components/Admin/SearchBar/SearchBar";
+import OrderList from "../../../../components/Admin/OrderList/OrderList";
+import EmptyState from "../../../../components/Admin/EmptyState/EmptyState";
+
+const socket = io(BASE_URL);
 
 const AdminHome = () => {
   const dispatch = useDispatch();
@@ -33,12 +42,10 @@ const AdminHome = () => {
   const { width: screenWidth } = Dimensions.get("window");
   const { top } = useSafeAreaInsets();
   const [isOnline, setIsOnline] = useState(false);
-  // const [canteenId, setCanteenId] = useState(null);
   const canteenId = useSelector(selectCanteenId);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [actionLoading, setActionLoading] = useState({});
   const flatListRef = useRef(null);
-  // const scrollX = useRef(new Animated.Value(0)).current;
 
   const [orders, setOrders] = useState([]); // Preparing Orders
   const [pendingOrders, setPendingOrders] = useState([]); // Pending Orders
@@ -50,9 +57,10 @@ const AdminHome = () => {
   const [searchQuery, setSearchQuery] = useState(""); // Search Query State
 
   const handleLogout = async () => {
-    await logoutUser(navigation, dispatch, () => {}); 
+    await logoutUser(navigation, dispatch, () => {});
   };
 
+  // Fetch Canteen Status
   useEffect(() => {
     const fetchCanteenData = async () => {
       if (!canteenId) {
@@ -67,31 +75,26 @@ const AdminHome = () => {
         }
 
         const dataStatus = await responseStatus.json();
-        setIsOnline(dataStatus.isOnline); 
-
+        setIsOnline(dataStatus.isOnline);
       } catch (error) {
         console.error("Failed to fetch canteen data:", error);
-
       }
     };
 
     fetchCanteenData();
-  }, [canteenId]); 
+  }, [canteenId]);
 
+  
+  // Toggle Online Status
   const toggleOnlineStatus = async () => {
     if (!canteenId) return;
 
     try {
-      // Check the current online status
       const currentStatus = isOnline;
-
-      // Determine the new status
       const newStatus = !currentStatus;
 
-      // Update the local state first (optimistic update)
       setIsOnline(newStatus);
 
-      // Make the API request to update the status on the server
       const response = await fetch(`${BASE_URL}/canteen/${canteenId}/status`, {
         method: "PATCH",
         headers: {
@@ -105,17 +108,12 @@ const AdminHome = () => {
       }
 
       const data = await response.json();
-      // Handle the response data if necessary
-
-
+      // Handle response if needed
     } catch (error) {
       console.error("Error updating status:", error);
-      // Revert status if update fails
-      setIsOnline(currentStatus);
-
+      setIsOnline(!isOnline); // Revert status if update fails
     }
   };
-
 
   // Slides for Promo Banner (if any)
   const slides = [
@@ -144,10 +142,13 @@ const AdminHome = () => {
     flatListRef.current?.scrollToIndex({ index: currentSlide, animated: true });
   }, [currentSlide]);
 
-  const handleMomentumScrollEnd = useCallback((event) => {
-    const index = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
-    setCurrentSlide(index);
-  }, [screenWidth]);
+  const handleMomentumScrollEnd = useCallback(
+    (event) => {
+      const index = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
+      setCurrentSlide(index);
+    },
+    [screenWidth]
+  );
 
   // Fetch Orders on Mount
   useEffect(() => {
@@ -176,10 +177,10 @@ const AdminHome = () => {
         const sortedOrders = data.orders.sort(
           (a, b) => new Date(b.orderPlacedAt) - new Date(a.orderPlacedAt)
         );
-        setPendingOrders(sortedOrders.filter(order => order.status === 'Pending'));
-        setOrders(sortedOrders.filter(order => order.status === 'Preparing'));
-        setReadyOrders(sortedOrders.filter(order => order.status === 'Ready'));
-        setPickedUpOrders(sortedOrders.filter(order => order.status === 'Delivered'));
+        setPendingOrders(sortedOrders.filter((order) => order.status === "Pending"));
+        setOrders(sortedOrders.filter((order) => order.status === "Preparing"));
+        setReadyOrders(sortedOrders.filter((order) => order.status === "Ready"));
+        setPickedUpOrders(sortedOrders.filter((order) => order.status === "Delivered"));
       } catch (error) {
         console.error("Error fetching orders:", error);
         Alert.alert("Error", error.message || "Something went wrong. Please try again.");
@@ -216,9 +217,9 @@ const AdminHome = () => {
     };
   }, []);
 
+  // Update Order Status
   const updateOrderStatus = async (id, status) => {
     try {
-      // Set action loading state
       setActionLoading((prev) => ({ ...prev, [id]: true }));
 
       const adminToken = await AsyncStorage.getItem("userToken");
@@ -276,18 +277,18 @@ const AdminHome = () => {
         error.message || "Something went wrong. Please try again."
       );
     } finally {
-      // Reset action loading state
       setActionLoading((prev) => ({ ...prev, [id]: false }));
     }
   };
-
 
   // Handle Accept Order
   const handleAcceptOrder = (orderId) => {
     const order = pendingOrders.find((order) => order._id === orderId);
     if (order) {
       setOrders((prev) =>
-        [...prev, order].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        [...prev, order].sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        )
       );
       setPendingOrders((prev) => prev.filter((order) => order._id !== orderId));
     }
@@ -298,7 +299,9 @@ const AdminHome = () => {
     const order = pendingOrders.find((order) => order._id === orderId);
     if (order) {
       setOrders((prev) =>
-        [...prev, order].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        [...prev, order].sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        )
       );
       setPendingOrders((prev) => prev.filter((order) => order._id !== orderId));
     }
@@ -309,7 +312,9 @@ const AdminHome = () => {
     const order = orders.find((order) => order._id === orderId);
     if (order) {
       setReadyOrders((prev) =>
-        [...prev, order].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        [...prev, order].sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        )
       );
       setOrders((prev) => prev.filter((order) => order._id !== orderId));
     }
@@ -318,47 +323,41 @@ const AdminHome = () => {
   // Handle Picked Up Order
   const handlePickedUpOrder = (orderId) => {
     const order = readyOrders.find((order) => order._id === orderId);
-  
+
     if (order) {
       setPickedUpOrders((prev) => {
-        // Check if the order already exists in `pickedUpOrders`
         const isDuplicate = prev.some((existingOrder) => existingOrder._id === order._id);
         if (!isDuplicate) {
-          // Add the new order to the top of the list
           const updatedOrders = [order, ...prev];
-          // Sort the orders in descending order by their orderPlacedAt date
-          updatedOrders.sort((a, b) => new Date(b.orderPlacedAt) - new Date(a.orderPlacedAt));
+          updatedOrders.sort(
+            (a, b) => new Date(b.orderPlacedAt) - new Date(a.orderPlacedAt)
+          );
           return updatedOrders;
         }
         return prev;
       });
-  
+
       setReadyOrders((prev) => prev.filter((order) => order._id !== orderId));
     }
   };
-  
-  
-  
-  
 
+  // Handle Payment Done
   const handlePaymentDone = async (orderId) => {
     try {
-      // Set action loading state
       setActionLoading((prev) => ({ ...prev, [orderId]: true }));
 
-      const token = await AsyncStorage.getItem("userToken"); // Retrieve the token
+      const token = await AsyncStorage.getItem("userToken");
       const response = await fetch(`${BASE_URL}/admin/payment/${orderId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ payment: 1 }), // Sending payment status as 1
+        body: JSON.stringify({ payment: 1 }),
       });
 
       if (response.ok) {
         const data = await response.json();
-        // Update the specific order's payment status
         setPickedUpOrders((prevOrders) =>
           prevOrders.map((order) =>
             order._id === orderId ? { ...order, payment: 1 } : order
@@ -375,11 +374,9 @@ const AdminHome = () => {
       console.error("Error updating payment status:", error);
       Alert.alert("Error", "Something went wrong. Please try again.");
     } finally {
-      // Reset action loading state
       setActionLoading((prev) => ({ ...prev, [orderId]: false }));
     }
   };
-
 
   // Filter orders based on search query for the active tab
   const getFilteredOrders = () => {
@@ -388,31 +385,36 @@ const AdminHome = () => {
       return activeTab === "Pending"
         ? pendingOrders
         : activeTab === "Preparing"
-          ? orders
-          : activeTab === "Ready"
-            ? readyOrders
-            : pickedUpOrders;
+        ? orders
+        : activeTab === "Ready"
+        ? readyOrders
+        : pickedUpOrders;
     }
-
-    const filterById = (order) => order._id.toLowerCase().includes(query);
-
+  
+    const filterByQuery = (order) => {
+      const orderId = order.orderId?.toString().toLowerCase() || ""; // Safely access and convert to string
+      const userName = order.userName?.toLowerCase() || ""; // Safely access and convert to string
+      return orderId.includes(query) || userName.includes(query);
+    };
+  
     switch (activeTab) {
       case "Pending":
-        return pendingOrders.filter(filterById);
+        return pendingOrders.filter(filterByQuery);
       case "Preparing":
-        return orders.filter(filterById);
+        return orders.filter(filterByQuery);
       case "Ready":
-        return readyOrders.filter(filterById);
+        return readyOrders.filter(filterByQuery);
       case "PickedUp":
-        return pickedUpOrders.filter(filterById);
+        return pickedUpOrders.filter(filterByQuery);
       default:
         return [];
     }
   };
+  
 
   const filteredOrders = getFilteredOrders();
 
-
+  console.log(orders)
   return (
     <View
       style={{
@@ -423,246 +425,32 @@ const AdminHome = () => {
     >
       <StatusBar barStyle="dark-content" backgroundColor={"white"} translucent />
 
-      <View className="flex-1 pt-3 px-4 space-y-2">
-        {/* Top Header */}
-        <View className="flex-row items-center justify-between h-8">
-          <View className="flex-row items-center space-x-2">
-            <Text className="text-2xl font-bold">Online</Text>
-            <Switch
-              value={isOnline}
-              onValueChange={toggleOnlineStatus}
-              trackColor={{ false: "#767577", true: "green" }}
-              thumbColor={isOnline ? "white" : "white"}
-            />
-          </View>
-          <View className="flex-row items-center space-x-4">
-            <TouchableOpacity>
-              <Icon.Bell height={24} width={24} stroke="black" />
-              <View className="absolute -top-2 -right-2 bg-red-500 w-4 h-4 rounded-full justify-center items-center">
-                <Text className="text-white text-xs">4</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Icon.Search height={24} width={24} stroke="black" />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={handleLogout}>
-              <Icon.LogOut height={24} width={24} stroke="black" />
-            </TouchableOpacity>
-          </View>
-        </View>
-        {/* Tab Section */}
-        <View className="flex-row justify-between space-x-2">
-          <TouchableOpacity
-            onPress={() => setActiveTab("Pending")}
-            className={`flex-1 items-center px-1 py-2 ${activeTab === "Pending" ? "bg-yellow-200" : "bg-gray-100"
-              } rounded-lg`}
-          >
-            <Text numberOfLines={1} className="text-gray-400">
-              Pending ({pendingOrders.length})
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setActiveTab("Preparing")}
-            className={`flex-1 items-center px-1 py-2 ${activeTab === "Preparing" ? "bg-yellow-200" : "bg-gray-100"
-              } rounded-lg`}
-          >
-            <Text numberOfLines={1} className="text-gray-400">
-              Preparing ({orders.length})
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setActiveTab("Ready")}
-            className={`flex-1 items-center px-1 py-2 ${activeTab === "Ready" ? "bg-yellow-200" : "bg-gray-100"
-              } rounded-lg`}
-          >
-            <Text className="text-gray-400">Ready ({readyOrders.length})</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setActiveTab("PickedUp")}
-            className={`flex-1 items-center px-1 py-2 ${activeTab === "PickedUp" ? "bg-yellow-200" : "bg-gray-100"
-              } rounded-lg`}
-          >
-            <Text numberOfLines={1} className="text-gray-400">
-              Picked Up ({pickedUpOrders.length})
-            </Text>
-          </TouchableOpacity>
-        </View>
+      <View style={styles.container}>
+        {/* Header */}
+        <Header isOnline={isOnline} toggleOnlineStatus={toggleOnlineStatus} handleLogout={handleLogout} />
+
+        {/* Tabs */}
+        <Tabs
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          pendingCount={pendingOrders.length}
+          preparingCount={orders.length}
+          readyCount={readyOrders.length}
+          pickedUpCount={pickedUpOrders.length}
+        />
 
         {/* Search Bar */}
-        <View className="flex-row items-center space-x-2 mt-4 bg-white rounded-lg p-3 shadow-3">
-          <Icon.Search height={20} width={20} stroke="gray" />
-          <TextInput
-            placeholder="Search for Order ID"
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            className="flex-1 ml-2"
-            keyboardType="default"
-            autoCapitalize="none"
-          />
-        </View>
+        <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 
-        {/* Orders List based on Tab Selection */}
-        <ScrollView showsVerticalScrollIndicator={false}>
-          {loading ? (
-            <View className="flex-1 justify-center items-center mt-10">
-              <ActivityIndicator size="large" color="#309624" />
-            </View>
-          ) : filteredOrders.length > 0 ? (
-            <View>
-              {filteredOrders.map((order) => (
-                <View
-                  key={order._id}
-                  className="p-4 bg-gray-50 rounded-lg shadow-sm my-2"
-                >
-                  {/* Order Header */}
-                  <View className="flex-row justify-between">
-                    <Text className="text-xl font-bold">ID: {order.orderId}</Text>
-                    {/* Optional: Display order time if available */}
-                    {/* <Text className="text-gray-500">{order.time}</Text> */}
-                  </View>
-                  <Text className="text-sm text-blue-500">
-                    1st order by {order.userName}
-                  </Text>
-
-                  {/* Order Items */}
-                  {order.items.map((item, idx) => (
-                    <View key={item.itemId} className="flex-row justify-between mt-2">
-                      <Text className="text-base">
-                        {item.itemQuantity} x {item.itemName}
-                      </Text>
-                      {/* Optional: Display item price */}
-                      {/* <Text className="text-base">₹{item.itemPrice}</Text> */}
-                    </View>
-                  ))}
-
-                  {/* Total Bill */}
-                  <View className="flex-row justify-between mt-2">
-                    <Text className="text-base font-bold">Total Bill</Text>
-                    <Text className="text-base font-bold">₹{order.totalAmount}</Text>
-                  </View>
-
-                  {/* Set Preparation Time (if applicable) */}
-                  {(activeTab === "Pending" || activeTab === "Preparing") && (
-                    <View className="flex-row items-center justify-between mt-2">
-                      <Text className="text-sm text-gray-500">
-                        Set food preparation time
-                      </Text>
-                      <View className="flex-row items-center">
-                        <TouchableOpacity className="p-2">
-                          <Text>-</Text>
-                        </TouchableOpacity>
-                        <Text className="px-2">15 mins</Text>
-                        <TouchableOpacity className="p-2">
-                          <Text>+</Text>
-                        </TouchableOpacity>
-                      </View>
-                    </View>
-                  )}
-
-                  {/* Action Buttons */}
-                  <View className="flex-row justify-between mt-4">
-                    {activeTab === "Pending" && (
-                      <>
-                        <TouchableOpacity
-                          onPress={() => updateOrderStatus(order._id, "Rejected")}
-                          className="flex-1 bg-red-100 rounded-lg py-2 mr-2"
-                          disabled={actionLoading[order._id]}
-                        >
-                          {actionLoading[order._id] ? (
-                            <ActivityIndicator size="small" color="#FF0000" />
-                          ) : (
-                            <Text className="text-red-500 text-center">Reject</Text>
-                          )}
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                          onPress={() => updateOrderStatus(order._id, "Preparing")}
-                          className="flex-1 bg-yellow-400 rounded-lg py-2"
-                          disabled={actionLoading[order._id]}
-                        >
-                          {actionLoading[order._id] ? (
-                            <ActivityIndicator size="small" color="#FFFFFF" />
-                          ) : (
-                            <Text className="text-center text-white">Accept</Text>
-                          )}
-                        </TouchableOpacity>
-                      </>
-                    )}
-
-                    {activeTab === "Preparing" && (
-                      <TouchableOpacity
-                        onPress={() => updateOrderStatus(order._id, "Ready")}
-                        className="bg-yellow-500 p-2 rounded-lg flex-1"
-                        disabled={actionLoading[order._id]}
-                      >
-                        {actionLoading[order._id] ? (
-                          <ActivityIndicator size="small" color="#FFFFFF" />
-                        ) : (
-                          <Text className="text-white text-center">Order Ready</Text>
-                        )}
-                      </TouchableOpacity>
-                    )}
-
-                    {activeTab === "Ready" && (
-                      <TouchableOpacity
-                        onPress={() => updateOrderStatus(order._id, "Delivered")}
-                        className="bg-green-500 p-2 rounded-lg flex-1"
-                        disabled={actionLoading[order._id]}
-                      >
-                        {actionLoading[order._id] ? (
-                          <ActivityIndicator size="small" color="#FFFFFF" />
-                        ) : (
-                          <Text className="text-white text-center">Order Picked Up</Text>
-                        )}
-                      </TouchableOpacity>
-                    )}
-
-                    {activeTab === "PickedUp" && (
-                      <>
-                        <Text
-                          className={`text-base font-bold ${order.payment === 1 ? "text-green-500" : "text-red-500"
-                            }`}
-                        >
-                          {order.payment === 1 ? "Payment Done" : "Pending Payment"}
-                        </Text>
-                        {order.payment !== 1 && (
-                          <TouchableOpacity
-                            onPress={() => handlePaymentDone(order._id)}
-                            className="bg-green-500 p-2 rounded-lg"
-                            disabled={actionLoading[order._id]}
-                          >
-                            {actionLoading[order._id] ? (
-                              <ActivityIndicator size="small" color="#FFFFFF" />
-                            ) : (
-                              <Text className="text-white text-center">Payment Done</Text>
-                            )}
-                          </TouchableOpacity>
-                        )}
-                        {order.payment === 1 && (
-                          <Text className="text-base text-green-500 font-bold mt-2">
-                            Order Picked Up
-                          </Text>
-                        )}
-                      </>
-                    )}
-                  </View>
-
-                </View>
-              ))}
-            </View>
-          ) : (
-            <View className="flex-1 justify-center items-center mt-10">
-              <Image
-                source={require("../../../../assets/images/admin/storeOpen.png")}
-                style={{ width: 150, height: 150 }}
-                resizeMode="contain"
-              />
-              <Text className="text-2xl font-bold mt-4">You are Online</Text>
-              <Text className="text-gray-500 text-lg">
-                Waiting for new orders
-              </Text>
-            </View>
-          )}
-        </ScrollView>
+        {/* Orders List */}
+        <OrderList
+          loading={loading}
+          orders={filteredOrders}
+          activeTab={activeTab}
+          actionLoading={actionLoading}
+          updateOrderStatus={updateOrderStatus}
+          handlePaymentDone={handlePaymentDone}
+        />
       </View>
 
       {/* Footer */}
@@ -670,5 +458,14 @@ const AdminHome = () => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: 12,
+    paddingHorizontal: 16,
+    backgroundColor: "#FFFFFF",
+  },
+});
 
 export default AdminHome;
