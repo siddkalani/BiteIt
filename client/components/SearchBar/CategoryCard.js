@@ -3,16 +3,18 @@ import { View, Text, Image, TouchableOpacity } from "react-native";
 import { FontFamily, FontSize } from "../../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
 import { BASE_URL } from "../../constants/constant";
-import { InteractionManager } from "react-native";
 
 const CategoryCard = ({ category, closeSearchModal }) => {
   const navigation = useNavigation();
 
   const handlePress = () => {
-    closeSearchModal(); // Close the modal first
-    InteractionManager.runAfterInteractions(() => {
-      navigation.navigate("HomeCategory", { id: category._id }); // Navigate after modal animation
-    });
+    // Navigate to HomeCategory immediately
+    navigation.navigate("HomeCategory", { id: category._id });
+
+    // Then close the modal (ensures a smoother animation)
+    if (closeSearchModal) {
+      closeSearchModal();
+    }
   };
 
   return (
