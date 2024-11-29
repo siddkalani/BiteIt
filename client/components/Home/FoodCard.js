@@ -166,7 +166,7 @@ const FoodCard = ({ foodItem }) => {
 
       <Text
         style={{
-          color: isOnline ? "green" : "gray",
+          color: isOnline ? "black" : "gray",
           fontSize: 16,
         }}
         className={`font-bold ${isOnline ? "" : ""}`}
@@ -208,19 +208,19 @@ const FoodCard = ({ foodItem }) => {
               style={{ alignSelf: "center" }}
             >
           <LinearGradient
-            colors={["#007022", "#54d17a", "#bcffd0"]}
+            colors={["white", "white", "white"]}
             start={{ x: 0, y: 1 }}
             end={{ x: 1.9, y: 0 }}
             
-            className="py-1 justify-center rounded-md items-center flex-row"
+            className="py-1 justify-center border-2 border-[#2b054c] rounded-md items-center flex-row"
           >
             
               <View className="h-4 w-4">
-                <Icon.Plus width={15} height={15} stroke="white" />
+                <Icon.Plus width={15} height={15} stroke="#2b054c" strokeWidth={4}/>
               </View>
               <View className="h-6 w-10">
                 <Text
-                  className="text-white ml-1"
+                  className="text-[#2b054c] ml-1 font-bold"
                   style={{
                     fontFamily: FontFamily.poppinsMedium,
                     fontSize: FontSize.size_mini,

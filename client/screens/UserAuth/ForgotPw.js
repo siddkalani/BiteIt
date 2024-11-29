@@ -117,7 +117,7 @@ const ForgotPw = () => {
     >
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
       <View className="bg-white px-4 py-3">
-        <GlobalHeader title="Forgot Password" />
+        <GlobalHeader title="" />
       </View>
 
       <View className="flex-1 px-5 space-y-8 mt-4 items-center">
@@ -141,11 +141,11 @@ const ForgotPw = () => {
               <Text className="text-red-500 text-center mb-4">{errorMessage}</Text>
             ) : null}
             <TouchableOpacity className="w-full" onPress={handleSendCode} disabled={isSendingCode}>
-              <LinearGradient colors={["#007022", "#54d17a", "#bcffd0"]} start={{ x: 0, y: 1 }} end={{ x: 1, y: 0 }} className="rounded-md">
+              <LinearGradient colors={["#2b054c", "#2b054c", "#2b054c"]} start={{ x: 0, y: 1 }} end={{ x: 1, y: 0 }} className="rounded-md">
                 {isSendingCode ? (
-                  <ActivityIndicator size="small" color="#ffffff" className="py-4" />
+                  <ActivityIndicator size="small" color="#ffffff" className="py-3" />
                 ) : (
-                  <Text className="text-white font-bold text-lg text-center py-4">
+                  <Text className="text-white font-bold text-lg text-center py-3">
                    Send Code
                   </Text>
                 )}
@@ -178,11 +178,11 @@ const ForgotPw = () => {
               <Text className="text-red-500 text-center mb-4">{errorMessage}</Text>
             ) : null}
             <TouchableOpacity className="w-full" onPress={handleOtpVerify} disabled={isVerifyingOtp}>
-              <LinearGradient colors={["#007022", "#54d17a", "#bcffd0"]} start={{ x: 0, y: 1 }} end={{ x: 1, y: 0 }} className="rounded-md">
+              <LinearGradient colors={["#2b054c", "#2b054c", "#2b054c"]} start={{ x: 0, y: 1 }} end={{ x: 1, y: 0 }} className="rounded-md">
                 {isVerifyingOtp ? (
-                  <ActivityIndicator size="small" color="#ffffff" className="py-4" />
+                  <ActivityIndicator size="small" color="#ffffff" className="py-3" />
                 ) : (
-                  <Text className="text-white font-bold text-lg text-center py-4">Verify OTP</Text>
+                  <Text className="text-white font-bold text-lg text-center py-3">Verify OTP</Text>
                 )}
               </LinearGradient>
             </TouchableOpacity>

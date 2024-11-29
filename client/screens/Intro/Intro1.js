@@ -5,6 +5,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { FontFamily, FontSize } from "../../GlobalStyles";
 import SafeAreaAndroid from "../../components/utils/SafeAreaAndroid";
 import Ionicons from "react-native-vector-icons/Ionicons";
+const introFoodImage = require("../../assets/images/intro/introFood.png");
 
 const { width, height } = Dimensions.get('window');
 
@@ -20,7 +21,7 @@ const Intro1 = () => {
     };
 
     return (
-        <View style={SafeAreaAndroid.AndroidSafeArea} className="flex-1 bg-white">
+        <View style={SafeAreaAndroid.AndroidSafeArea} className="flex-1">
             <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
             
             {/* Skip button with icon */}
@@ -37,7 +38,7 @@ const Intro1 = () => {
             <View className="flex-1 items-center justify-between">
                 {/* Background Image */}
                 <Image
-                    source={require("../../assets/images/intro/introFood.png")}
+                    source={introFoodImage}
                     style={{ resizeMode: 'cover', height: '100%', width: '100%' }}
                     className="absolute bottom-[-10] w-full h-full -z-10"
                 />
@@ -45,9 +46,9 @@ const Intro1 = () => {
                 {/* Main content with title and subtitle */}
                 <View className="bg-white rounded-b-full" style={{ height: height * 0.5, width: width * 1.2 }}>
                     <View className="w-full items-center justify-center rounded-b-lg" style={{ height: height * 0.5 }}>
-                        <Text style={{ fontFamily: FontFamily.poppinsSemiBold, fontSize: FontSize.size_11xl }} className="text-center">
+                        <Text style={{ fontFamily: FontFamily.poppinsSemiBold, fontSize: FontSize.size_11xl }} className="text-center text-[#2b054c]">
                             Order Food{'\n'}
-                            <Text style={{ fontFamily: FontFamily.poppinsSemiBold, fontSize: FontSize.size_11xl }} className="text-green-700">
+                            <Text style={{ fontFamily: FontFamily.poppinsSemiBold, fontSize: FontSize.size_11xl }} className="text-[#2b054c]">
                                 Without cash
                             </Text>
                         </Text>
@@ -64,7 +65,7 @@ const Intro1 = () => {
                 {/* Get Started Button */}
                 <View className="w-full px-4 py-6">
                     <LinearGradient
-                        colors={["#007022", "#54d17a", "#bcffd0"]}
+                        colors={["#1d0336", "#2b054c", "#bcffd0"]}
                         start={{ x: 0, y: 1 }}
                         end={{ x: 1.9, y: 0 }}
                         className="rounded-xl"

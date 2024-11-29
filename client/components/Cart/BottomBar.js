@@ -64,7 +64,7 @@ const BottomBarComponent = ({
           {/* Deliver To Section */}
           <View className="flex-row items-center space-x-2 mb-2">
             <View className="flex-row items-center">
-              <Ionicons name="location-outline" size={20} color="#4CAF50" />
+              <Ionicons name="location-outline" size={20} color="#2b054c" />
               <Text className="ml-2 text-base font-semibold text-black">
                 Delivering to
               </Text>
@@ -77,7 +77,7 @@ const BottomBarComponent = ({
           {/* From Section */}
           <View className="flex-row items-center space-x-2">
             <View className="flex-row items-center">
-              <Ionicons name="restaurant-outline" size={20} color="#4CAF50" />
+              <Ionicons name="restaurant-outline" size={20} color="#2b054c" />
               <Text className="ml-2 text-base font-semibold text-black">
                 From
               </Text>
@@ -96,17 +96,17 @@ const BottomBarComponent = ({
           <Icon.ChevronDown
             width={16}
             height={16}
-            stroke="green"
+            stroke="#2b054c"
             strokeWidth="3"
           />
-          <Text className="text-green-600 font-semibold ml-1">Change</Text>
+          <Text className="text-[#2b054c] font-semibold ml-1">Change</Text>
         </TouchableOpacity>
       </View>
 
       {/* Slide to Pay */}
       <View style={{ alignItems: "center" }}>
         <LinearGradient
-          colors={["green", "green"]}
+          colors={["#2b054c", "#2b054c"]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
           style={{
@@ -142,7 +142,7 @@ const BottomBarComponent = ({
                 elevation: 5,
               }}
             >
-              <Icon.ArrowRight width={24} height={24} stroke="green" />
+              <Icon.ArrowRight width={24} height={24} stroke="#2b054c" />
             </Animated.View>
           </PanGestureHandler>
         </LinearGradient>

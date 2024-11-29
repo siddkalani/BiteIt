@@ -73,10 +73,10 @@ const Account = () => {
 
     return (
         <View className="flex-1" style={{ paddingBottom: insets.bottom }}>
-            <StatusBar barStyle="light-content" backgroundColor={'#831a1d'} />
-            <SafeAreaView style={{ flex: 1, backgroundColor: '#831a1d', paddingTop: insets.top }}>
+            <StatusBar barStyle="light-content" backgroundColor={'#2b054c'} />
+            <SafeAreaView style={{ flex: 1, backgroundColor: '#2b054c', paddingTop: insets.top }}>
                 {/* Header with user information */}
-                <View className="bg-[#831a1d] px-4 pb-5">
+                <View className="bg-[#2b054c] px-4 pb-5">
                     <View className="flex-row items-center mb-2">
                         <TouchableOpacity onPress={handleBack} className="p-2 bg-gray-200 rounded-full">
                             <IconF.ChevronLeft width={24} height={24} stroke="black" />

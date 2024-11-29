@@ -24,17 +24,17 @@ const FloatingCartBar = ({ imageUrl, restaurantName }) => {
   };
 
   return (
-    <View className="left-0 right-0">
-      <View className="bg-white rounded-t-2xl shadow-lg flex-row items-center justify-between p-3">
+    <View className="left-0 right-0 mb-5 w-full items-center">
+      <View className="bg-[#2b054c] rounded-2xl w-[90%] shadow-lg flex-row items-center justify-between py-2 px-4">
         <View className="flex-row items-center space-x-3">
           {/* Image and restaurant name */}
           <View>
-            <Text className="text-sm text-gray-600">{itemCount} item{itemCount !== 1 ? 's' : ''} added</Text>
+            <Text className="text-sm text-white">{itemCount} item{itemCount !== 1 ? 's' : ''} added</Text>
           </View>
         </View>
         <View className="flex-row items-center space-x-2">
           <TouchableOpacity
-            className="bg-green-500 flex-row space-x-1 items-center rounded-lg p-2"
+            className="bg-[#28A745] flex-row space-x-1 items-center rounded-lg p-2"
             onPress={handleCheckout}
           >
             <View>

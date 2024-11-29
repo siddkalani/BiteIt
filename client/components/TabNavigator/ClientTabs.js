@@ -72,7 +72,7 @@ const CustomTabBarWithCart = ({ state, descriptors, navigation, translateY }) =>
               onPress={onPress}
               style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
             >
-              <Icon name={iconName} size={24} color={isFocused ? 'green' : 'gray'} />
+              <Icon name={iconName} size={24} color={isFocused ? '#2b054c' : 'gray'} />
             </TouchableOpacity>
           );
         })}
@@ -146,7 +146,7 @@ const ClientTabs = () => {
 
   const animateTabBar = (toValue) => {
     Animated.spring(translateY, {
-      toValue: toValue ? 0 : 130, // Adjust this value to hide the bar completely
+      toValue: toValue ? 0 : 60, // Adjust this value to hide the bar completely
       useNativeDriver: true,
     }).start();
   };

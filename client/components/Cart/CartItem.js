@@ -30,9 +30,9 @@ const CartItemComponent = ({
           <TouchableOpacity
             onPress={() => handleDecrement(item._id)}
             disabled={!itemOnlineStatus[item._id]}
-            className="p-2"
+            className="p-2 "
           >
-            <Icon.Minus width={16} height={16} stroke="green" strokeWidth="3" />
+            <Icon.Minus width={16} height={16} stroke="#2b054c" strokeWidth="3" />
           </TouchableOpacity>
           <View className="w-3.5 items-center justify-center">
             <Text adjustsFontSizeToFit numberOfLines={1} className="font-bold">
@@ -44,7 +44,7 @@ const CartItemComponent = ({
             disabled={!itemOnlineStatus[item._id]}
             className="p-2"
           >
-            <Icon.Plus width={16} height={16} stroke="green" strokeWidth="3" />
+            <Icon.Plus width={16} height={16} stroke="#2b054c" strokeWidth="3" />
           </TouchableOpacity>
         </View>
 

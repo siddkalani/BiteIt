@@ -132,7 +132,7 @@ const LogIn = () => {
           </TouchableOpacity>
 
           {/* Continue Button with Loading State */}
-          <LinearGradient colors={["#007022", "#54d17a", "#bcffd0"]} start={{ x: 0, y: 1 }} end={{ x: 1.9, y: 0 }} className="rounded-xl">
+          <LinearGradient colors={["#2b054c", "#2b054c", "#bcffd0"]} start={{ x: 0, y: 1 }} end={{ x: 1.9, y: 0 }} className="rounded-xl">
             <Pressable className="p-3 justify-center items-center" onPress={handleLogin} disabled={isLoading}>
               {isLoading ? (
                 <ActivityIndicator size="small" color="#ffffff" />

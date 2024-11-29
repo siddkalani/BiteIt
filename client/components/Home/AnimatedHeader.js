@@ -60,11 +60,11 @@ const AnimatedHeader = ({
     >
       <SafeAreaView
         style={{
-          backgroundColor: "#309624",
+          backgroundColor: "#2b054c",
           paddingTop: Platform.OS === "ios" ? 0 : StatusBar.currentHeight,
         }}
       >
-        <View style={{ backgroundColor: "#309624" }}>
+        <View style={{ backgroundColor: "#2b054c" }}>
           <View className="flex-row items-center justify-between px-4 mt-2">
             {/* Delivery Location */}
             <TouchableOpacity

@@ -435,11 +435,11 @@ const CartPage = () => {
                 <View className="flex-row justify-between items-center">
                   <Text className="text-lg font-semibold">Offers</Text>
                   <TouchableOpacity onPress={() => setModalVisible(true)}>
-                    <Text className="text-green-600">View offers</Text>
+                    <Text className="text-[#2b054c]">View offers</Text>
                   </TouchableOpacity>
                 </View>
                 {/* Highlighted Applied Cashback */}
-                <Text className="text-gray-500 mt-2 bg-green-100 p-2 rounded-lg">
+                <Text className="text-gray-500 mt-2 rounded-lg">
                   ₹{offerDiscount} Cashback applied!
                 </Text>
               </View>

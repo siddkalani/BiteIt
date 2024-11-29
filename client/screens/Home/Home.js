@@ -182,7 +182,7 @@ const Home = ({ setTabBarVisible }) => {
 
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
-      <StatusBar barStyle="light-content" backgroundColor={"#309624"} translucent />
+      <StatusBar barStyle="light-content" backgroundColor={"#2b054c"} translucent />
 
       {/* Header Component */}
       <AnimatedHeader
@@ -205,7 +205,7 @@ const Home = ({ setTabBarVisible }) => {
         overScrollMode="never"
       >
         <View className="rounded-b-3xl">
-          <View className="bg-[#309624] px-4 pb-2 rounded-b-3xl">
+          <View className="bg-[#2b054c] px-4 pb-2 rounded-b-3xl">
             <Image
               source={require("../../assets/images/home/home-slider.png")}
               resizeMode="contain"
