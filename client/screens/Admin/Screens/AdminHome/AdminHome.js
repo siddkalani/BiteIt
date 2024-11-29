@@ -153,7 +153,7 @@ const AdminHome = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const adminToken = await AsyncStorage.getItem("adminToken");
+        const adminToken = await AsyncStorage.getItem("userToken");
         console.log(adminToken);
         if (!adminToken) {
           Alert.alert("Error", "Admin is not authenticated");
@@ -221,7 +221,7 @@ const AdminHome = () => {
       // Set action loading state
       setActionLoading((prev) => ({ ...prev, [id]: true }));
 
-      const adminToken = await AsyncStorage.getItem("adminToken");
+      const adminToken = await AsyncStorage.getItem("userToken");
       if (!adminToken) {
         Alert.alert("Error", "Admin is not authenticated");
         setActionLoading((prev) => ({ ...prev, [id]: false }));

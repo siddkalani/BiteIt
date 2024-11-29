@@ -9,12 +9,15 @@ const AuthLoadingScreen = () => {
   useEffect(() => {
     const checkAuth = async () => {
       const userToken = await AsyncStorage.getItem("userToken");
-      const adminToken = await AsyncStorage.getItem("userToken");
       const role = await AsyncStorage.getItem("role"); // Fetch the stored role (e.g., 'admin' or 'user')
+
+      console.log("User Token:", userToken);
+      console.log("Role:", role);
+
 
       if (userToken && role === "admin") {
         navigation.replace("AdminTabs"); // If admin, go to Admin screen
-      } else if (userToken && role === "user") {
+      } else if (userToken && role === "faculty") {
         navigation.replace("ClientTabs"); // If user, go to User screen
       } else {
         navigation.replace("Intro"); // If not logged in, go to Login/Intro screen

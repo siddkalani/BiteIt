@@ -36,3 +36,4 @@ const foodItemSchema = mongoose.Schema(
 );
 
 module.exports = mongoose.model("FoodItem", foodItemSchema);
+
