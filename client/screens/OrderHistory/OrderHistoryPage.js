@@ -124,6 +124,12 @@ const OrderHistoryPage = () => {
       minute: "2-digit",
     });
 
+    const deliveredDate = new Date(item.deliveredAt);
+const formattedDeliveredDate = deliveredDate.toLocaleDateString();
+const formattedDeliveredTime = deliveredDate.toLocaleTimeString([], {
+  hour: "2-digit",
+  minute: "2-digit",
+});
   
     const handleTrackOrder = () => {
     navigation.navigate("OrderTracking", { order: item }); // Pass the entire order object
@@ -135,6 +141,9 @@ const OrderHistoryPage = () => {
         <Text className="text-gray-500 mb-2">Canteen: {item.canteenName}</Text>
         <Text className="text-gray-500 mb-2">
           Ordered On: {formattedDate} at {formattedTime}
+        </Text>
+        <Text className="text-gray-500 mb-2">
+          Delivered At: {formattedDeliveredDate} at {formattedDeliveredTime}
         </Text>
         <Text className="font-bold mb-2">Items:</Text>
   

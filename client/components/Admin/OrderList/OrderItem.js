@@ -31,7 +31,25 @@ const OrderItem = ({ order, activeTab, updateOrderStatus, handlePaymentDone }) =
         <Text className="text-xl font-bold">ID: {order.orderId}</Text>
       </View>
       <Text className="text-sm text-blue-500">1st order by {order.userName}</Text>
+      <View className="mt-2">
+  
+  {/* Conditional Time Display */}
+  <View className="mt-2">
+        {activeTab === "Pending" && (
+          <Text className="text-sm text-gray-500">
+            Placed on: {new Date(order.orderPlacedAt).toLocaleDateString()} at {new Date(order.orderPlacedAt).toLocaleTimeString()}
+          </Text>
+        )}
+        {activeTab === "PickedUp" && order.deliveredAt && !isNaN(new Date(order.deliveredAt)) ? (
+    <Text className="text-sm text-gray-500">
+      Delivered At: {new Date(order.deliveredAt).toLocaleDateString()} at {new Date(order.deliveredAt).toLocaleTimeString()}
+    </Text>
+  ) : (
+    <Text className="text-sm text-gray-500">Delivery time not available</Text>
+  )}
+</View>
 
+</View>
       {/* Order Items */}
       {order.items.map((item) => (
         <View key={item.itemId} className="flex-row justify-between mt-2">
@@ -40,6 +58,7 @@ const OrderItem = ({ order, activeTab, updateOrderStatus, handlePaymentDone }) =
           </Text>
         </View>
       ))}
+
 
       {/* Total Bill */}
       <View className="flex-row justify-between mt-2">
