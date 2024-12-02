@@ -86,7 +86,7 @@ const FoodItemCard = ({
           </LinearGradient>
         )
       ) : (
-        <Text className="text-red-500">Currently Unavailable</Text>
+        <Text className="text-red-500">Not Available</Text>
       )}
     </View>
   );

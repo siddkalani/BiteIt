@@ -5,7 +5,7 @@ import { Alert, Platform, ActivityIndicator, View } from "react-native";
 import * as Notifications from "expo-notifications";
 import AppNavigator from "./navigation";
 import store from "./store";
-import { initializeSocket, cleanupSocket } from "./services/foodItemSocketService";
+import { initializeSocket, cleanupSocket } from "./services/socketService";
 
 // Set up Android notification channel
 if (Platform.OS === "android") {
