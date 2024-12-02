@@ -38,7 +38,8 @@
     "updates": {
       "url": "https://u.expo.dev/5d4647bf-23f8-4d3b-884d-91e700f01c21"
     },
-    "scheme": "canteenpp"  
+    "scheme": "canteenpp"  ,
+    "newArchEnabled": true
   
   }
 }

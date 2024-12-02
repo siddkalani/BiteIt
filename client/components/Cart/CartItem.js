@@ -2,7 +2,6 @@
 import React from "react";
 import { View, Text, TouchableOpacity, Image } from "react-native";
 import * as Icon from "react-native-feather";
-import { BASE_URL } from "../../constants/constant";
 
 const CartItemComponent = ({
   item,
@@ -11,6 +10,7 @@ const CartItemComponent = ({
   handleRemoveFromCart,
   itemOnlineStatus,
 }) => {
+  const isItemOnline = itemOnlineStatus[item._id] ?? true; 
   return (
     <View className="flex-row items-center space-x-2 my-1 p-3 bg-white rounded-lg">
       {/* <Image
@@ -21,7 +21,7 @@ const CartItemComponent = ({
         <Text className="font-semibold text-lg">{item.itemName}</Text>
         <Text className="text-gray-500">₹{item.itemPrice}</Text>
         {/* Display availability status if item is offline */}
-        {!itemOnlineStatus[item._id] && (
+        {!isItemOnline && (
           <Text className="text-red-500 font-semibold">Not Available</Text>
         )}
       </View>

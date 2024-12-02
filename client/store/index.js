@@ -5,7 +5,7 @@ import foodItemSlice from "./Slices/foodItemSlice";
 import cartSlice from "./Slices/cartSlice";
 import serviceSlice from "./Slices/orderServiceSlice";
 import orderSlice from './Slices/orderSlice'
-import socketMiddleware from "../utils/socketMiddleware";
+// import socketMiddleware from "../utils/socketMiddleware";
 
 const store = configureStore({
   reducer: {
@@ -15,8 +15,8 @@ const store = configureStore({
     service: serviceSlice.reducer,
     order: orderSlice.reducer,
   },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(socketMiddleware),
+  // middleware: (getDefaultMiddleware) =>
+  //   getDefaultMiddleware().concat(socketMiddleware),
 });
 
 export default store;
