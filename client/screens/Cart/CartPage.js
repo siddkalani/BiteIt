@@ -676,21 +676,21 @@ const CartPage = () => {
   useEffect(() => {
     const loadCart = async () => {
       const savedCart = await loadCartFromStorage();
-
-      // Ensure items are only added to the cart if they are not already present
-      savedCart.forEach((item) => {
-        const itemInCart = cartItems.find(
-          (cartItem) => cartItem._id === item._id
-        );
-        if (!itemInCart) {
-          dispatch(addToCart(item));
-        }
-      });
+      if (savedCart.length !== cartItems.length) {
+        savedCart.forEach((item) => {
+          const itemInCart = cartItems.find(
+            (cartItem) => cartItem._id === item._id
+          );
+          if (!itemInCart) {
+            dispatch(addToCart(item)); // Only dispatch if not already in the cart
+          }
+        });
+      }
     };
-
+  
     loadCart();
-  }, [dispatch, cartItems]);
-
+  }, [dispatch, cartItems.length]); // Only reload if the length of the cart changes
+  
 
   // Handle placing the order
   const handlePlaceOrder = async () => {
@@ -768,6 +768,7 @@ const CartPage = () => {
   // Handle removing an item from the cart
   const handleRemoveFromCart = (itemId) => {
     dispatch(removeFromCart({ itemId }));
+    saveCartToStorage(cartItems.filter(item => item._id !== itemId));
   };
 
   // Handle incrementing item quantity
