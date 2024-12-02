@@ -304,4 +304,3 @@ const HomeCategory = () => {
 };
 
 export default HomeCategory;
-

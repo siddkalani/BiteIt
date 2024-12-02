@@ -2,9 +2,27 @@ import io from "socket.io-client";
 import { BASE_URL } from "../constants/constant";
 import store from "../store";
 import { updateFoodItemStatus } from "../store/Slices/foodItemSlice";
+import { updateCategoryItemStatus } from "../store/Slices/categoryItemSlice";
+import { paymentUpdated,orderDelivered } from "../store/Slices/orderHistorySlice";
 
 let socket;
 
+// Common logic for updating item status
+const updateItemStatus = (type, updatedItem, isOnline) => {
+  const actionMap = {
+    foodItem: updateFoodItemStatus,
+    categoryItem: updateCategoryItemStatus,
+  };
+
+  const action = actionMap[type];
+  if (action) {
+    store.dispatch(action({ id: updatedItem._id, isOnline }));
+  } else {
+    console.error(`Unsupported type: ${type}`);
+  }
+};
+
+// Initialize socket connection and listeners
 const initializeSocket = () => {
   if (!socket) {
     socket = io(BASE_URL);
@@ -15,11 +33,28 @@ const initializeSocket = () => {
     });
 
     socket.on("foodItemOnline", (updatedItem) => {
-      store.dispatch(updateFoodItemStatus({ id: updatedItem._id, isOnline: true }));
+      updateItemStatus("foodItem", updatedItem, true);
     });
 
     socket.on("foodItemOffline", (updatedItem) => {
-      store.dispatch(updateFoodItemStatus({ id: updatedItem._id, isOnline: false }));
+      updateItemStatus("foodItem", updatedItem, false);
+    });
+
+    socket.on("foodItemOnline", (updatedItem) => {
+      updateItemStatus("categoryItem", updatedItem, true);
+    });
+
+    socket.on("foodItemOffline", (updatedItem) => {
+      updateItemStatus("categoryItem", updatedItem, false);
+    });
+
+    socket.on("orderDelivered", (newOrder) => {
+      store.dispatch(orderDelivered(newOrder));  // Handle order delivered event
+    });
+
+    // Listen for payment completed event
+    socket.on("paymentDone", (updatedOrder) => {
+      store.dispatch(paymentUpdated(updatedOrder));  // Handle payment done event
     });
 
     socket.on("disconnect", () => {
@@ -28,6 +63,7 @@ const initializeSocket = () => {
   }
 };
 
+// Cleanup socket connection
 const cleanupSocket = () => {
   if (socket) {
     socket.disconnect();

@@ -54,4 +54,3 @@ const foodItemSlice = createSlice({
 
 export const { updateFoodItemStatus } = foodItemSlice.actions;
 export default foodItemSlice;
-
