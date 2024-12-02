@@ -38,8 +38,11 @@ const orderHistorySlice = createSlice({
       const index = state.orders.findIndex(order => order._id === updatedOrder._id);
       if (index !== -1) {
         state.orders[index] = { ...state.orders[index], payment: updatedOrder.payment };
+      } else {
+        console.log("Order not found in state:", updatedOrder._id); // Log if the order was not found
       }
     },
+    
   },
   extraReducers: (builder) => {
     builder
