@@ -2,7 +2,6 @@ const asyncHandler = require("express-async-handler");
 const Order = require("../../models/orderModel");
 const Item = require("../../models/foodItemModel");
 const Canteen = require("../../models/canteenModel");
-const io = require("../../config/socket");
 
 // POST -> /user/order/add
 const createOrder = asyncHandler(async (req, res) => {

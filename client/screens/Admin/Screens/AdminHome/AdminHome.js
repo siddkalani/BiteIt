@@ -381,12 +381,14 @@ const AdminHome = () => {
   // Handle Picked Up Order
   const handlePickedUpOrder = (orderId) => {
     const order = readyOrders.find((order) => order._id === orderId);
-
+  
     if (order) {
       setPickedUpOrders((prev) => {
         const isDuplicate = prev.some((existingOrder) => existingOrder._id === order._id);
         if (!isDuplicate) {
-          const updatedOrders = [order, ...prev];
+          // Include deliveredAt if it's set
+          const updatedOrder = { ...order, deliveredAt: new Date() };  // Adding deliveredAt time
+          const updatedOrders = [updatedOrder, ...prev];
           updatedOrders.sort(
             (a, b) => new Date(b.orderPlacedAt) - new Date(a.orderPlacedAt)
           );
@@ -394,10 +396,12 @@ const AdminHome = () => {
         }
         return prev;
       });
-
+  
+      // Remove from ready orders
       setReadyOrders((prev) => prev.filter((order) => order._id !== orderId));
     }
   };
+  
 
   // Handle Payment Done
   const handlePaymentDone = async (orderId) => {

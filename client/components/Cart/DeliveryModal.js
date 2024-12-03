@@ -45,7 +45,7 @@ const DeliveryModalComponent = ({
       handlePosition="outside"
       onOpen={() => setIsModalOpen(true)}
       onClose={() => {
-        console.log("Modal closed. Room number: ", selectedRoom);
+        // console.log("Modal closed. Room number: ", selectedRoom);
         setIsModalOpen(false);
       }}
       
@@ -85,7 +85,7 @@ const DeliveryModalComponent = ({
           <>
             <Text className="text-lg font-bold mt-4">Enter Room Number</Text>
             <TextInput
-              placeholder="Eg: B-203"
+              placeholder="Where should we deliver? (e.g. Room A-105)"
               value={selectedRoom}
               onChangeText={handleRoomChange} 
               keyboardType="default"

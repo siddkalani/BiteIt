@@ -8,12 +8,10 @@ import LogIn from "./screens/UserAuth/LogIn";
 import Home from "./screens/Home/Home";
 import OTP from "./screens/UserAuth/Otp";
 import AdminHome from "./screens/Admin/Screens/AdminHome/AdminHome";
-import OldAdmin from "./screens/Admin/AdminHome";
 import SearchResults from "./components/SearchBar/SearchResults";
 import HomeCategory from "./screens/Categories/HomeCategory";
 import CartPage from "./screens/Cart/CartPage";
 import OrderHistoryPage from "./screens/OrderHistory/OrderHistoryPage";
-import PendingOrders from "./screens/Admin/PendingOrder";
 import PaymentService from "./screens/Payment/PaymentService";
 import Intro1 from "./screens/Intro/Intro1";
 import PaymentOption from "./screens/Payment/PaymentOption";
@@ -78,7 +76,6 @@ function AppNavigator() {
         <Stack.Screen name="SearchResults" component={SearchResults} />
         <Stack.Screen name="CartPage" component={CartPage} />
         <Stack.Screen name="OrderHistory" component={OrderHistoryPage} />
-        <Stack.Screen name="PendingOrder" component={PendingOrders} />
         <Stack.Screen name="PaymentOption" component={PaymentOption} />
 
         {/* <Stack.Screen name="PaymentConfirmation" component={PaymentConfirmation} /> */}
@@ -86,7 +83,6 @@ function AppNavigator() {
 
         {/* admin side */}
         <Stack.Screen name="AdminTabs" component={AdminTabs} />
-        <Stack.Screen name="AdminHome" component={OldAdmin} />
         <Stack.Screen name="Inventory" component={Inventory} />
         <Stack.Screen name="Bills" component={Bills} />
         <Stack.Screen name="AdminAccount" component={AdminAccount} />

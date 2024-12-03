@@ -226,7 +226,7 @@ const CartPage = () => {
         status: "Pending", // Initial order status
         deliverTo: 
         deliveryType === "Table Service" && selectedRoom 
-        ? `Room ${selectedRoom}`  // If Table Service is selected and room is provided
+        ? `${selectedRoom}`  // If Table Service is selected and room is provided
         : deliveryType === "Pickup" 
         ? "Pickup"  // If Pickup is selected
         : deliveryType,  

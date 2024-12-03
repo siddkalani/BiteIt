@@ -23,6 +23,7 @@ const OrderItem = ({ order, activeTab, updateOrderStatus, handlePaymentDone }) =
       setButtonLoading(null);
     }
   };
+  // console.log(order);
 
   return (
     <View className="p-4 bg-gray-50 rounded-lg shadow-sm my-2">
@@ -31,6 +32,7 @@ const OrderItem = ({ order, activeTab, updateOrderStatus, handlePaymentDone }) =
       <Text className="text-xl font-bold">ID: {String(order.orderId).padStart(2, "0")}</Text>
       </View>
       <Text className="text-sm text-blue-500">1st order by {order.userName}</Text>
+      <Text className="text-sm text-blue-500"> Delivery Location: {order.deliverTo || 'Not available'}</Text>
       <View className="mt-2">
   
   {/* Conditional Time Display */}
@@ -64,6 +66,7 @@ const OrderItem = ({ order, activeTab, updateOrderStatus, handlePaymentDone }) =
       <View className="flex-row justify-between mt-2">
         <Text className="text-base font-bold">Total Bill</Text>
         <Text className="text-base font-bold">₹{order.totalAmount}</Text>
+        
       </View>
 
       {/* Action Buttons */}
