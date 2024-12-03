@@ -12,6 +12,8 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { Modalize } from "react-native-modalize";
 import { FontFamily, FontSize } from "../../GlobalStyles";
+import { useDispatch, useSelector } from "react-redux"; // I
+import { setSelectedRoom } from "../../store/Slices/orderServiceSlice";
 
 const DeliveryModalComponent = ({
   modalizeRef,
@@ -20,12 +22,21 @@ const DeliveryModalComponent = ({
   serviceOptions,
   handleOptionPress,
   deliveryType,
-  selectedRoom,
-  setSelectedRoom,
+  // selectedRoom,
+  // setSelectedRoom,
   errorMessage,
   handleProceed,
   isLoading,
 }) => {
+
+  const dispatch = useDispatch();
+  const selectedRoom = useSelector((state) => state.service.selectedRoom); // Access selectedRoom from Redux
+
+  const handleRoomChange = (text) => {
+    console.log("Room Number Set: ", text); // Log the room number being set
+    dispatch(setSelectedRoom(text)); // Dispatch the action to update the room in the Redux store
+  };
+
   return (
     <Modalize
       ref={modalizeRef}
@@ -33,7 +44,11 @@ const DeliveryModalComponent = ({
       handleStyle={{ backgroundColor: "#D3D3D3" }}
       handlePosition="outside"
       onOpen={() => setIsModalOpen(true)}
-      onClose={() => setIsModalOpen(false)}
+      onClose={() => {
+        console.log("Modal closed. Room number: ", selectedRoom);
+        setIsModalOpen(false);
+      }}
+      
       scrollViewProps={{
         // Allow scrolling within the modal if content exceeds modal height
         scrollEnabled: true,
@@ -72,7 +87,7 @@ const DeliveryModalComponent = ({
             <TextInput
               placeholder="Eg: B-203"
               value={selectedRoom}
-              onChangeText={setSelectedRoom}
+              onChangeText={handleRoomChange} 
               keyboardType="default"
               style={{
                 height: 50,

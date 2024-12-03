@@ -72,7 +72,8 @@ const CartPage = () => {
   const modalizeRef = useRef(null); // Reference to the Modalize component
   const deliveryType = useSelector((state) => state.service.deliveryType);
   const selectedCanteen = useSelector((state) => state.service.canteenName);
-  const [selectedRoom, setSelectedRoom] = useState(""); // For room number
+  const selectedRoom = useSelector((state) => state.service.selectedRoom);
+  // const [selectedRoom, setSelectedRoom] = useState(""); // For room number
   const { top } = useSafeAreaInsets();
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -98,7 +99,7 @@ const CartPage = () => {
   const closeModal = () => {
     modalizeRef.current?.close(); // Close the Modalize
     setErrorMessage("");
-    setSelectedRoom("");
+    // setSelectedRoom("");
   };
 
   // Handle selecting a service option
@@ -211,6 +212,8 @@ const CartPage = () => {
         itemName: item.itemName,
         itemQuantity: item.quantity,
       }));
+
+      console.log("Selected Room:", selectedRoom);
   
       // Step 4: Create the order payload
       const payload = {
@@ -221,9 +224,12 @@ const CartPage = () => {
         items: orderData, // Cart items data
         payment: 0, // Assume payment is 0 for now (you can integrate payment later)
         status: "Pending", // Initial order status
-        deliverTo: deliveryType === "Table Service" 
-                    ? `Room ${selectedRoom}` // Room number if table service
-                    : deliveryType, // Else use delivery type directly
+        deliverTo: 
+        deliveryType === "Table Service" && selectedRoom 
+        ? `Room ${selectedRoom}`  // If Table Service is selected and room is provided
+        : deliveryType === "Pickup" 
+        ? "Pickup"  // If Pickup is selected
+        : deliveryType,  
       };
   
       // Step 5: Retrieve user token from AsyncStorage
@@ -484,8 +490,7 @@ const CartPage = () => {
           serviceOptions={serviceOptions}
           handleOptionPress={handleOptionPress}
           deliveryType={deliveryType}
-          selectedRoom={selectedRoom}
-          setSelectedRoom={setSelectedRoom}
+          // setSelectedRoom={setSelectedRoom}
           errorMessage={errorMessage}
           handleProceed={handleProceed}
           isLoading={isLoading}

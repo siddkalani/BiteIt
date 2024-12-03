@@ -28,7 +28,7 @@ const OrderItem = ({ order, activeTab, updateOrderStatus, handlePaymentDone }) =
     <View className="p-4 bg-gray-50 rounded-lg shadow-sm my-2">
       {/* Order Header */}
       <View className="flex-row justify-between">
-        <Text className="text-xl font-bold">ID: {order.orderId}</Text>
+      <Text className="text-xl font-bold">ID: {String(order.orderId).padStart(2, "0")}</Text>
       </View>
       <Text className="text-sm text-blue-500">1st order by {order.userName}</Text>
       <View className="mt-2">

@@ -72,9 +72,13 @@ const orderSchema = new mongoose.Schema(
 orderSchema.pre("save", async function (next) {
   if (this.isNew) {
     const lastOrder = await this.constructor.findOne().sort({ orderId: -1 });
-    this.orderId = lastOrder ? lastOrder.orderId + 1 : 1; // Start from 1 if no orders exist
+    let newOrderId = lastOrder ? lastOrder.orderId + 1 : 1; // Start from 1 if no orders exist
+    
+    // Ensure the orderId is a two-digit number (e.g., 01, 02, 03, ..., 10, 11, etc.)
+    this.orderId = newOrderId < 10 ? `0${newOrderId}` : `${newOrderId}`;
   }
   next();
 });
+
 
 module.exports = mongoose.model("Order", orderSchema);

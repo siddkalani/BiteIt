@@ -472,7 +472,7 @@ const AdminHome = () => {
 
   const filteredOrders = getFilteredOrders();
 
-  console.log(orders)
+  // console.log(orders)
   return (
     <View
       style={{
