@@ -29,6 +29,7 @@ import PaymentConfirmation from "./screens/Payment/PaymentConfirmation";
 import CreateAccount from "./screens/UserAuth/CreateAccount";
 import ForgotPw from "./screens/UserAuth/ForgotPw";
 import AuthLoadingScreen from "./screens/UserAuth/AuthLoadingScreen";
+import AppWrapper from "./AppWrapper";
 
 const Stack = createNativeStackNavigator();
 

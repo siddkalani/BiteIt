@@ -4,6 +4,7 @@ import store from "../store";
 import { updateFoodItemStatus } from "../store/Slices/foodItemSlice";
 import { updateCategoryItemStatus } from "../store/Slices/categoryItemSlice";
 import { paymentUpdated,orderDelivered } from "../store/Slices/orderHistorySlice";
+import { updateCanteenStatus } from "../store/Slices/canteenSlice";
 
 let socket;
 
@@ -30,6 +31,11 @@ const initializeSocket = () => {
     socket.on("connect", () => {
       console.log("Connected to server");
       socket.emit("joinRoom", "roomId"); // Replace "roomId" with a dynamic room ID if needed
+    });
+
+    socket.on('canteenStatus', (status) => {
+      console.log('Canteen status updated:', status);
+      store.dispatch(updateCanteenStatus(status.isOnline));
     });
 
     socket.on("foodItemOnline", (updatedItem) => {
