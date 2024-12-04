@@ -34,7 +34,7 @@ const initializeSocket = () => {
     });
 
     socket.on('canteenStatus', (status) => {
-      console.log('Canteen status updated:', status);
+      // console.log('Canteen status updated:', status);
       store.dispatch(updateCanteenStatus(status.isOnline));
     });
 
