@@ -46,17 +46,11 @@ const initializeSocket = () => {
 
     socket.on("foodItemOnline", (updatedItem) => {
       updateItemStatus("foodItem", updatedItem, true);
-    });
-
-    socket.on("foodItemOffline", (updatedItem) => {
-      updateItemStatus("foodItem", updatedItem, false);
-    });
-
-    socket.on("foodItemOnline", (updatedItem) => {
       updateItemStatus("categoryItem", updatedItem, true);
     });
 
     socket.on("foodItemOffline", (updatedItem) => {
+      updateItemStatus("foodItem", updatedItem, false);
       updateItemStatus("categoryItem", updatedItem, false);
     });
 

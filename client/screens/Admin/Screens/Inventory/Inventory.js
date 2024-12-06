@@ -5,18 +5,20 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import * as IconF from 'react-native-feather';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BASE_URL } from '../../../../constants/constant';
-import io from 'socket.io-client';
+import { useDispatch } from "react-redux";
+import { updateFoodItemStatusAsync } from '../../../../store/Slices/foodItemSlice';
 
 const { width } = Dimensions.get('window');
 const paddingHorizontal = 16;
 const tabWidth = (width - paddingHorizontal * 2) / 2;
-
-// const socket = io(BASE_URL); 
+ 
 
 const Category = ({ categoryName, items }) => {
   const [isOpen, setIsOpen] = useState(true);
   const [CustomOpen, IsCustomOpen] = useState(false);
   const [localItems, setLocalItems] = useState(items); // Local state for managing item toggles
+
+  const dispatch = useDispatch();
 
   const toggleCategory = () => {
     setIsOpen(!isOpen);
@@ -25,63 +27,22 @@ const Category = ({ categoryName, items }) => {
   const handleToggle = async (itemId, currentStatus) => {
     try {
       const token = await AsyncStorage.getItem("userToken");
+      const newStatus = !currentStatus;
 
-      const response = await fetch(`${BASE_URL}/food-item/update`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          itemId,
-          isOnline: !currentStatus,
-        }),
-      });
+      // Dispatch async thunk to update food item status
+      await dispatch(updateFoodItemStatusAsync({ itemId, isOnline: newStatus, token }));
 
-      const data = await response.json();
-
-      if (response.ok) {
-        // Update local state for the item toggle switch
-        setLocalItems((prevItems) =>
-          prevItems.map((item) =>
-            item._id === itemId ? { ...item, isOnline: !currentStatus } : item
-          )
-        );
-      } else {
-        console.error("Error updating status:", data.message);
-      }
+      // Update the local state immediately after the update
+      setLocalItems((prevItems) =>
+        prevItems.map((item) =>
+          item._id === itemId ? { ...item, isOnline: newStatus } : item
+        )
+      );
     } catch (error) {
-      console.error("Server error:", error);
+      console.error("Error updating status:", error);
     }
   };
 
-
-  useEffect(() => {
-    // Event listener for item going online
-    socket.on("foodItemOnline", (updatedItem) => {
-      setLocalItems((prevItems) =>
-        prevItems.map((item) =>
-          item._id === updatedItem._id ? { ...item, isOnline: true } : item
-        )
-      );
-    });
-
-    // Event listener for item going offline
-    socket.on("foodItemOffline", (updatedItem) => {
-      setLocalItems((prevItems) =>
-        prevItems.map((item) =>
-          item._id === updatedItem._id ? { ...item, isOnline: false } : item
-        )
-      );
-    });
-
-    return () => {
-      socket.off("foodItemOnline");
-      socket.off("foodItemOffline");
-    };
-  }, []);
-
-  // Toggle for custom open/close state
   const handleCustomToggle = () => {
     IsCustomOpen((prevState) => !prevState); // Toggle the custom state
   };
@@ -107,8 +68,8 @@ const Category = ({ categoryName, items }) => {
 
       {isOpen && (
         <View className="bg-white">
-          {localItems.map((item, index) => (
-            <View key={index} className="flex-row justify-between items-center py-2 px-4 border-b border-gray-200">
+          {localItems.map((item) => (
+            <View key={item._id} className="flex-row justify-between items-center py-2 px-4 border-b border-gray-200">
               <Text>{item.itemName}</Text>
               <Switch
                 value={item.isOnline} // Use local state for isOnline
@@ -123,7 +84,6 @@ const Category = ({ categoryName, items }) => {
     </View>
   );
 };
-
 
 
 const Inventory = () => {
@@ -269,3 +229,5 @@ const Inventory = () => {
 };
 
 export default Inventory;
+
+
