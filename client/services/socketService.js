@@ -5,6 +5,7 @@ import { updateFoodItemStatus } from "../store/Slices/foodItemSlice";
 import { updateCategoryItemStatus } from "../store/Slices/categoryItemSlice";
 import { paymentUpdated,orderDelivered } from "../store/Slices/orderHistorySlice";
 import { updateCanteenStatus } from "../store/Slices/canteenSlice";
+import { addNewOrder } from "../store/Slices/adminAllOrders";
 
 let socket;
 
@@ -26,11 +27,16 @@ const updateItemStatus = (type, updatedItem, isOnline) => {
 // Initialize socket connection and listeners
 const initializeSocket = () => {
   if (!socket) {
-    socket = io(BASE_URL);
+    socket = io(BASE_URL, {
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 2000,
+    });
 
     socket.on("connect", () => {
       console.log("Connected to server");
-      socket.emit("joinRoom", "roomId"); // Replace "roomId" with a dynamic room ID if needed
+      // Dynamically join room if needed
+      socket.emit("joinRoom", "yourRoomId");
     });
 
     socket.on('canteenStatus', (status) => {
@@ -63,8 +69,24 @@ const initializeSocket = () => {
       store.dispatch(paymentUpdated(updatedOrder));  // Handle payment done event
     });
 
-    socket.on("disconnect", () => {
-      console.log("Disconnected from server");
+    socket.on("newOrder", (order) => {
+      store.dispatch(addNewOrder(order)); 
+    });
+
+    socket.on("connect_error", (error) => {
+      console.error("Connection error:", error.message);
+    });
+
+    socket.on("reconnect_attempt", (attemptNumber) => {
+      console.log(`Reconnection attempt #${attemptNumber}`);
+    });
+
+    socket.on("reconnect_failed", () => {
+      console.error("Reconnection failed");
+    });
+
+    socket.on("disconnect", (reason) => {
+      console.log(`Disconnected from server. Reason: ${reason}`);
     });
   }
 };

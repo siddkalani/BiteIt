@@ -3,7 +3,7 @@ import io from "socket.io-client";
 import { BASE_URL } from "../constants/constant";
 import { saveCartToStorage } from "./storageUtils";
 
-const socket = io(BASE_URL);
+// const socket = io(BASE_URL);
 
 const socketMiddleware = (store) => {
     // // Listen for events only once to avoid multiple listeners

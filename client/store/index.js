@@ -8,6 +8,7 @@ import orderSlice from './Slices/orderSlice'
 import categoryItemSlice from "./Slices/categoryItemSlice";
 import orderHistorySlice from "./Slices/orderHistorySlice";
 import canteenSlice from "./Slices/canteenSlice";
+import allOrderSlice from "./Slices/adminAllOrders";
 // import socketMiddleware from "../utils/socketMiddleware";
 
 const store = configureStore({
@@ -19,7 +20,8 @@ const store = configureStore({
     order: orderSlice.reducer,
     categoryItem: categoryItemSlice.reducer,
     orderHistory: orderHistorySlice.reducer,
-    canteen: canteenSlice.reducer
+    canteen: canteenSlice.reducer,
+    allOrders: allOrderSlice.reducer
   },
   // middleware: (getDefaultMiddleware) =>
   //   getDefaultMiddleware().concat(socketMiddleware),

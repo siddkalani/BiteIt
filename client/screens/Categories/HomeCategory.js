@@ -332,10 +332,10 @@ import { LinearGradient } from "expo-linear-gradient";
 import * as Icon from "react-native-feather";
 import { FontFamily } from "../../GlobalStyles";
 import SafeAreaAndroid from "../../components/utils/SafeAreaAndroid";
-import io from "socket.io-client";
+
 import { fetchCategoryItems } from "../../store/Slices/categoryItemSlice";
 
-const socket = io(BASE_URL); 
+
 
 const HEADER_HEIGHT = 300;
 

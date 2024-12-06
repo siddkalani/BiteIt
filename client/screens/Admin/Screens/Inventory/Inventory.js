@@ -11,7 +11,7 @@ const { width } = Dimensions.get('window');
 const paddingHorizontal = 16;
 const tabWidth = (width - paddingHorizontal * 2) / 2;
 
-const socket = io(BASE_URL); 
+// const socket = io(BASE_URL); 
 
 const Category = ({ categoryName, items }) => {
   const [isOpen, setIsOpen] = useState(true);

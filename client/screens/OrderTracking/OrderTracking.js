@@ -12,7 +12,7 @@ import * as Icon from 'react-native-feather';
 import io from "socket.io-client";
 import { BASE_URL } from '../../constants/constant';
 
-const socket = io(BASE_URL);
+// const socket = io(BASE_URL);
 
 import { useNavigation, useRoute } from '@react-navigation/native';
 

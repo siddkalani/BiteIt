@@ -80,6 +80,7 @@ const CartPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false); // Track Modalize visibility
 
   const foodItems = useSelector((state) => state.foodItem.items);
+
   const itemOnlineStatus = useMemo(() => {
     const statusMap = {};
     cartItems.forEach((cartItem) => {
@@ -372,19 +373,6 @@ const CartPage = () => {
       useNativeDriver: false,
     }).start();
   };
-
-  // useEffect(() => {
-  //   cartItems.forEach((item) => {
-  //     if (!itemOnlineStatus[item._id]) {
-  //       dispatch(removeFromCart({ itemId: item._id }));
-  //       Alert.alert(
-  //         "Item Unavailable",
-  //         `${item.itemName} is now offline and has been removed from your cart.`
-  //       );
-  //     }
-  //   });
-  // }, [cartItems, itemOnlineStatus, dispatch]);
-  
 
   return (
     <GestureHandlerRootView className="flex-1">

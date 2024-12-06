@@ -146,10 +146,6 @@ import {
   removeFromCart,
 } from "../../store/Slices/cartSlice";
 import FoodItemCard from "../utils/FoodItemCard";
-import io from "socket.io-client"; 
-import { BASE_URL } from "../../constants/constant";
-
-const socket = io(BASE_URL); 
 
 const SearchResults = ({ searchResults, updateSearchHistory }) => {
   const dispatch = useDispatch();

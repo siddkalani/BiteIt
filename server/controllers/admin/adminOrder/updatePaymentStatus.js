@@ -27,6 +27,7 @@ const updatePaymentStatus = asyncHandler(async (req, res) => {
 
     // Emit real-time update for payment
     const io = req.app.get("io");
+    
     io.emit("paymentDone", order); // Emit to update the client in real time
 
     res.status(200).json({
