@@ -577,10 +577,7 @@ import Tabs from "../../../../components/Admin/Tabs/Tabs";
 import SearchBar from "../../../../components/Admin/SearchBar/SearchBar";
 import OrderList from "../../../../components/Admin/OrderList/OrderList";
 
-
 // const socket = io(BASE_URL);
-
-
 
 const AdminHome = () => {
   const dispatch = useDispatch();
@@ -735,7 +732,7 @@ const AdminHome = () => {
             readyCount={ready.length}
             pickedUpCount={pickedUp.length}
           />
-          <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+          <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
           <OrderList
             orders={filteredOrders}
             activeTab={activeTab}

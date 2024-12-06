@@ -157,42 +157,32 @@
 
 // export default OrderItem;
 
-
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 
 const OrderItem = ({
-  order = {},
-  activeTab = "Pending",
+  order,
+  activeTab,
+  isSelected,
+  toggleSelectOrder,
   updateOrderStatus,
   handlePaymentDone,
 }) => {
-
-  if (!updateOrderStatus) {
-    console.error("updateOrderStatus function is missing");
-    return null;
-  }
   const [buttonLoading, setButtonLoading] = useState(null);
 
   const handleButtonPress = async (status) => {
-    if (!updateOrderStatus) return;
     setButtonLoading(status);
     try {
       await updateOrderStatus(order._id, status);
-    } catch (error) {
-      console.error("Error updating order status:", error);
     } finally {
       setButtonLoading(null);
     }
   };
 
   const handlePaymentPress = async () => {
-    if (!handlePaymentDone) return;
     setButtonLoading("Payment");
     try {
       await handlePaymentDone(order._id);
-    } catch (error) {
-      console.error("Error handling payment:", error);
     } finally {
       setButtonLoading(null);
     }
@@ -212,74 +202,127 @@ const OrderItem = ({
   const formatDateTime = (date) => new Date(date).toLocaleString();
 
   return (
-    <View style={{ padding: 16, backgroundColor: "#f9f9f9", borderRadius: 8, marginBottom: 8 }}>
-      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-        <Text style={{ fontSize: 18, fontWeight: "bold" }}>ID: {String(orderId).padStart(2, "0")}</Text>
+    <View className="p-4 bg-gray-100 rounded-lg shadow-sm mb-2">
+      {/* Header with Checkbox */}
+      <View className="flex-row justify-between items-center">
+        <Text className="text-lg font-bold">ID: {String(orderId).padStart(2, "0")}</Text>
+        {/* Custom Checkbox */}
+        <TouchableOpacity
+          onPress={() => toggleSelectOrder(order._id)}
+          className={`w-6 h-6 border rounded flex items-center justify-center ${
+            isSelected ? "bg-green-500 border-green-500" : "bg-white border-gray-400"
+          }`}
+        >
+          {isSelected && <Text className="text-white font-bold">✓</Text>}
+        </TouchableOpacity>
       </View>
-      <Text style={{ color: "#007bff", marginTop: 4 }}>1st order by {userName}</Text>
-      <Text style={{ color: "#007bff" }}>Delivery Location: {deliverTo}</Text>
+      <Text className="text-sm text-blue-500 mt-2">1st order by {userName}</Text>
+      <Text className="text-sm text-blue-500">Delivery Location: {deliverTo}</Text>
 
+      {/* Conditional Date/Time */}
       {activeTab === "Pending" && orderPlacedAt && (
-        <Text style={{ color: "#555" }}>
+        <Text className="text-sm text-gray-600 mt-2">
           Placed on: {formatDateTime(orderPlacedAt)}
         </Text>
       )}
       {activeTab === "PickedUp" && deliveredAt && (
-        <Text style={{ color: "#555" }}>
+        <Text className="text-sm text-gray-600 mt-2">
           Delivered At: {formatDateTime(deliveredAt)}
         </Text>
       )}
 
+      {/* Order Items */}
       {items.map((item) => (
-        <View key={item.itemId} style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 8 }}>
-          <Text>{item.itemQuantity} x {item.itemName}</Text>
+        <View key={item.itemId} className="flex-row justify-between mt-2">
+          <Text className="text-base">
+            {item.itemQuantity} x {item.itemName}
+          </Text>
         </View>
       ))}
 
-      <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 8 }}>
-        <Text style={{ fontWeight: "bold" }}>Total Bill</Text>
-        <Text style={{ fontWeight: "bold" }}>₹{totalAmount}</Text>
+      {/* Total */}
+      <View className="flex-row justify-between mt-2">
+        <Text className="text-base font-bold">Total Bill</Text>
+        <Text className="text-base font-bold">₹{totalAmount}</Text>
       </View>
 
-      <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 16 }}>
+      {/* Action Buttons */}
+      <View className="flex-row justify-between mt-4">
         {activeTab === "Pending" && (
           <>
             <TouchableOpacity
               onPress={() => handleButtonPress("Rejected")}
-              style={{ flex: 1, backgroundColor: "#fdecea", borderRadius: 8, padding: 8, marginRight: 8 }}
+              className="flex-1 bg-red-100 rounded-lg py-2 mr-2"
               disabled={buttonLoading === "Rejected"}
             >
               {buttonLoading === "Rejected" ? (
                 <ActivityIndicator size="small" color="#FF0000" />
               ) : (
-                <Text style={{ color: "#FF0000", textAlign: "center" }}>Reject</Text>
+                <Text className="text-red-500 text-center">Reject</Text>
               )}
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => handleButtonPress("Preparing")}
-              style={{ flex: 1, backgroundColor: "#ffc107", borderRadius: 8, padding: 8 }}
+              className="flex-1 bg-yellow-400 rounded-lg py-2"
               disabled={buttonLoading === "Preparing"}
             >
               {buttonLoading === "Preparing" ? (
-                <ActivityIndicator size="small" color="#FFF" />
+                <ActivityIndicator size="small" color="#FFFFFF" />
               ) : (
-                <Text style={{ color: "#FFF", textAlign: "center" }}>Accept</Text>
+                <Text className="text-white text-center">Accept</Text>
               )}
             </TouchableOpacity>
           </>
         )}
-        {activeTab === "PickedUp" && payment !== 1 && (
+        {activeTab === "Preparing" && (
           <TouchableOpacity
-            onPress={handlePaymentPress}
-            style={{ backgroundColor: "#4caf50", padding: 8, borderRadius: 8 }}
-            disabled={buttonLoading === "Payment"}
+            onPress={() => handleButtonPress("Ready")}
+            className="bg-yellow-500 p-2 rounded-lg flex-1"
+            disabled={buttonLoading === "Ready"}
           >
-            {buttonLoading === "Payment" ? (
-              <ActivityIndicator size="small" color="#FFF" />
+            {buttonLoading === "Ready" ? (
+              <ActivityIndicator size="small" color="#FFFFFF" />
             ) : (
-              <Text style={{ color: "#FFF", textAlign: "center" }}>Payment Done</Text>
+              <Text className="text-white text-center">Order Ready</Text>
             )}
           </TouchableOpacity>
+        )}
+        {activeTab === "Ready" && (
+          <TouchableOpacity
+            onPress={() => handleButtonPress("Delivered")}
+            className="bg-green-500 p-2 rounded-lg flex-1"
+            disabled={buttonLoading === "Delivered"}
+          >
+            {buttonLoading === "Delivered" ? (
+              <ActivityIndicator size="small" color="#FFFFFF" />
+            ) : (
+              <Text className="text-white text-center">Order Picked Up</Text>
+            )}
+          </TouchableOpacity>
+        )}
+        {activeTab === "PickedUp" && (
+          <>
+            <Text
+              className={`text-base font-bold ${
+                payment === 1 ? "text-green-500" : "text-red-500"
+              }`}
+            >
+              {payment === 1 ? "Payment Done" : "Pending Payment"}
+            </Text>
+            {payment !== 1 && (
+              <TouchableOpacity
+                onPress={handlePaymentPress}
+                className="bg-green-500 p-2 rounded-lg"
+                disabled={buttonLoading === "Payment"}
+              >
+                {buttonLoading === "Payment" ? (
+                  <ActivityIndicator size="small" color="#FFFFFF" />
+                ) : (
+                  <Text className="text-white text-center">Payment Done</Text>
+                )}
+              </TouchableOpacity>
+            )}
+          </>
         )}
       </View>
     </View>
