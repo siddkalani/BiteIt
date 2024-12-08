@@ -5,7 +5,7 @@ import { updateFoodItemStatus } from "../store/Slices/foodItemSlice";
 import { updateCategoryItemStatus } from "../store/Slices/categoryItemSlice";
 import { paymentUpdated,orderDelivered } from "../store/Slices/orderHistorySlice";
 import { updateCanteenStatus } from "../store/Slices/canteenSlice";
-import { addNewOrder } from "../store/Slices/adminAllOrders";
+import { addNewOrder } from "../store/Slices/orderSlice";
 
 let socket;
 
@@ -54,6 +54,10 @@ const initializeSocket = () => {
       updateItemStatus("categoryItem", updatedItem, false);
     });
 
+    socket.on("newOrder", (order) => {
+      store.dispatch(addNewOrder(order));  // Dispatch action to add new order to state
+    });
+
     socket.on("orderDelivered", (newOrder) => {
       store.dispatch(orderDelivered(newOrder));  // Handle order delivered event
     });
@@ -63,9 +67,6 @@ const initializeSocket = () => {
       store.dispatch(paymentUpdated(updatedOrder));  // Handle payment done event
     });
 
-    socket.on("newOrder", (order) => {
-      store.dispatch(addNewOrder(order)); 
-    });
 
     socket.on("connect_error", (error) => {
       console.error("Connection error:", error.message);

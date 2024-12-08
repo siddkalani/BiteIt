@@ -14,7 +14,7 @@ const getAllOrders = asyncHandler(async (req, res) => {
 
     // Iterate over each order and log the items for debugging
     orders.forEach(order => {
-      console.log(`Order ID: ${order._id}, Items:`);
+      // console.log(`Order ID: ${order._id}, Items:`);
       order.items.forEach(item => {
         console.log(`Item ID: ${item.itemId}, Item Name: ${item.itemName}, Quantity: ${item.itemQuantity}`);
       });
@@ -34,114 +34,87 @@ const getAllOrders = asyncHandler(async (req, res) => {
 
 // POST -> /admin/orders/status
 const updateOrderStatus = asyncHandler(async (req, res) => {
-  const { updates } = req.body; // Expect an array of { id, status } objects
+  const { id } = req.params;
+  const { status } = req.body;
 
-  if (!Array.isArray(updates) || updates.length === 0) {
-    return res.status(400).json({ message: "Invalid updates format or empty list." });
+  if (
+    ![
+      "Pending",
+      "Accepted",
+      "Preparing",
+      "Ready",
+      "Delivered",
+      "Rejected",
+    ].includes(status)
+  ) {
+    return res.status(400).json({ message: "Invalid status" });
   }
 
-  // Validate statuses
-  const validStatuses = ["Pending", "Accepted", "Rejected", "Ready", "Delivered"];
-  for (const update of updates) {
-    if (!update.id || !validStatuses.includes(update.status)) {
-      return res.status(400).json({ message: "Invalid order ID or status." });
-    }
+  const order = await Order.findById(id);
+
+  if (!order) {
+    return res.status(404).json({ message: "Order not found" });
   }
 
-  // Fetch and update orders in a batch
-  const updatedOrders = [];
-  const io = req.app.get("io"); // Access Socket.IO instance
+  order.status = status;
+  await order.save();
 
-  try {
-    for (const update of updates) {
-      const { id, status } = update;
+  const io = req.app.get("io");
 
-      // Find and update each order
-      const order = await Order.findById(id);
-      if (!order) {
-        console.error(`Order not found: ${id}`);
-        continue; // Skip invalid orders
+  switch (status) {
+    case "Accepted":
+      io.emit("orderAccepted", order);
+      await sendNotification(order.userId, "Order Accepted", `Your order is confirmed and will be prepared shortly.`);
+      break;
+    case "Preparing":
+      io.emit("orderPreparing", order);
+      await sendNotification(order.userId, "Order Preparing", `Your order is now being prepared.`);
+      break;
+    case "Ready":
+      io.emit("orderReady", order);
+      await sendNotification(order.userId, "Order Ready", `Your order is ready for pickup.`);
+      break;
+    case "Delivered":
+      io.emit("orderDelivered", order);
+
+      // Log the order object before saving to OrderHistory
+      console.log("Order to be saved to history:", order);
+
+      // Save the order to OrderHistory when delivered
+      try {
+        const newOrderHistory = new OrderHistory({
+          orderId:order._id,
+          userId: order.userId,
+          canteenId: order.canteenId,
+          canteenName: order.canteenName,
+          items: order.items, // Store the array of ordered items
+          totalAmount: order.totalAmount,
+          status: "Delivered",
+          payment: order.payment,
+          orderPlacedAt: order.orderPlacedAt,
+        });
+
+        await newOrderHistory.save();
+        console.log("Order history saved successfully.");
+      } catch (error) {
+        console.error("Error saving order history:", error);
+        return res
+          .status(500)
+          .json({ message: "Error saving order history", error });
       }
 
-      order.status = status;
-
-      // Set the deliveredAt timestamp if applicable
-      if (status === "Delivered" && !order.deliveredAt) {
-        order.deliveredAt = new Date();
-      }
-
-      await order.save();
-      updatedOrders.push(order);
-
-      // Emit real-time updates and handle notifications
-      switch (status) {
-        case "Accepted":
-          io.emit("orderAccepted", order);
-          await sendNotification(
-            order.userId,
-            "Order Accepted",
-            "Your order is confirmed and will be prepared shortly."
-          );
-          break;
-
-        case "Ready":
-          io.emit("orderReady", order);
-          await sendNotification(
-            order.userId,
-            "Order Ready",
-            "Your order is now ready. Please collect at the counter."
-          );
-          break;
-
-        case "Delivered":
-          io.emit("orderDelivered", order);
-
-          // Save to OrderHistory
-          const newOrderHistory = new OrderHistory({
-            orderId: order._id,
-            userId: order.userId,
-            canteenId: order.canteenId,
-            canteenName: order.canteenName,
-            items: order.items, // Store the array of ordered items
-            totalAmount: order.totalAmount,
-            status: "Delivered",
-            payment: order.payment,
-            orderPlacedAt: order.orderPlacedAt,
-            deliveredAt: order.deliveredAt,
-          });
-          await newOrderHistory.save();
-
-          await sendNotification(
-            order.userId,
-            "Order Delivered",
-            "Your order has been delivered."
-          );
-          break;
-
-        case "Rejected":
-          await Order.findByIdAndDelete(id); // Delete the order
-          io.emit("orderRejected", order);
-          await sendNotification(
-            order.userId,
-            "Order Rejected",
-            "Your order has been rejected."
-          );
-          break;
-
-        default:
-          break;
-      }
-    }
-
-    // Respond with success
-    res.status(200).json({
-      message: "Order statuses updated successfully.",
-      updatedOrders,
-    });
-  } catch (error) {
-    console.error("Error updating orders:", error);
-    res.status(500).json({ message: `Error updating orders: ${error.message}` });
+      await sendNotification(order.userId, "Order Delivered", `Your order has been delivered.`);
+      break;
+    case "Rejected":
+      await Order.findByIdAndDelete(id); 
+      io.emit("orderRejected", order);
+      await sendNotification(order.userId, "Order Rejected", `Your order has been rejected.`);
+      break;
+    default:
+      break;
   }
+
+  res.status(200).json({ message: `Order ${status} successfully`, order });
 });
 
 

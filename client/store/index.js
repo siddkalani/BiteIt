@@ -21,7 +21,7 @@ const store = configureStore({
     categoryItem: categoryItemSlice.reducer,
     orderHistory: orderHistorySlice.reducer,
     canteen: canteenSlice.reducer,
-    allOrders: allOrderSlice.reducer
+    // allOrders: allOrderSlice.reducer
   },
   // middleware: (getDefaultMiddleware) =>
   //   getDefaultMiddleware().concat(socketMiddleware),

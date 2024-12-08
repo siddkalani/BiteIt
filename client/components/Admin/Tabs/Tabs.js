@@ -5,7 +5,7 @@ import { View, TouchableOpacity, Text } from "react-native";
 const Tabs = ({ activeTab, setActiveTab, pendingCount, preparingCount, readyCount, pickedUpCount }) => {
   const tabs = [
     { name: "Pending", count: pendingCount },
-    // { name: "Preparing", count: preparingCount },
+    { name: "Preparing", count: preparingCount },
     { name: "Ready", count: readyCount },
     { name: "PickedUp", count: pickedUpCount },
   ];

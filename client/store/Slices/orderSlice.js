@@ -26,3 +26,7 @@ export const selectOrderPlaced = (state) => state.order.orderPlaced;
 export const selectOrderDetails = (state) => state.order.orderDetails;
 
 export default orderSlice; // Export the reducer
+
+
+
+

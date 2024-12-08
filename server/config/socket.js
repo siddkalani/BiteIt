@@ -32,6 +32,8 @@
 
 // module.exports = initializeSocket;
 
+
+
 const http = require("http");
 const socketIo = require("socket.io");
 
@@ -42,43 +44,44 @@ const initializeSocket = (app) => {
   // Initialize Socket.IO with CORS options
   const io = socketIo(server, {
     cors: {
-      origin: "*", // Allow all domains
-      methods: ["GET", "POST"], // Allowed methods
-      allowedHeaders: ["Authorization"], // Example of allowed headers
-      credentials: true, // Allow credentials if needed
+      origin: "*",
+      methods: ["GET", "POST"],
+      allowedHeaders: ["Authorization"],
+      credentials: true,
     },
   });
 
-  // Map to track connected clients (key: IP, value: active socket ID)
-  const connectedClients = new Map();
+  // Map to track connected users (key: user ID or socket ID, value: socket details)
+  const connectedUsers = new Map();
 
   io.on("connection", (socket) => {
     const clientAddress = socket.handshake.address; // Get client IP
     const clientId = socket.id;
 
-    console.log(`A user connected: ${clientId} (${clientAddress})`);
+    // Use socket.id as the unique identifier
+    const userId = socket.handshake.query.userId || clientId;
 
-    // Check for duplicate connections
-    if (connectedClients.has(clientAddress)) {
-      const activeSocketId = connectedClients.get(clientAddress);
+    console.log(`A user connected: ${clientId} (${clientAddress}) with ID: ${userId}`);
+
+    // If userId is already connected, clean up the stale connection
+    if (connectedUsers.has(userId)) {
+      const activeSocketId = connectedUsers.get(userId);
 
       // Check if the existing socket is still active
       const activeSocket = io.sockets.sockets.get(activeSocketId);
       if (activeSocket) {
         console.log(
-          `Duplicate connection detected from ${clientAddress}. Disconnecting new socket ${clientId}`
+          `Duplicate connection detected for user ${userId}. Disconnecting old socket ${activeSocketId}`
         );
-        socket.disconnect();
-        return;
+        activeSocket.disconnect(); // Disconnect the old socket instead of the new one
       }
 
-      // Clean up stale connections
-      console.log(`Cleaning up stale connection for ${clientAddress}`);
-      connectedClients.delete(clientAddress);
+      // Remove the old connection
+      connectedUsers.delete(userId);
     }
 
-    // Register new connection
-    connectedClients.set(clientAddress, clientId);
+    // Register the new connection
+    connectedUsers.set(userId, clientId);
 
     // Handle user joining a room
     socket.on("joinRoom", (roomId) => {
@@ -92,10 +95,10 @@ const initializeSocket = (app) => {
         `User disconnected: ${clientId} (${clientAddress}). Reason: ${reason}`
       );
 
-      // Remove socket from the connected clients map
-      if (connectedClients.get(clientAddress) === clientId) {
-        connectedClients.delete(clientAddress);
-        console.log(`Removed ${clientAddress} from connected clients map`);
+      // Remove socket from the connected users map
+      if (connectedUsers.get(userId) === clientId) {
+        connectedUsers.delete(userId);
+        console.log(`Removed user ${userId} from connected users map`);
       }
     });
 
@@ -110,7 +113,7 @@ const initializeSocket = (app) => {
     console.error(`Socket.IO error: ${error.message}`);
   });
 
-  return { server, io }; // Return both the server and io instances
+  return { server, io };
 };
 
 module.exports = initializeSocket;
