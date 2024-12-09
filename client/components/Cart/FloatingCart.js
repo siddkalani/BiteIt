@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -9,46 +9,113 @@ import { selectOrderPlaced } from '../../store/Slices/orderSlice';
 const FloatingCartBar = ({ imageUrl, restaurantName }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const orderPlaced = useSelector(selectOrderPlaced); // Access global state
-  // Get itemCount from cartSlice
+  const orderPlaced = useSelector(selectOrderPlaced);
   const itemCount = useSelector(selectItemCount);
+
+  // Track which "page" is displayed; 0 = main page, 1 = cart page on swipe/pagination
+  const [currentPage, setCurrentPage] = useState(0);
 
   const handleCheckout = () => {
     navigation.navigate('CartPage');
   };
 
-  // Handle clearing the cart
   const handleClearCart = () => {
-    dispatch(clearCart()); // Dispatch the action to clear all items
+    dispatch(clearCart());
     console.log('Cart cleared');
+  };
+
+  const handleTrackOrder = () => {
+    // Navigate to order tracking page
+    navigation.navigate('OrderTracking');
+  };
+
+  // Simple toggle function for demonstration (in a real scenario, use a swipe gesture or a pager)
+  const togglePage = () => {
+    setCurrentPage((prevPage) => (prevPage === 0 ? 1 : 0));
   };
 
   return (
     <View className="left-0 right-0 mb-5 w-full items-center">
       <View className="bg-[#2b054c] rounded-2xl w-[90%] shadow-lg flex-row items-center justify-between py-2 px-4">
-        <View className="flex-row items-center space-x-3">
-          {/* Image and restaurant name */}
-          <View>
-            <Text className="text-sm text-white">{itemCount} item{itemCount !== 1 ? 's' : ''} added</Text>
-          </View>
+        
+        {/* Left section - changes based on orderPlaced and currentPage */}
+        <View className="flex-row items-center space-x-3 flex-1">
+          {currentPage === 0 ? (
+            // Main page: Conditionally show orderPlaced or normal cart info
+            orderPlaced ? (
+              <Text className="text-sm text-white">
+                Your order has been placed! Track it below.
+              </Text>
+            ) : (
+              <Text className="text-sm text-white">
+                {itemCount} item{itemCount !== 1 ? 's' : ''} added
+              </Text>
+            )
+          ) : (
+            // Second page: Always show cart details for editing
+            <Text className="text-sm text-white">
+              Cart Items: {itemCount} item{itemCount !== 1 ? 's' : ''}
+            </Text>
+          )}
         </View>
-        <View className="flex-row items-center space-x-2">
-          <TouchableOpacity
-            className="bg-[#28A745] flex-row space-x-1 items-center rounded-lg p-2"
-            onPress={handleCheckout}
-          >
-            <View>
-              <Text className="text-white font-semibold">Checkout</Text>
-            </View>
-            <Icon name="chevron-forward" size={20} color="white" className="ml-1" />
-          </TouchableOpacity>
 
-          {/* Clear Cart Button */}
-          <TouchableOpacity 
-            className="bg-red-100 p-2 items-center justify-center rounded-lg" 
-            onPress={handleClearCart}  // Clear the entire cart
+        {/* Right section - also changes based on orderPlaced and currentPage */}
+        <View className="flex-row items-center space-x-2">
+          {currentPage === 0 ? (
+            orderPlaced ? (
+              // If order is placed, show "Track Order" button
+              <TouchableOpacity
+                className="bg-[#28A745] flex-row space-x-1 items-center rounded-lg p-2"
+                onPress={handleTrackOrder}
+              >
+                <Text className="text-white font-semibold">Track Order</Text>
+                <Icon name="chevron-forward" size={20} color="white" className="ml-1" />
+              </TouchableOpacity>
+            ) : (
+              // Normal scenario: show checkout and clear cart
+              <>
+                <TouchableOpacity
+                  className="bg-[#28A745] flex-row space-x-1 items-center rounded-lg p-2"
+                  onPress={handleCheckout}
+                >
+                  <Text className="text-white font-semibold">Checkout</Text>
+                  <Icon name="chevron-forward" size={20} color="white" className="ml-1" />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  className="bg-red-100 p-2 items-center justify-center rounded-lg"
+                  onPress={handleClearCart}
+                >
+                  <Icon name="trash" size={24} color="#FF3B30" />
+                </TouchableOpacity>
+              </>
+            )
+          ) : (
+            // On the second page: show the cart editing buttons even if order is placed
+            <>
+              <TouchableOpacity
+                className="bg-[#28A745] flex-row space-x-1 items-center rounded-lg p-2"
+                onPress={handleCheckout}
+              >
+                <Text className="text-white font-semibold">View Cart</Text>
+                <Icon name="cart" size={20} color="white" className="ml-1" />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                className="bg-red-100 p-2 items-center justify-center rounded-lg"
+                onPress={handleClearCart}
+              >
+                <Icon name="trash" size={24} color="#FF3B30" />
+              </TouchableOpacity>
+            </>
+          )}
+
+          {/* Button to toggle between pages (for demonstration) */}
+          <TouchableOpacity
+            className="bg-white p-2 rounded-lg"
+            onPress={togglePage}
           >
-            <Icon name="trash" size={24} color="#FF3B30" />
+            <Icon name={currentPage === 0 ? "arrow-forward" : "arrow-back"} size={20} color="#2b054c" />
           </TouchableOpacity>
         </View>
       </View>
@@ -57,9 +124,6 @@ const FloatingCartBar = ({ imageUrl, restaurantName }) => {
 };
 
 export default FloatingCartBar;
-
-
-
 
 
 // // import React from 'react';
