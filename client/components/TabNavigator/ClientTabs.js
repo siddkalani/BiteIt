@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import FloatingCartBar from '../Cart/FloatingCart';
 import Home from '../../screens/Home/Home';
 import OrderHistoryPage from '../../screens/OrderHistory/OrderHistoryPage';
-import Account from '../../screens/Account/Account';
+import Account from '../../screens/account/Account';
 import { selectItemCount } from '../../store/Slices/cartSlice';
 import { selectCanteenId } from '../../store/Slices/orderServiceSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
