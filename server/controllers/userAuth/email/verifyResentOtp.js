@@ -1,6 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../../../models/userModel"); // Updated to use User model
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 const verifyResentOtp = asyncHandler(async (req, res) => {
   const { email, otp } = req.body;

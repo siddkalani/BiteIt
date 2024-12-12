@@ -1,6 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../../../models/userModel"); // Updated to use User model
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const randomString = require("randomstring");
 const { sendOTPEmail } = require("../../../services/authService");
 

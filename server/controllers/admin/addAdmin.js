@@ -1,6 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Admin = require("../../models/adminModel");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 // POST -> /admin/add
 const addAdmin = asyncHandler(async (req, res) => {
