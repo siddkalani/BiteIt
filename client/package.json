@@ -19,7 +19,7 @@
     "@react-navigation/native-stack": "^6.11.0",
     "@react-navigation/stack": "^6.4.1",
     "@reduxjs/toolkit": "^2.2.7",
-    "autoprefixer": "^10.4.20",
+    "autoprefixer": "^10.4.7",
     "axios": "^1.7.3",
     "expo": "^52.0.0",
     "expo-auth-session": "~6.0.1",
@@ -38,7 +38,7 @@
     "jwt-decode": "^4.0.0",
     "nativewind": "^2.0.11",
     "npm": "^10.8.2",
-    "postcss": "^8.4.49",
+    "postcss": "^8.4.14",
     "react": "18.3.1",
     "react-content-loader": "^7.0.2",
     "react-dom": "18.3.1",
@@ -69,7 +69,7 @@
     "redux-thunk": "^3.1.0",
     "reselect": "^5.1.1",
     "socket.io-client": "^4.7.5",
-    "tailwindcss": "^3.4.16"
+    "tailwindcss": "^3.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0"
