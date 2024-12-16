@@ -44,7 +44,6 @@
     "react-content-loader": "^7.0.2",
     "react-dom": "18.3.1",
     "react-native": "^0.76.5",
-    "react-native-bottom-sheet": "^1.0.3",
     "react-native-dotenv": "^3.4.11",
     "react-native-feather": "^1.1.2",
     "react-native-gesture-handler": "^2.20.0",
