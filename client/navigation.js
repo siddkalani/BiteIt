@@ -14,7 +14,7 @@ import CartPage from "./screens/Cart/CartPage";
 import OrderHistoryPage from "./screens/OrderHistory/OrderHistoryPage";
 import PaymentService from "./screens/payment/PaymentService";
 import Intro1 from "./screens/Intro/Intro1";
-import PaymentOption from "./screens/payment/PaymentOption";
+import PaymentOption from "./screens/Payment/PaymentOption";
 import Inventory from "./screens/Admin/Screens/Inventory/Inventory";
 import AdminAccount from "./screens/Admin/Screens/AdminAccount/AdminAccount";
 import Bills from "./screens/Admin/Screens/Bills/Bills";
