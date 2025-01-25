@@ -9,11 +9,6 @@
     },
     "preview": {
       "distribution": "internal"
-    },
-    "production": {
-      "env": {
-        "EAS_BUILD_DISABLE_BUNDLE_JAVASCRIPT_STEP": "1"
-      }
     }
   },
   "submit": {
