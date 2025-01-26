@@ -6,6 +6,7 @@ import { Alert, Platform, ActivityIndicator, View } from "react-native";
 import * as Notifications from "expo-notifications";
 import AppNavigator from "./navigation";
 import store from "./store";
+import "./global.css"
 import { initializeSocket, cleanupSocket } from "./services/socketService"; // Ensure these are correctly implemented
 
 // Set up Android notification channel
