@@ -10,7 +10,8 @@ const introFoodImage = require("../../assets/images/intro/introFood.png");
 const { width, height } = Dimensions.get('window');
 
 const Intro1 = () => {
-    const navigation = useNavigation();
+        const navigation = useNavigation();
+        console.log(SafeAreaAndroid.AndroidSafeArea);
 
     const handlePress = () => {
         navigation.navigate('LogIn');

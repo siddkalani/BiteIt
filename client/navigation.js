@@ -61,7 +61,7 @@ function AppNavigator() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="AuthLoading" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="AuthLoading" component={AuthLoadingScreen} />
-        <Stack.Screen name="Intro" component={Intro1} />
+        {/* <Stack.Screen name="Intro" component={Intro1} /> */}
         <Stack.Screen name="CreateAccount" component={CreateAccount} />
         <Stack.Screen name="LogIn" component={LogIn} />
         <Stack.Screen name="Otp" component={OTP} />

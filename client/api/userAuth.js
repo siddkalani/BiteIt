@@ -296,7 +296,7 @@ export const logoutUser = async (navigation, dispatch, setIsAuthenticated) => {
             navigation.dispatch(
               CommonActions.reset({
                 index: 0,
-                routes: [{ name: "Intro" }],
+                routes: [{ name: "LogIn" }],
               })
             );
           } catch (error) {

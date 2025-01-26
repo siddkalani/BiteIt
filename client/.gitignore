@@ -38,4 +38,3 @@ yarn-error.*
 package-lock.json
 yarn.lock
 
-client/constants/constant.js

@@ -20,7 +20,7 @@ const AuthLoadingScreen = () => {
       } else if (userToken && role === "faculty") {
         navigation.replace("ClientTabs"); // If user, go to User screen
       } else {
-        navigation.replace("Intro"); // If not logged in, go to Login/Intro screen
+        navigation.replace("LogIn"); // If not logged in, go to Login/Intro screen
       }
     };
     checkAuth();
