@@ -1,1 +1,1 @@
-# CanteenApp
+# BiteIt
