@@ -194,7 +194,7 @@ const FoodCard = ({ foodItem }) => {
             start={{ x: 0, y: 1 }}
             end={{ x: 1.9, y: 0 }}
             
-            className="py-1 justify-center border-2 border-[#2b054c] rounded-md items-center flex-row"
+            className="py-1 justify-center border-2 border-[#2b054c] rounded-md items-center flex-row overflow-hidden"
           >
             
               <View className="h-4 w-4">

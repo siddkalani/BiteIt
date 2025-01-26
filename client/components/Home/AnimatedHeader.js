@@ -52,7 +52,7 @@ const AnimatedHeader = ({
         transform: [{
           translateY: scrollY.interpolate({
             inputRange: [0, STICKY_SEARCH_THRESHOLD],
-            outputRange: [0, STICKY_SEARCH_THRESHOLD - 100],
+            outputRange: [0, STICKY_SEARCH_THRESHOLD - 95],
             extrapolate: "clamp",
           })
         }],

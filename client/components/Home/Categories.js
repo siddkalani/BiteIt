@@ -86,17 +86,17 @@ const Categories = () => {
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          className="space-x-4"
+          className=""
         >
           {category.map((item) => (
             <TouchableOpacity
               onPress={() => handlePress(item._id)}
               key={item._id}
-              className="items-center"
+              className="items-center mr-2"
             >
               <Image
                 source={{ uri: `${BASE_URL}/uploads/${item.image}` }}
-                className="h-[62] w-[61] rounded-full"
+                className="h-[60] w-[60] rounded-full"
                 resizeMode="cover"
               />
               <Text

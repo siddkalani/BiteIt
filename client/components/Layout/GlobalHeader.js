@@ -1,10 +1,19 @@
+// GlobalHeader.js
+
 import React from "react";
 import { View, Text, TouchableOpacity, Platform, SafeAreaView, StatusBar } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { FontFamily, FontSize } from "../../GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
 
-const GlobalHeader = ({ title = "Service Type", onBackPress , backgroundColor = 'white',textColor = 'text-black',iconColor = 'black' }) => {
+const GlobalHeader = ({
+  title = "Service Type",
+  onBackPress,
+  backgroundColor = 'white',
+  textColor = 'text-black',
+  iconColor = 'black',
+  showBackButton = true, // New prop with default value
+}) => {
   const navigation = useNavigation();
 
   const handlePress = () => {
@@ -23,12 +32,14 @@ const GlobalHeader = ({ title = "Service Type", onBackPress , backgroundColor = 
       }}
     >
       <View className="flex-row items-center space-x-3 h-7">
-        <TouchableOpacity
-          onPress={handlePress}
-          className="w-10 h-10 justify-center absolute"
-        >
-          <Ionicons name="arrow-back" size={24} color={`${iconColor}`} />
-        </TouchableOpacity>
+        {showBackButton && (
+          <TouchableOpacity
+            onPress={handlePress}
+            className="w-10 h-10 justify-center absolute"
+          >
+            <Ionicons name="arrow-back" size={24} color={`${iconColor}`} />
+          </TouchableOpacity>
+        )}
 
         <View className="flex-1 items-center">
           <Text

@@ -117,7 +117,7 @@ const FullScreenSkeleton = () => {
   );
 };
 
-const HEADER_HEIGHT = 100;
+const HEADER_HEIGHT = 95;
 const STICKY_SEARCH_THRESHOLD = HEADER_HEIGHT / 1.5;
 
 const Home = ({ setTabBarVisible }) => {
@@ -215,7 +215,7 @@ const Home = ({ setTabBarVisible }) => {
           </View>
         </View>
 
-        <View className="px-4 pb-4 pt-2 space-y-2" style={{ backgroundColor: "white" }}>
+        <View className="px-4 pb-4 pt-2 " style={{ backgroundColor: "white" }}>
           <Categories />
         </View>
 
