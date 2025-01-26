@@ -2,7 +2,6 @@
   "expo": {
     "name": "canteenApp",
     "slug": "canteenApp",
-    // "displayName": "canteenApp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -21,7 +20,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.shreyaa03.canteexnApp"
+      "package": "com.shreyaa03.canteenApp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -38,8 +37,7 @@
     "updates": {
       "url": "https://u.expo.dev/5d4647bf-23f8-4d3b-884d-91e700f01c21"
     },
-    "scheme": "canteenpp"  ,
+    "scheme": "canteenpp",
     "newArchEnabled": true
-  
   }
 }
